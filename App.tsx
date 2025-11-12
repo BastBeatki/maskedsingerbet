@@ -3,8 +3,9 @@ import { useAppManager } from './hooks/useGameState';
 import { HomeView } from './components/HomeView';
 import { SettingsView } from './components/SettingsView';
 import { GameView } from './components/GameView';
+import { RulesView } from './components/RulesView';
 
-type View = 'home' | 'game' | 'settings';
+type View = 'home' | 'game' | 'settings' | 'rules';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -102,6 +103,8 @@ const App: React.FC = () => {
             onDeleteShow={(id) => activeSeasonId && deleteShow(activeSeasonId, id)}
           />
         );
+       case 'rules':
+        return <RulesView onBack={handleBackToHome} />;
       case 'home':
       default:
         return (

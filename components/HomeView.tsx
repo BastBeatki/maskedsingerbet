@@ -74,7 +74,7 @@ const EditSeasonModal: React.FC<{
 
 interface HomeViewProps {
   appState: AppState;
-  onNavigate: (view: 'game' | 'settings', seasonId?: string) => void;
+  onNavigate: (view: 'game' | 'settings' | 'rules', seasonId?: string) => void;
   onImport: (state: AppState) => void;
   onReset: () => void;
   onAddSeason: (name: string) => void;
@@ -140,22 +140,27 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
 
         <Card className="mb-10">
             <h2 className="text-2xl font-bold mb-4 text-center">Daten-Verwaltung</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Button onClick={() => onNavigate('settings')} variant="secondary" className="col-span-2 md:col-span-1">
+             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <Button onClick={() => onNavigate('settings')} variant="secondary">
                     Stammdaten verwalten
                 </Button>
-                <Button onClick={handleExport} variant="secondary" className="flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
-                    Exportieren
+                <Button onClick={() => onNavigate('rules')} variant="secondary">
+                    Spielerklärung
                 </Button>
-                <label htmlFor="import-file-input" className="bg-tertiary hover:bg-tertiary/80 border border-border px-5 py-3 font-bold rounded-lg transition-all duration-300 text-white flex items-center justify-center gap-2 cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" /></svg>
-                    Importieren
-                </label>
-                <input id="import-file-input" type="file" accept=".json" onChange={handleFileChange} className="hidden" />
-                <Button onClick={onReset} variant="danger" className="w-full">
-                    Reset All Data
-                </Button>
+            </div>
+            <div className="border-t border-border pt-6">
+                 <h3 className="text-lg font-bold mb-4 text-center text-text-secondary">Backup</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Button onClick={handleExport} variant="secondary" className="flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+                        Exportieren
+                    </Button>
+                    <label htmlFor="import-file-input" className="bg-tertiary hover:bg-tertiary/80 border border-border px-5 py-3 font-bold rounded-lg transition-all duration-300 text-white flex items-center justify-center gap-2 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" /></svg>
+                        Importieren
+                    </label>
+                    <input id="import-file-input" type="file" accept=".json" onChange={handleFileChange} className="hidden" />
+                </div>
             </div>
         </Card>
 
