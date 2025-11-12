@@ -125,9 +125,9 @@ export const calculateScores = (season: Season, allPlayers: Player[]): PlayerSco
       const tipShow = season.shows.find(s => s.id === targetTip.showId);
       if (!tipShow) continue; // Tip's original show might have been deleted
 
-      // Calculate time decay factor: 20% decay per show difference, capped at 0.
+      // Calculate time decay factor: 15% decay per show difference, capped at 0.
       const showDifference = Math.max(0, counterBetShow.episodeNumber - tipShow.episodeNumber);
-      const decayFactor = Math.max(0, 1.0 - (showDifference * 0.2));
+      const decayFactor = Math.max(0, 1.0 - (showDifference * 0.15));
 
       const isTargetTipCorrect = targetTip.celebrityName.trim().toLowerCase() === actualCelebrity;
       const isFinalTargetTip = targetTip.isFinal === true;
