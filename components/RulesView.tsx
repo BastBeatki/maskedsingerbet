@@ -48,7 +48,7 @@ export const RulesView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <h2 className="text-2xl font-bold text-accent mb-3">Punkte-/Risikologik — kurz</h2>
             <ul className="list-disc list-inside space-y-2 text-lg text-text-secondary">
               <li>Frühe, richtige Tipps = hohe Grundpunkte.</li>
-              <li>Pionier-Bonus > Nachahmer-Punkte.</li>
+              <li>Pionier-Bonus &gt; Nachahmer-Punkte.</li>
               <li>Finaler Tipp = großer Bonus, aber endgültiges Sperren.</li>
               <li>Gegenwette = Hebel auf Fehler anderer; früh wetten zahlt sich am meisten aus.</li>
             </ul>
