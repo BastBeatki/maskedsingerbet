@@ -1,0 +1,5 @@
+{
+  "name": "The Masked Singer Tipper",
+  "description": "An interactive tipping and scoreboard tool for the TV show 'The Masked Singer'. Players can guess the celebrities behind the masks, track their tips throughout a season, and get points for correct guesses. All data is managed in the browser and can be exported or imported via JSON files.",
+  "requestFramePermissions": []
+}
