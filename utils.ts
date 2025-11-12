@@ -118,16 +118,29 @@ export const calculateScores = (season: Season, allPlayers: Player[]): PlayerSco
       if (!bettorScore || !targetScore) continue;
 
       const targetTip = mask.tips[cb.targetPlayerId]?.[cb.targetTipIndex];
+      const counterBetShow = season.shows.find(s => s.id === cb.showId);
 
-      if (!targetTip) continue;
+      if (!targetTip || !counterBetShow) continue; // Tip or show might have been deleted
+
+      const tipShow = season.shows.find(s => s.id === targetTip.showId);
+      if (!tipShow) continue; // Tip's original show might have been deleted
+
+      // Calculate time decay factor: 20% decay per show difference, capped at 0.
+      const showDifference = Math.max(0, counterBetShow.episodeNumber - tipShow.episodeNumber);
+      const decayFactor = Math.max(0, 1.0 - (showDifference * 0.2));
 
       const isTargetTipCorrect = targetTip.celebrityName.trim().toLowerCase() === actualCelebrity;
       const isFinalTargetTip = targetTip.isFinal === true;
 
-      // Define points based on whether the bet is against a final tip
-      const winPoints = isFinalTargetTip ? 5 : 3;
-      const bettorLossPoints = isFinalTargetTip ? -3 : -2;
-      const targetLossPoints = isFinalTargetTip ? -3 : -2;
+      // Define base points based on whether the bet is against a final tip
+      const baseWinPoints = isFinalTargetTip ? 5 : 3;
+      const baseBettorLossPoints = isFinalTargetTip ? -3 : -2;
+      const baseTargetLossPoints = isFinalTargetTip ? -3 : -2;
+      
+      // Apply decay factor
+      const winPoints = Math.round(baseWinPoints * decayFactor);
+      const bettorLossPoints = Math.round(baseBettorLossPoints * decayFactor);
+      const targetLossPoints = Math.round(baseTargetLossPoints * decayFactor);
 
       if (isTargetTipCorrect) {
         // Counter-bet was WRONG, bettor loses points
@@ -135,8 +148,12 @@ export const calculateScores = (season: Season, allPlayers: Player[]): PlayerSco
       } else {
         // Counter-bet was CORRECT, bettor gains points, target loses points
         bettorScore.counterBetPoints += winPoints;
-        targetScore.counterBetPoints += targetLossPoints;
-        bettorScore.wonCounterBets += 1;
+        if(targetLossPoints !== 0) {
+            targetScore.counterBetPoints += targetLossPoints;
+        }
+        if(winPoints > 0) {
+            bettorScore.wonCounterBets += 1;
+        }
       }
     }
   }

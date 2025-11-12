@@ -74,7 +74,7 @@ const App: React.FC = () => {
                 onRevealMask={(maskId, celebrity) => revealMask(activeSeasonId!, maskId, celebrity)}
                 onAddOrUpdateTip={(maskId, playerId, celebrity, isFinal) => addOrUpdateTip(activeSeasonId!, maskId, playerId, celebrity, isFinal)}
                 onDeleteLastTip={(maskId, playerId) => deleteLastTip(activeSeasonId!, maskId, playerId)}
-                onAddCounterBet={(maskId, bettor, target, index) => addCounterBet(activeSeasonId!, maskId, bettor, target, index)}
+                onAddCounterBet={(maskId, bettor, target) => addCounterBet(activeSeasonId!, maskId, bettor, target)}
                 onDeleteCounterBet={(id) => deleteCounterBet(activeSeasonId!, id)}
                 onAddShow={() => addShow(activeSeasonId!)}
                 onSetActiveShowId={(id) => setActiveShowId(activeSeasonId!, id)}

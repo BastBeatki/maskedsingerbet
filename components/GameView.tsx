@@ -188,7 +188,7 @@ const CounterBetsModal: React.FC<{
     counterBets: CounterBet[];
     isOpen: boolean;
     onClose: () => void;
-    onAddCounterBet: (bettorPlayerId: string, targetPlayerId: string, targetTipIndex: number) => void;
+    onAddCounterBet: (bettorPlayerId: string, targetPlayerId: string) => void;
     onDeleteCounterBet: (id: string) => void;
 }> = ({ mask, players, shows, counterBets, isOpen, onClose, onAddCounterBet, onDeleteCounterBet }) => {
     const [bettorId, setBettorId] = useState('');
@@ -206,6 +206,7 @@ const CounterBetsModal: React.FC<{
 
     const targetablePlayers = players.filter(p => p.id !== bettorId);
     const targetTips = targetId ? mask.tips[targetId] || [] : [];
+    const latestTargetTip = targetTips.length > 0 ? targetTips[targetTips.length - 1] : null;
     
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={`Counter-Bets for ${mask.name}`}>
@@ -252,27 +253,26 @@ const CounterBetsModal: React.FC<{
 
                 {targetId && (
                     <div className="mt-4">
-                        <label className="block text-sm font-medium text-text-secondary mb-2">Bet against one of the target's tips:</label>
+                        <label className="block text-sm font-medium text-text-secondary mb-2">Bet against the target's latest tip:</label>
                         <div className="space-y-2">
-                             {targetTips.map((tip, index) => {
+                             {latestTargetTip ? (() => {
                                 const existingBet = counterBets.some(cb => 
                                     cb.bettorPlayerId === bettorId &&
                                     cb.targetPlayerId === targetId &&
-                                    cb.maskId === mask.id &&
-                                    cb.targetTipIndex === index
+                                    cb.maskId === mask.id
                                 );
                                 return (
-                                    <div key={index} className="bg-background p-3 rounded-lg flex items-center justify-between">
+                                    <div className="bg-background p-3 rounded-lg flex items-center justify-between">
                                         <div>
-                                            <p className="font-semibold">Tip #{index + 1}: "{tip.celebrityName}"</p>
+                                            <p className="font-semibold">Tip #{targetTips.length}: "{latestTargetTip.celebrityName}"</p>
                                             <div className="flex items-center gap-2">
-                                                <p className="text-xs text-text-secondary">from {getShowName(tip.showId)}</p>
-                                                {tip.isFinal && <span className="text-xs font-bold text-yellow-400"> (FINAL)</span>}
+                                                <p className="text-xs text-text-secondary">from {getShowName(latestTargetTip.showId)}</p>
+                                                {latestTargetTip.isFinal && <span className="text-xs font-bold text-yellow-400"> (FINAL)</span>}
                                             </div>
                                         </div>
                                         <Button
                                             variant="secondary"
-                                            onClick={() => onAddCounterBet(bettorId, targetId, index)}
+                                            onClick={() => onAddCounterBet(bettorId, targetId)}
                                             disabled={!bettorId || mask.isRevealed || existingBet}
                                             className="py-2 px-3 text-sm"
                                         >
@@ -280,8 +280,7 @@ const CounterBetsModal: React.FC<{
                                         </Button>
                                     </div>
                                 );
-                             })}
-                             {targetTips.length === 0 && <p className="text-center text-text-secondary p-4">Target has no tips for this mask yet.</p>}
+                             })() : <p className="text-center text-text-secondary p-4">Target has no tips for this mask yet.</p>}
                         </div>
                     </div>
                 )}
@@ -301,7 +300,7 @@ const MaskCard: React.FC<{
     onReveal: (celebrity: string) => void;
     onSaveTip: (playerId: string, celebrityName: string, isFinal: boolean) => void;
     onDeleteLastTip: (playerId: string) => void;
-    onAddCounterBet: (bettorPlayerId: string, targetPlayerId: string, targetTipIndex: number) => void;
+    onAddCounterBet: (bettorPlayerId: string, targetPlayerId: string) => void;
     onDeleteCounterBet: (id: string) => void;
 }> = ({ mask, players, shows, counterBets, isTippingActive, onReveal, onSaveTip, onDeleteLastTip, onAddCounterBet, onDeleteCounterBet }) => {
     const [isRevealModalOpen, setRevealModalOpen] = useState(false);
@@ -439,7 +438,7 @@ interface GameViewProps {
   onRevealMask: (maskId: string, celebrity: string) => void;
   onAddOrUpdateTip: (maskId: string, playerId: string, celebrityName: string, isFinal: boolean) => void;
   onDeleteLastTip: (maskId: string, playerId: string) => void;
-  onAddCounterBet: (maskId: string, bettorPlayerId: string, targetPlayerId: string, targetTipIndex: number) => void;
+  onAddCounterBet: (maskId: string, bettorPlayerId: string, targetPlayerId: string) => void;
   onDeleteCounterBet: (id: string) => void;
   onAddShow: () => void;
   onSetActiveShowId: (id: string) => void;
@@ -480,7 +479,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                 onReveal={(celebrity) => onRevealMask(mask.id, celebrity)}
                 onSaveTip={(playerId, celebrity, isFinal) => onAddOrUpdateTip(mask.id, playerId, celebrity, isFinal)}
                 onDeleteLastTip={(playerId) => onDeleteLastTip(mask.id, playerId)}
-                onAddCounterBet={(bettor, target, index) => onAddCounterBet(mask.id, bettor, target, index)}
+                onAddCounterBet={(bettor, target) => onAddCounterBet(mask.id, bettor, target)}
                 onDeleteCounterBet={onDeleteCounterBet}
               />
             ))}

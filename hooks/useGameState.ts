@@ -342,7 +342,7 @@ export const useAppManager = () => {
   };
 
   // --- Counter-Bet Management ---
-  const addCounterBet = (seasonId: string, maskId: string, bettorPlayerId: string, targetPlayerId: string, targetTipIndex: number) => {
+  const addCounterBet = (seasonId: string, maskId: string, bettorPlayerId: string, targetPlayerId: string) => {
     withSeason(seasonId, season => {
         if (!season.activeShowId) {
             alert("Please start a show to place a counter-bet.");
@@ -356,20 +356,21 @@ export const useAppManager = () => {
         const alreadyBet = season.counterBets.some(cb => 
             cb.maskId === maskId &&
             cb.bettorPlayerId === bettorPlayerId &&
-            cb.targetPlayerId === targetPlayerId &&
-            cb.targetTipIndex === targetTipIndex
+            cb.targetPlayerId === targetPlayerId
         );
 
         if (alreadyBet) {
-            alert("You have already placed a counter-bet against this specific tip.");
+            alert("You have already placed a counter-bet against this player for this mask.");
             return season;
         }
         
         const targetTips = season.masks.find(m => m.id === maskId)?.tips[targetPlayerId] || [];
-        if (!targetTips[targetTipIndex]) {
-            alert("This tip does not exist and cannot be bet against.");
+        if (targetTips.length === 0) {
+            alert("This player has no tips to bet against for this mask.");
             return season;
         }
+        
+        const lastTipIndex = targetTips.length - 1;
 
         const newCounterBet: CounterBet = {
             id: generateId(),
@@ -377,7 +378,7 @@ export const useAppManager = () => {
             maskId,
             bettorPlayerId,
             targetPlayerId,
-            targetTipIndex,
+            targetTipIndex: lastTipIndex,
         };
         
         return { ...season, counterBets: [...season.counterBets, newCounterBet] };
