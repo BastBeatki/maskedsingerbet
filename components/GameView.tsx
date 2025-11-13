@@ -360,22 +360,34 @@ const MaskCard: React.FC<{
                 <div className="flex items-start justify-between mb-4">
                     <div className="flex-grow pr-4 min-w-0">
                         <h3 className="text-2xl font-bold">{mask.name}</h3>
-                        {mask.isRevealed && (
-                            <div className="flex items-center gap-3 mt-2">
-                                {mask.celebrityImageUrl && (
-                                    <img src={mask.celebrityImageUrl} alt={mask.revealedCelebrity} className="w-12 h-12 rounded-full object-cover border-2 border-yellow-400 flex-shrink-0" />
-                                )}
-                                <div className="min-w-0">
-                                    <p className="text-lg text-yellow-400 font-semibold break-words" title={mask.revealedCelebrity}>{mask.revealedCelebrity}</p>
-                                    <p className="text-sm text-text-secondary">Demaskiert in: {getShowName(mask.revealedInShowId)}</p>
-                                </div>
-                            </div>
-                        )}
                     </div>
                     {mask.imageUrl && (
                         <img src={mask.imageUrl} alt={mask.name} className="w-20 h-20 rounded-full object-cover border-2 border-border flex-shrink-0" />
                     )}
                 </div>
+
+                {mask.isRevealed && (
+                    <div className="bg-background rounded-lg p-4 border border-yellow-500/50 mb-4">
+                        <div className="flex items-center gap-4">
+                            {mask.celebrityImageUrl && (
+                                <img 
+                                    src={mask.celebrityImageUrl} 
+                                    alt={mask.revealedCelebrity} 
+                                    className="w-16 h-16 rounded-full object-cover border-2 border-yellow-400 flex-shrink-0" 
+                                />
+                            )}
+                            <div className="min-w-0">
+                                <p className="text-xs text-yellow-300 font-semibold tracking-wider uppercase">Demaskiert</p>
+                                <p className="text-xl text-yellow-400 font-bold break-words" title={mask.revealedCelebrity}>
+                                    {mask.revealedCelebrity}
+                                </p>
+                                <p className="text-sm text-text-secondary">
+                                    in: {getShowName(mask.revealedInShowId)}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 
                 <div className="space-y-3 flex-grow">
                     {players.map(player => {
