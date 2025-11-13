@@ -42,7 +42,7 @@ const Leaderboard: React.FC<{ scores: PlayerScore[], players: Player[] }> = ({ s
         })}
       </div>
     ) : (
-      <p className="text-text-secondary">No players in this season. Add players in Settings.</p>
+      <p className="text-text-secondary">Keine Spieler in dieser Season. Füge Spieler in den Einstellungen hinzu.</p>
     )}
   </Card>
 );
@@ -64,17 +64,17 @@ const RevealModal: React.FC<{mask: Mask; isOpen: boolean; onClose: () => void; o
     }, [isOpen]);
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={`Reveal ${mask.name}`}>
+        <Modal isOpen={isOpen} onClose={onClose} title={`Enthülle ${mask.name}`}>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <Input
                     type="text"
-                    placeholder="Enter celebrity name"
+                    placeholder="Namen des Promis eingeben"
                     value={celebrityName}
                     onChange={(e) => setCelebrityName(e.target.value)}
                     autoFocus
                     required
                 />
-                <Button type="submit" className="w-full">Reveal Identity</Button>
+                <Button type="submit" className="w-full">Identität enthüllen</Button>
             </form>
         </Modal>
     );
@@ -110,11 +110,11 @@ const TipModal: React.FC<{
         }
     };
     
-    const getShowName = (showId: string) => shows.find(s => s.id === showId)?.name || 'Unknown Show';
+    const getShowName = (showId: string) => shows.find(s => s.id === showId)?.name || 'Unbekannte Show';
     const hasFinalTip = playerTips.some(tip => tip.isFinal);
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={`Tips for ${mask.name}`}>
+        <Modal isOpen={isOpen} onClose={onClose} title={`Tipps für ${mask.name}`}>
             <div className="flex items-center gap-3 mb-4">
                 {player.imageUrl 
                   ? <img src={player.imageUrl} alt={player.name} className="w-12 h-12 rounded-full object-cover" />
@@ -127,16 +127,16 @@ const TipModal: React.FC<{
                     <div key={index} className="bg-background p-3 rounded-lg flex justify-between items-start">
                         <div>
                             <p className="font-bold text-lg">"{tip.celebrityName}"</p>
-                            <p className="text-sm text-text-secondary">Tipped in: {getShowName(tip.showId)}</p>
+                            <p className="text-sm text-text-secondary">Getippt in: {getShowName(tip.showId)}</p>
                         </div>
                         {tip.isFinal && (
                             <span className="text-xs font-bold text-yellow-400 bg-yellow-900/50 border border-yellow-600 px-2 py-1 rounded-full">
-                                FINAL  LOCKED
+                                FINAL GESPERRT
                             </span>
                         )}
                     </div>
                 ))}
-                 {playerTips.length === 0 && <p className="text-text-secondary">No tips placed yet.</p>}
+                 {playerTips.length === 0 && <p className="text-text-secondary">Noch keine Tipps abgegeben.</p>}
             </div>
 
             {!mask.isRevealed && !hasFinalTip && (
@@ -145,7 +145,7 @@ const TipModal: React.FC<{
                         <form onSubmit={handleSave} className="space-y-4">
                             <Input
                                 type="text"
-                                placeholder={`Enter Tip #${playerTips.length + 1}`}
+                                placeholder={`Tipp #${playerTips.length + 1} eingeben`}
                                 value={newTipName}
                                 onChange={(e) => setNewTipName(e.target.value)}
                                 required
@@ -160,22 +160,22 @@ const TipModal: React.FC<{
                                         className="h-5 w-5 rounded bg-surface border-border text-primary focus:ring-primary"
                                     />
                                     <label htmlFor="final-tip-checkbox" className="flex flex-col">
-                                        <span className="font-semibold text-text-primary">Lock as Final Tip (Volles Risiko)</span>
-                                        <span className="text-sm text-text-secondary">You can't place any more tips for this mask!</span>
+                                        <span className="font-semibold text-text-primary">Als finalen Tipp sperren (Volles Risiko)</span>
+                                        <span className="text-sm text-text-secondary">Du kannst keine weiteren Tipps für diese Maske abgeben!</span>
                                     </label>
                                 </div>
                             )}
-                            <Button type="submit" className="w-full">Add Tip</Button>
+                            <Button type="submit" className="w-full">Tipp hinzufügen</Button>
                         </form>
                     ) : (
-                        <p className="text-center font-semibold text-text-secondary">Maximum of 3 tips reached.</p>
+                        <p className="text-center font-semibold text-text-secondary">Maximum von 3 Tipps erreicht.</p>
                     )}
                      {playerTips.length > 0 && (
-                        <Button variant="danger" onClick={onDeleteLastTip} className="w-full mt-2">Undo Last Tip</Button>
+                        <Button variant="danger" onClick={onDeleteLastTip} className="w-full mt-2">Letzten Tipp löschen</Button>
                     )}
                 </div>
             )}
-            {hasFinalTip && <p className="text-center font-bold text-yellow-400 mt-4">Your final tip is locked in!</p>}
+            {hasFinalTip && <p className="text-center font-bold text-yellow-400 mt-4">Dein finaler Tipp ist gesperrt!</p>}
         </Modal>
     );
 };
@@ -194,8 +194,8 @@ const CounterBetsModal: React.FC<{
     const [bettorId, setBettorId] = useState('');
     const [targetId, setTargetId] = useState('');
 
-    const getPlayerName = (id: string) => players.find(p => p.id === id)?.name || 'Unknown Player';
-    const getShowName = (id: string) => shows.find(s => s.id === id)?.name || 'Unknown Show';
+    const getPlayerName = (id: string) => players.find(p => p.id === id)?.name || 'Unbekannter Spieler';
+    const getShowName = (id: string) => shows.find(s => s.id === id)?.name || 'Unbekannte Show';
 
     useEffect(() => {
         if (isOpen) {
@@ -209,9 +209,9 @@ const CounterBetsModal: React.FC<{
     const latestTargetTip = targetTips.length > 0 ? targetTips[targetTips.length - 1] : null;
     
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={`Counter-Bets for ${mask.name}`}>
+        <Modal isOpen={isOpen} onClose={onClose} title={`Gegenwetten für ${mask.name}`}>
             <div className="mb-6">
-                <h3 className="text-lg font-bold mb-2">Active Counter-Bets</h3>
+                <h3 className="text-lg font-bold mb-2">Aktive Gegenwetten</h3>
                 {counterBets.length > 0 ? (
                     <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
                         {counterBets.map(cb => {
@@ -219,7 +219,7 @@ const CounterBetsModal: React.FC<{
                             return (
                                 <div key={cb.id} className="bg-background p-2 rounded-lg flex justify-between items-center text-sm">
                                     <span>
-                                        <strong style={{color: players.find(p=>p.id===cb.bettorPlayerId)?.color}}>{getPlayerName(cb.bettorPlayerId)}</strong> bets against <strong style={{color: players.find(p=>p.id===cb.targetPlayerId)?.color}}>{getPlayerName(cb.targetPlayerId)}</strong>'s tip "{targetTip?.celebrityName || 'deleted tip'}"
+                                        <strong style={{color: players.find(p=>p.id===cb.bettorPlayerId)?.color}}>{getPlayerName(cb.bettorPlayerId)}</strong> wettet gegen <strong style={{color: players.find(p=>p.id===cb.targetPlayerId)?.color}}>{getPlayerName(cb.targetPlayerId)}</strong>'s Tipp "{targetTip?.celebrityName || 'gelöschter Tipp'}"
                                         <span className="text-xs text-text-secondary ml-2">(in {getShowName(cb.showId)})</span>
                                     </span>
                                     <button onClick={() => onDeleteCounterBet(cb.id)} className="text-red-500 hover:text-red-400 font-bold ml-2">✕</button>
@@ -227,24 +227,24 @@ const CounterBetsModal: React.FC<{
                             );
                         })}
                     </div>
-                ) : <p className="text-text-secondary">No counter-bets placed for this mask yet.</p>}
+                ) : <p className="text-text-secondary">Noch keine Gegenwetten für diese Maske platziert.</p>}
             </div>
 
             <div className="border-t border-border pt-4">
-                <h3 className="text-lg font-bold mb-4">Place a New Counter-Bet</h3>
+                <h3 className="text-lg font-bold mb-4">Neue Gegenwette platzieren</h3>
                  <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                           <label className="block text-sm font-medium text-text-secondary mb-1">Bettor</label>
+                           <label className="block text-sm font-medium text-text-secondary mb-1">Wettender</label>
                             <select value={bettorId} onChange={e => { setBettorId(e.target.value); setTargetId(''); }} className="w-full bg-background border-2 border-border rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
-                                <option value="">Select Bettor</option>
+                                <option value="">Wettenden auswählen</option>
                                 {players.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-text-secondary mb-1">Target</label>
+                            <label className="block text-sm font-medium text-text-secondary mb-1">Ziel</label>
                             <select value={targetId} onChange={e => setTargetId(e.target.value)} className="w-full bg-background border-2 border-border rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent" disabled={!bettorId}>
-                                <option value="">Select Target</option>
+                                <option value="">Ziel auswählen</option>
                                 {targetablePlayers.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                             </select>
                         </div>
@@ -253,7 +253,7 @@ const CounterBetsModal: React.FC<{
 
                 {targetId && (
                     <div className="mt-4">
-                        <label className="block text-sm font-medium text-text-secondary mb-2">Bet against the target's latest tip:</label>
+                        <label className="block text-sm font-medium text-text-secondary mb-2">Wette gegen den letzten Tipp des Ziels:</label>
                         <div className="space-y-2">
                              {latestTargetTip ? (() => {
                                 const existingBet = counterBets.some(cb => 
@@ -264,9 +264,9 @@ const CounterBetsModal: React.FC<{
                                 return (
                                     <div className="bg-background p-3 rounded-lg flex items-center justify-between">
                                         <div>
-                                            <p className="font-semibold">Tip #{targetTips.length}: "{latestTargetTip.celebrityName}"</p>
+                                            <p className="font-semibold">Tipp #{targetTips.length}: "{latestTargetTip.celebrityName}"</p>
                                             <div className="flex items-center gap-2">
-                                                <p className="text-xs text-text-secondary">from {getShowName(latestTargetTip.showId)}</p>
+                                                <p className="text-xs text-text-secondary">von {getShowName(latestTargetTip.showId)}</p>
                                                 {latestTargetTip.isFinal && <span className="text-xs font-bold text-yellow-400"> (FINAL)</span>}
                                             </div>
                                         </div>
@@ -276,11 +276,11 @@ const CounterBetsModal: React.FC<{
                                             disabled={!bettorId || mask.isRevealed || existingBet}
                                             className="py-2 px-3 text-sm"
                                         >
-                                            {existingBet ? 'Bet Placed' : 'Bet Against'}
+                                            {existingBet ? 'Wette platziert' : 'Dagegen wetten'}
                                         </Button>
                                     </div>
                                 );
-                             })() : <p className="text-center text-text-secondary p-4">Target has no tips for this mask yet.</p>}
+                             })() : <p className="text-center text-text-secondary p-4">Das Ziel hat noch keine Tipps für diese Maske.</p>}
                         </div>
                     </div>
                 )}
@@ -311,7 +311,7 @@ const MaskCard: React.FC<{
         if(isTippingActive) {
             setActiveTipPlayer(player);
         } else {
-            alert("Please start or select a show to manage tips.");
+            alert("Bitte eine Show auswählen oder starten, um Tipps zu verwalten.");
         }
     }
 
@@ -333,21 +333,24 @@ const MaskCard: React.FC<{
                 <div className="space-y-3 flex-grow">
                     {players.map(player => {
                         const playerTips = mask.tips[player.id] || [];
-                        const finalTip = playerTips.find(t => t.isFinal);
+                        const lastTip = playerTips.length > 0 ? playerTips[playerTips.length - 1] : null;
+                        
                         return (
                             <div key={player.id} onClick={() => handlePlayerClick(player)} className={`bg-background p-3 rounded-lg ${isTippingActive ? 'cursor-pointer hover:bg-background/70' : 'cursor-not-allowed opacity-70'} transition-colors`}>
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-3 truncate">
                                         {player.imageUrl ? (
                                             <img src={player.imageUrl} alt={player.name} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
                                         ) : (
                                             <span className="w-8 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: player.color }}></span>
                                         )}
-                                        <span className="font-medium">{player.name}</span>
+                                        <span className="font-medium truncate">{player.name}</span>
                                     </div>
-                                    <div className="flex items-center gap-2 text-sm text-text-secondary">
-                                        {finalTip && <span className="text-xs font-bold text-yellow-400">FINAL</span>}
-                                        {playerTips.length > 0 ? `${playerTips.length}/3 Tips` : 'No tips yet'}
+                                    <div className="flex items-center gap-2 text-sm text-text-secondary flex-shrink-0">
+                                        {lastTip?.isFinal && <span className="text-xs font-bold text-yellow-400">FINAL</span>}
+                                        <span className="font-semibold truncate">
+                                            {lastTip ? `"${lastTip.celebrityName}"` : 'Noch kein Tipp'}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -358,10 +361,10 @@ const MaskCard: React.FC<{
                 {!mask.isRevealed && (
                     <div className="grid grid-cols-2 gap-2 mt-6">
                         <Button onClick={() => setCounterBetModalOpen(true)} variant="secondary" className="w-full text-sm" disabled={!isTippingActive}>
-                            Counter-Bets
+                            Gegenwetten {counterBets.length > 0 ? `(${counterBets.length})` : ''}
                         </Button>
                         <Button onClick={() => setRevealModalOpen(true)} variant="success" className="w-full text-sm" disabled={!isTippingActive}>
-                            Reveal
+                            Enthüllen
                         </Button>
                     </div>
                 )}
@@ -487,7 +490,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
         ) : (
              <Card className="text-center py-16">
                 <h2 className="text-2xl font-bold mb-2">Noch keine Masken</h2>
-                <p className="text-text-secondary">Gehe zu den Stammdaten, um Masken für die Season hinzuzufügen.</p>
+                <p className="text-text-secondary">Gehe zu den Einstellungen, um Masken für diese Season hinzuzufügen.</p>
              </Card>
         )}
       </div>
