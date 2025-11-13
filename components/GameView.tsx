@@ -366,7 +366,7 @@ const MaskCard: React.FC<{
                                     <img src={mask.celebrityImageUrl} alt={mask.revealedCelebrity} className="w-12 h-12 rounded-full object-cover border-2 border-yellow-400 flex-shrink-0" />
                                 )}
                                 <div className="min-w-0">
-                                    <p className="text-lg text-yellow-400 font-semibold truncate" title={mask.revealedCelebrity}>{mask.revealedCelebrity}</p>
+                                    <p className="text-lg text-yellow-400 font-semibold break-words" title={mask.revealedCelebrity}>{mask.revealedCelebrity}</p>
                                     <p className="text-sm text-text-secondary">Demaskiert in: {getShowName(mask.revealedInShowId)}</p>
                                 </div>
                             </div>
