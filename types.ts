@@ -27,6 +27,8 @@ export interface Mask {
   };
   revealedCelebrity?: string;
   isRevealed: boolean;
+  revealedInShowId?: string;
+  celebrityImageUrl?: string;
 }
 
 export interface CounterBet {

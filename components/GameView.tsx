@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Season, Mask, Player, PlayerScore, Tip, Show, CounterBet } from '../types';
-import { calculateScores } from '../utils';
+import { calculateScores, fileToBase64 } from '../utils';
 import { Button, Card, Input, Modal } from './common/UI';
 
 // --- Leaderboard ---
@@ -48,37 +48,71 @@ const Leaderboard: React.FC<{ scores: PlayerScore[], players: Player[] }> = ({ s
 );
 
 // --- Reveal Modal ---
-const RevealModal: React.FC<{mask: Mask; isOpen: boolean; onClose: () => void; onReveal: (celebrity: string) => void;}> = ({ mask, isOpen, onClose, onReveal }) => {
+const RevealModal: React.FC<{
+    mask: Mask; 
+    isOpen: boolean; 
+    onClose: () => void; 
+    onReveal: (celebrity: string, imageUrl?: string) => void;
+}> = ({ mask, isOpen, onClose, onReveal }) => {
     const [celebrityName, setCelebrityName] = useState('');
+    const [newImageFile, setNewImageFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | undefined>('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setNewImageFile(file);
+            setImagePreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (celebrityName.trim()) {
-            onReveal(celebrityName.trim());
+            let finalImageUrl: string | undefined;
+            if (newImageFile) {
+                finalImageUrl = await fileToBase64(newImageFile);
+            }
+            onReveal(celebrityName.trim(), finalImageUrl);
             onClose();
         }
     }
     
     useEffect(() => {
-        if(isOpen) setCelebrityName('');
+        if(isOpen) {
+            setCelebrityName('');
+            setNewImageFile(null);
+            setImagePreview(undefined);
+        }
     }, [isOpen]);
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={`Enthülle ${mask.name}`}>
+        <Modal isOpen={isOpen} onClose={onClose} title={`Demaskiere ${mask.name}`}>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <Input
+                    label="Name des Promis"
                     type="text"
-                    placeholder="Namen des Promis eingeben"
+                    placeholder="Namen eingeben"
                     value={celebrityName}
                     onChange={(e) => setCelebrityName(e.target.value)}
                     autoFocus
                     required
                 />
-                <Button type="submit" className="w-full">Identität enthüllen</Button>
+                 <div>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">Bild des Promis (optional)</label>
+                    {imagePreview && <img src={imagePreview} alt="Vorschau" className="w-full h-40 object-cover rounded-lg mb-2" />}
+                    <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                    />
+                </div>
+                <Button type="submit" className="w-full">Identität demaskieren</Button>
             </form>
         </Modal>
     );
 };
+
 
 // --- Tip Modal ---
 const TipModal: React.FC<{
@@ -297,7 +331,7 @@ const MaskCard: React.FC<{
     shows: Show[];
     counterBets: CounterBet[];
     isTippingActive: boolean;
-    onReveal: (celebrity: string) => void;
+    onReveal: (celebrity: string, imageUrl?: string) => void;
     onSaveTip: (playerId: string, celebrityName: string, isFinal: boolean) => void;
     onDeleteLastTip: (playerId: string) => void;
     onAddCounterBet: (bettorPlayerId: string, targetPlayerId: string) => void;
@@ -314,19 +348,32 @@ const MaskCard: React.FC<{
             alert("Bitte eine Show auswählen oder starten, um Tipps zu verwalten.");
         }
     }
+    
+    const getShowName = (showId: string | undefined) => {
+        if (!showId) return 'Unbekannt';
+        return shows.find(s => s.id === showId)?.name || 'Unbekannte Show';
+    }
 
     return (
         <>
             <Card className="flex flex-col">
                 <div className="flex items-start justify-between mb-4">
-                    <div>
+                    <div className="flex-grow pr-4">
                         <h3 className="text-2xl font-bold">{mask.name}</h3>
                         {mask.isRevealed && (
-                            <p className="text-lg text-yellow-400 font-semibold">{mask.revealedCelebrity}</p>
+                            <div className="flex items-center gap-3 mt-2">
+                                {mask.celebrityImageUrl && (
+                                    <img src={mask.celebrityImageUrl} alt={mask.revealedCelebrity} className="w-12 h-12 rounded-full object-cover border-2 border-yellow-400 flex-shrink-0" />
+                                )}
+                                <div className="truncate">
+                                    <p className="text-lg text-yellow-400 font-semibold truncate" title={mask.revealedCelebrity}>{mask.revealedCelebrity}</p>
+                                    <p className="text-sm text-text-secondary">Demaskiert in: {getShowName(mask.revealedInShowId)}</p>
+                                </div>
+                            </div>
                         )}
                     </div>
                     {mask.imageUrl && (
-                        <img src={mask.imageUrl} alt={mask.name} className="w-20 h-20 rounded-full object-cover border-2 border-border" />
+                        <img src={mask.imageUrl} alt={mask.name} className="w-20 h-20 rounded-full object-cover border-2 border-border flex-shrink-0" />
                     )}
                 </div>
                 
@@ -364,7 +411,7 @@ const MaskCard: React.FC<{
                             Gegenwetten {counterBets.length > 0 ? `(${counterBets.length})` : ''}
                         </Button>
                         <Button onClick={() => setRevealModalOpen(true)} variant="success" className="w-full text-sm" disabled={!isTippingActive}>
-                            Enthüllen
+                            Demaskieren
                         </Button>
                     </div>
                 )}
@@ -374,7 +421,7 @@ const MaskCard: React.FC<{
                 mask={mask}
                 isOpen={isRevealModalOpen}
                 onClose={() => setRevealModalOpen(false)}
-                onReveal={(celebrity) => onReveal(celebrity)}
+                onReveal={(celebrity, imageUrl) => onReveal(celebrity, imageUrl)}
             />
             
             {activeTipPlayer && (
@@ -438,7 +485,7 @@ interface GameViewProps {
   season: Season;
   allPlayers: Player[];
   onBack: () => void;
-  onRevealMask: (maskId: string, celebrity: string) => void;
+  onRevealMask: (maskId: string, celebrity: string, imageUrl?: string) => void;
   onAddOrUpdateTip: (maskId: string, playerId: string, celebrityName: string, isFinal: boolean) => void;
   onDeleteLastTip: (maskId: string, playerId: string) => void;
   onAddCounterBet: (maskId: string, bettorPlayerId: string, targetPlayerId: string) => void;
@@ -479,7 +526,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                 shows={season.shows}
                 counterBets={season.counterBets.filter(cb => cb.maskId === mask.id)}
                 isTippingActive={!!season.activeShowId}
-                onReveal={(celebrity) => onRevealMask(mask.id, celebrity)}
+                onReveal={(celebrity, imageUrl) => onRevealMask(mask.id, celebrity, imageUrl)}
                 onSaveTip={(playerId, celebrity, isFinal) => onAddOrUpdateTip(mask.id, playerId, celebrity, isFinal)}
                 onDeleteLastTip={(playerId) => onDeleteLastTip(mask.id, playerId)}
                 onAddCounterBet={(bettor, target) => onAddCounterBet(mask.id, bettor, target)}

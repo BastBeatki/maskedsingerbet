@@ -275,10 +275,16 @@ export const useAppManager = () => {
     }));
   };
 
-  const revealMask = (seasonId: string, id: string, celebrityName: string) => {
+  const revealMask = (seasonId: string, id: string, celebrityName: string, celebrityImageUrl?: string) => {
     withSeason(seasonId, season => ({
         ...season,
-        masks: season.masks.map(m => m.id === id ? { ...m, isRevealed: true, revealedCelebrity: celebrityName } : m),
+        masks: season.masks.map(m => m.id === id ? { 
+            ...m, 
+            isRevealed: true, 
+            revealedCelebrity: celebrityName,
+            celebrityImageUrl: celebrityImageUrl,
+            revealedInShowId: season.activeShowId || undefined
+        } : m),
     }));
   };
 

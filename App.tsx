@@ -72,7 +72,7 @@ const App: React.FC = () => {
                 season={activeSeason}
                 allPlayers={appState.players}
                 onBack={handleBackToHome}
-                onRevealMask={(maskId, celebrity) => revealMask(activeSeasonId!, maskId, celebrity)}
+                onRevealMask={(maskId, celebrity, imageUrl) => revealMask(activeSeasonId!, maskId, celebrity, imageUrl)}
                 onAddOrUpdateTip={(maskId, playerId, celebrity, isFinal) => addOrUpdateTip(activeSeasonId!, maskId, playerId, celebrity, isFinal)}
                 onDeleteLastTip={(maskId, playerId) => deleteLastTip(activeSeasonId!, maskId, playerId)}
                 onAddCounterBet={(maskId, bettor, target) => addCounterBet(activeSeasonId!, maskId, bettor, target)}
