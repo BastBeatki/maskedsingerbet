@@ -1,77 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AppState, Season } from '../types';
 import { Button, Card, Input, Modal } from './common/UI';
-// Fix: Corrected typo in import from 'fileToBase66' to 'fileToBase64'.
-import { downloadJson, readFileAsText, fileToBase64 } from '../utils';
-
-// --- Edit Season Modal ---
-const EditSeasonModal: React.FC<{
-    season: Season | null;
-    isOpen: boolean;
-    onClose: () => void;
-    onSave: (id: string, name: string, imageUrl?: string) => void;
-}> = ({ season, isOpen, onClose, onSave }) => {
-    const [name, setName] = useState('');
-    const [newImageFile, setNewImageFile] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string | undefined>('');
-
-    useEffect(() => {
-        if (season) {
-            setName(season.seasonName);
-            setImagePreview(season.imageUrl);
-            setNewImageFile(null);
-        }
-    }, [season]);
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setNewImageFile(file);
-            setImagePreview(URL.createObjectURL(file));
-        }
-    };
-
-    const handleSave = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!season || !name.trim()) return;
-
-        let finalImageUrl = season.imageUrl;
-        if (newImageFile) {
-            finalImageUrl = await fileToBase64(newImageFile);
-        }
-
-        onSave(season.id, name.trim(), finalImageUrl);
-        onClose();
-    };
-
-    return (
-        <Modal isOpen={isOpen} onClose={onClose} title={season ? `Edit ${season.seasonName}` : 'Edit Season'}>
-            <form onSubmit={handleSave} className="space-y-4">
-                <Input
-                    label="Season Name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                />
-                 <div>
-                    <label className="block text-sm font-medium text-text-secondary mb-2">Season Image</label>
-                    {imagePreview && <img src={imagePreview} alt="Preview" className="w-full h-32 object-cover rounded-lg mb-2" />}
-                    <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                    />
-                </div>
-                <div className="flex justify-end gap-4 pt-4">
-                    <Button type="button" variant="secondary" onClick={onClose}>Cancel</Button>
-                    <Button type="submit">Save Changes</Button>
-                </div>
-            </form>
-        </Modal>
-    );
-};
-
+import { downloadJson, readFileAsText } from '../utils';
 
 interface HomeViewProps {
   appState: AppState;
@@ -79,15 +9,13 @@ interface HomeViewProps {
   onImport: (state: AppState) => void;
   onReset: () => void;
   onAddSeason: (name: string) => void;
-  onUpdateSeason: (id: string, name: string, imageUrl?: string) => void;
   onDeleteSeason: (id: string) => void;
 }
 
 export const HomeView: React.FC<HomeViewProps> = (props) => {
-  const { appState, onNavigate, onImport, onReset, onAddSeason, onUpdateSeason, onDeleteSeason } = props;
+  const { appState, onNavigate, onImport, onReset, onAddSeason, onDeleteSeason } = props;
   const [newSeasonName, setNewSeasonName] = useState('');
-  const [editingSeason, setEditingSeason] = useState<Season | null>(null);
-
+  
   const handleExport = () => {
     downloadJson(appState, `masked-singer-tipper_ALL-DATA_${new Date().toISOString().split('T')[0]}.json`);
   };
@@ -177,7 +105,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                                     <p className="text-white/80 text-sm">{season.playerIds.length} Players, {season.masks.length} Masks</p>
                                 </div>
                                 <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onClick={(e) => { e.stopPropagation(); setEditingSeason(season); }} className="bg-surface/80 p-2 rounded-full text-text-primary hover:bg-surface" title="Bearbeiten"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.402 2.622a2.496 2.496 0 00-3.528 0L2.622 13.874a2.496 2.496 0 00-.64 1.48V17.5a.5.5 0 00.5.5h2.146a2.496 2.496 0 001.48-.64l11.252-11.252a2.496 2.496 0 000-3.528zM4.44 15.864L13.25 7.05l1.697 1.697-8.81 8.81H4.44v-1.697z" /></svg></button>
                                     <button onClick={(e) => { e.stopPropagation(); onNavigate('settings', season.id); }} className="bg-surface/80 p-2 rounded-full text-text-primary hover:bg-surface" title="Einstellungen"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-1.57 1.996A1.532 1.532 0 013 7.482c-1.56.38-1.56 2.6 0 2.98a1.532 1.532 0 01.948 2.286c-.836 1.372.734 2.942 1.996 1.57A1.532 1.532 0 017.482 17c.38 1.56 2.6 1.56 2.98 0a1.532 1.532 0 012.286-.948c1.372.836 2.942-.734 1.57-1.996A1.532 1.532 0 0117 12.518c1.56-.38 1.56-2.6 0-2.98a1.532 1.532 0 01-.948-2.286c.836-1.372-.734-2.942-1.996-1.57A1.532 1.532 0 0112.518 3c-1.56-.38-2.6-1.56-2.98-2.83zM10 5a5 5 0 100 10 5 5 0 000-10z" clipRule="evenodd" /><path d="M10 7a3 3 0 100 6 3 3 0 000-6z" /></svg></button>
                                 </div>
                             </div>
@@ -191,19 +118,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 )}
             </section>
         </main>
-      
-      <EditSeasonModal
-        season={editingSeason}
-        isOpen={!!editingSeason}
-        onClose={() => setEditingSeason(null)}
-        onSave={(id, name, img) => {
-            onUpdateSeason(id, name, img);
-            const updatedSeason = appState.seasons.find(s => s.id === id);
-            if (updatedSeason) {
-                setEditingSeason({ ...updatedSeason, seasonName: name, imageUrl: img });
-            }
-        }}
-      />
     </div>
   );
 };

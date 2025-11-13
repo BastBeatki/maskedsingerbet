@@ -94,7 +94,7 @@ const App: React.FC = () => {
             onUpdatePlayer={updatePlayer}
             onDeletePlayer={deletePlayer}
             // Season-specific funcs
-            onUpdateSeasonName={(name) => activeSeasonId && updateSeason(activeSeasonId, name, activeSeason?.imageUrl)}
+            onUpdateSeason={(name, img) => activeSeasonId && updateSeason(activeSeasonId, name, img)}
             onAddPlayerToSeason={(playerId) => activeSeasonId && addPlayerToSeason(activeSeasonId, playerId)}
             onRemovePlayerFromSeason={(playerId) => activeSeasonId && removePlayerFromSeason(activeSeasonId, playerId)}
             onAddMask={(name, img) => activeSeasonId && addMask(activeSeasonId, name, img)}
@@ -114,7 +114,6 @@ const App: React.FC = () => {
               onImport={importState}
               onReset={resetGame}
               onAddSeason={addSeason}
-              onUpdateSeason={updateSeason}
               onDeleteSeason={deleteSeason}
             />
           );

@@ -411,28 +411,49 @@ export const useAppManager = () => {
     });
   };
   
-  const deleteShow = (seasonId: string, showId: string) => {
-    if (!window.confirm("Are you sure you want to delete this show? All tips and counter-bets from this show will be permanently removed.")) return;
-    
-    withSeason(seasonId, season => {
-      const newShows = season.shows.filter(s => s.id !== showId);
-      const newMasks = season.masks.map(mask => {
-        const newTips = { ...mask.tips };
-        for (const playerId in newTips) {
-          newTips[playerId] = newTips[playerId].filter(tip => tip.showId !== showId);
-        }
-        return { ...mask, tips: newTips };
-      });
-      const newCounterBets = season.counterBets.filter(cb => cb.showId !== showId);
-      
-      let newActiveShowId = season.activeShowId;
-      if (season.activeShowId === showId) {
-        newActiveShowId = newShows.length > 0 ? newShows[newShows.length - 1].id : null;
-      }
+ const deleteShow = (seasonId: string, showId: string) => {
+    if (!window.confirm("Sicher, dass du diese Show löschen möchtest? Alle Tipps und Gegenwetten aus dieser Show werden unwiderruflich entfernt.")) {
+        return;
+    }
 
-      return { ...season, shows: newShows, masks: newMasks, counterBets: newCounterBets, activeShowId: newActiveShowId };
+    withSeason(seasonId, (currentSeason) => {
+        const updatedShows = currentSeason.shows.filter(s => s.id !== showId);
+
+        const updatedMasks = currentSeason.masks.map(mask => {
+            const updatedTips = { ...mask.tips };
+            Object.keys(updatedTips).forEach(playerId => {
+                updatedTips[playerId] = updatedTips[playerId].filter(tip => tip.showId !== showId);
+            });
+
+            const updatedMask = { ...mask, tips: updatedTips };
+            if (updatedMask.revealedInShowId === showId) {
+                delete updatedMask.revealedInShowId;
+            }
+            return updatedMask;
+        });
+
+        const updatedCounterBets = currentSeason.counterBets.filter(cb => cb.showId !== showId);
+
+        let updatedActiveShowId = currentSeason.activeShowId;
+        if (currentSeason.activeShowId === showId) {
+            if (updatedShows.length > 0) {
+                updatedActiveShowId = updatedShows.reduce((latest, current) => 
+                    current.episodeNumber > latest.episodeNumber ? current : latest
+                ).id;
+            } else {
+                updatedActiveShowId = null;
+            }
+        }
+
+        return {
+            ...currentSeason,
+            shows: updatedShows,
+            masks: updatedMasks,
+            counterBets: updatedCounterBets,
+            activeShowId: updatedActiveShowId,
+        };
     });
-  };
+};
 
 
   const setActiveShowId = (seasonId: string, id: string) => {

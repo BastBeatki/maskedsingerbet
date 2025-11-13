@@ -7,7 +7,7 @@ import { PLAYER_COLORS } from '../constants';
 interface SettingsViewProps {
   season: Season | null;
   allPlayers: Player[];
-  onUpdateSeasonName: (name: string) => void;
+  onUpdateSeason: (name: string, imageUrl?: string) => void;
   onAddPlayer: (name: string) => void;
   onUpdatePlayer: (id: string, name:string, color: string, imageUrl?: string) => void;
   onDeletePlayer: (id: string) => void;
@@ -155,6 +155,38 @@ export const SettingsView: React.FC<SettingsViewProps> = (props) => {
   const [editingMask, setEditingMask] = useState<Mask | null>(null);
   const [editingPlayer, setEditingPlayer] = useState<Player | null>(null);
   const [playerToAdd, setPlayerToAdd] = useState('');
+
+  // State for editing season details
+  const [seasonName, setSeasonName] = useState('');
+  const [newSeasonImageFile, setNewSeasonImageFile] = useState<File | null>(null);
+  const [seasonImagePreview, setSeasonImagePreview] = useState<string | undefined>('');
+
+  useEffect(() => {
+      if (props.season) {
+          setSeasonName(props.season.seasonName);
+          setSeasonImagePreview(props.season.imageUrl);
+          setNewSeasonImageFile(null); // Reset file input when season changes
+      }
+  }, [props.season]);
+
+  const handleSeasonImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+          setNewSeasonImageFile(file);
+          setSeasonImagePreview(URL.createObjectURL(file));
+      }
+  };
+
+  const handleSaveSeasonDetails = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!props.season || !seasonName.trim()) return;
+      let finalImageUrl = props.season.imageUrl;
+      if (newSeasonImageFile) {
+          finalImageUrl = await fileToBase64(newSeasonImageFile);
+      }
+      props.onUpdateSeason(seasonName.trim(), finalImageUrl);
+      alert('Season details updated!');
+  };
   
   const handleAddPlayer = (e: React.FormEvent) => {
     e.preventDefault();
@@ -228,13 +260,28 @@ export const SettingsView: React.FC<SettingsViewProps> = (props) => {
             <SettingsHeader onBack={props.onBack} title={`Einstellungen: ${props.season.seasonName}`}/>
             <div className="space-y-8">
                 <Card>
-                    <h2 className="text-2xl font-bold mb-4">Season Name</h2>
-                    <Input
-                        type="text"
-                        value={props.season.seasonName}
-                        onChange={(e) => props.onUpdateSeasonName(e.target.value)}
-                        placeholder="Enter season name"
-                    />
+                    <form onSubmit={handleSaveSeasonDetails} className="space-y-4">
+                        <h2 className="text-2xl font-bold mb-2">Season Details</h2>
+                        <Input
+                            label="Season Name"
+                            type="text"
+                            value={seasonName}
+                            onChange={(e) => setSeasonName(e.target.value)}
+                            required
+                        />
+                        <div>
+                            <label className="block text-sm font-medium text-text-secondary mb-2">Season Image</label>
+                            {seasonImagePreview && <img src={seasonImagePreview} alt="Preview" className="w-full h-32 object-cover rounded-lg mb-2" />}
+                            <Input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleSeasonImageChange}
+                            />
+                        </div>
+                        <div className="flex justify-end">
+                            <Button type="submit">Save Season Details</Button>
+                        </div>
+                    </form>
                 </Card>
 
                 <Card>
