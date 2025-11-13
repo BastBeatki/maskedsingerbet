@@ -358,14 +358,14 @@ const MaskCard: React.FC<{
         <>
             <Card className="flex flex-col">
                 <div className="flex items-start justify-between mb-4">
-                    <div className="flex-grow pr-4">
+                    <div className="flex-grow pr-4 min-w-0">
                         <h3 className="text-2xl font-bold">{mask.name}</h3>
                         {mask.isRevealed && (
                             <div className="flex items-center gap-3 mt-2">
                                 {mask.celebrityImageUrl && (
                                     <img src={mask.celebrityImageUrl} alt={mask.revealedCelebrity} className="w-12 h-12 rounded-full object-cover border-2 border-yellow-400 flex-shrink-0" />
                                 )}
-                                <div className="truncate">
+                                <div className="min-w-0">
                                     <p className="text-lg text-yellow-400 font-semibold truncate" title={mask.revealedCelebrity}>{mask.revealedCelebrity}</p>
                                     <p className="text-sm text-text-secondary">Demaskiert in: {getShowName(mask.revealedInShowId)}</p>
                                 </div>
