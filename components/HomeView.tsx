@@ -123,27 +123,62 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
             <p className="text-lg sm:text-xl text-text-secondary">Willkommen! Wähle eine Season oder starte eine neue.</p>
         </header>
 
-        <main className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <main className="w-full max-w-7xl mx-auto flex flex-col gap-12">
             
-            {/* Main Content: Seasons List */}
-            <section className="w-full lg:flex-grow">
+            {/* Top Management Section */}
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <Card>
+                    <h3 className="text-xl font-bold mb-4">Neue Season starten</h3>
+                    <form onSubmit={handleAddSeason} className="flex flex-col sm:flex-row gap-4">
+                        <Input
+                            type="text"
+                            value={newSeasonName}
+                            onChange={(e) => setNewSeasonName(e.target.value)}
+                            placeholder="Season Name"
+                            className="flex-grow"
+                            required
+                        />
+                        <Button type="submit" className="w-full sm:w-auto">Erstellen</Button>
+                    </form>
+                </Card>
+
+                <Card>
+                    <h3 className="text-xl font-bold mb-4">Verwaltung & Daten</h3>
+                     <div className="grid grid-cols-2 gap-3">
+                        <Button onClick={() => onNavigate('settings')} variant="secondary">Stammdaten</Button>
+                        <Button onClick={() => onNavigate('rules')} variant="secondary">Spielregeln</Button>
+                        <Button onClick={handleExport} variant="secondary" className="flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+                            Export
+                        </Button>
+                        <label htmlFor="import-file-input" className="bg-tertiary hover:bg-tertiary/80 border border-border px-4 py-2.5 font-bold rounded-lg transition-all duration-300 text-white flex items-center justify-center gap-2 cursor-pointer text-sm sm:text-base">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" /></svg>
+                            Import
+                        </label>
+                        <input id="import-file-input" type="file" accept=".json" onChange={handleFileChange} className="hidden" />
+                    </div>
+                </Card>
+            </section>
+
+            {/* Seasons List */}
+            <section>
                 <h2 className="text-3xl font-bold mb-6">Deine Seasons</h2>
                 {appState.seasons.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                         {appState.seasons.map(season => (
-                            <div key={season.id} className="group relative rounded-xl overflow-hidden cursor-pointer h-56" onClick={() => onNavigate('game', season.id)}>
+                            <div key={season.id} className="group relative rounded-xl overflow-hidden cursor-pointer h-48" onClick={() => onNavigate('game', season.id)}>
                                 <img 
                                     src={season.imageUrl || 'https://images.unsplash.com/photo-1570641963303-34829dd79813?q=80&w=2070&auto=format&fit=crop'} 
                                     alt={season.seasonName} 
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end">
-                                    <h3 className="text-2xl font-bold text-white truncate">{season.seasonName}</h3>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex flex-col justify-end">
+                                    <h3 className="text-xl font-bold text-white truncate">{season.seasonName}</h3>
                                     <p className="text-white/80 text-sm">{season.playerIds.length} Players, {season.masks.length} Masks</p>
                                 </div>
-                                <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onClick={(e) => { e.stopPropagation(); onNavigate('settings', season.id); }} className="bg-surface/80 p-2 rounded-full text-text-primary hover:bg-surface" title="Einstellungen"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.402 2.622a2.496 2.496 0 00-3.528 0L2.622 13.874a2.496 2.496 0 00-.64 1.48V17.5a.5.5 0 00.5.5h2.146a2.496 2.496 0 001.48-.64l11.252-11.252a2.496 2.496 0 000-3.528zM4.44 15.864L13.25 7.05l1.697 1.697-8.81 8.81H4.44v-1.697z" /></svg></button>
-                                    <button onClick={(e) => { e.stopPropagation(); setEditingSeason(season); }} className="bg-surface/80 p-2 rounded-full text-text-primary hover:bg-surface" title="Bearbeiten"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 3a1 1 0 00-1 1v1a1 1 0 102 0V4a1 1 0 00-1-1zM5.5 5.05a1 1 0 00-1.414.07L2.672 6.534a1 1 0 001.342 1.486l1.414-1.26a1 1 0 00-.07-1.486zM13.466 2.672a1 1 0 00-1.486 1.342l1.26 1.414a1 1 0 001.486-1.342L13.466 2.672zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM4 10a1 1 0 01-1 1H2a1 1 0 110-2h1a1 1 0 011 1zM14.95 14.5a1 1 0 00.07 1.414l1.414 1.414a1 1 0 001.486-1.342l-1.414-1.26a1 1 0 00-1.486-.07zM3.534 16.328a1 1 0 001.342-1.486l-1.26-1.414a1 1 0 00-1.486 1.342l1.26 1.414zM10 17a1 1 0 001-1v-1a1 1 0 10-2 0v1a1 1 0 001 1z" clipRule="evenodd" /></svg></button>
+                                <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onClick={(e) => { e.stopPropagation(); setEditingSeason(season); }} className="bg-surface/80 p-2 rounded-full text-text-primary hover:bg-surface" title="Bearbeiten"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.402 2.622a2.496 2.496 0 00-3.528 0L2.622 13.874a2.496 2.496 0 00-.64 1.48V17.5a.5.5 0 00.5.5h2.146a2.496 2.496 0 001.48-.64l11.252-11.252a2.496 2.496 0 000-3.528zM4.44 15.864L13.25 7.05l1.697 1.697-8.81 8.81H4.44v-1.697z" /></svg></button>
+                                    <button onClick={(e) => { e.stopPropagation(); onNavigate('settings', season.id); }} className="bg-surface/80 p-2 rounded-full text-text-primary hover:bg-surface" title="Einstellungen"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-1.57 1.996A1.532 1.532 0 013 7.482c-1.56.38-1.56 2.6 0 2.98a1.532 1.532 0 01.948 2.286c-.836 1.372.734 2.942 1.996 1.57A1.532 1.532 0 017.482 17c.38 1.56 2.6 1.56 2.98 0a1.532 1.532 0 012.286-.948c1.372.836 2.942-.734 1.57-1.996A1.532 1.532 0 0117 12.518c1.56-.38 1.56-2.6 0-2.98a1.532 1.532 0 01-.948-2.286c.836-1.372-.734-2.942-1.996-1.57A1.532 1.532 0 0112.518 3c-1.56-.38-2.6-1.56-2.98-2.83zM10 5a5 5 0 100 10 5 5 0 000-10z" clipRule="evenodd" /><path d="M10 7a3 3 0 100 6 3 3 0 000-6z" /></svg></button>
                                 </div>
                             </div>
                         ))}
@@ -155,43 +190,6 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     </Card>
                 )}
             </section>
-
-            {/* Management Sidebar */}
-            <aside className="w-full lg:w-1/3 lg:max-w-sm flex-shrink-0">
-                 <div className="space-y-6 lg:sticky lg:top-8">
-                    <Card>
-                        <h3 className="text-xl font-bold mb-4">Neue Season starten</h3>
-                        <form onSubmit={handleAddSeason} className="flex flex-col sm:flex-row gap-4">
-                            <Input
-                                type="text"
-                                value={newSeasonName}
-                                onChange={(e) => setNewSeasonName(e.target.value)}
-                                placeholder="Season Name"
-                                className="flex-grow"
-                                required
-                            />
-                            <Button type="submit" className="w-full sm:w-auto">Erstellen</Button>
-                        </form>
-                    </Card>
-
-                    <Card>
-                        <h3 className="text-xl font-bold mb-4">Verwaltung & Daten</h3>
-                         <div className="grid grid-cols-2 gap-3">
-                            <Button onClick={() => onNavigate('settings')} variant="secondary">Stammdaten</Button>
-                            <Button onClick={() => onNavigate('rules')} variant="secondary">Spielregeln</Button>
-                            <Button onClick={handleExport} variant="secondary" className="flex items-center justify-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
-                                Export
-                            </Button>
-                            <label htmlFor="import-file-input" className="bg-tertiary hover:bg-tertiary/80 border border-border px-4 py-2.5 font-bold rounded-lg transition-all duration-300 text-white flex items-center justify-center gap-2 cursor-pointer text-sm sm:text-base">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" /></svg>
-                                Import
-                            </label>
-                            <input id="import-file-input" type="file" accept=".json" onChange={handleFileChange} className="hidden" />
-                        </div>
-                    </Card>
-                </div>
-            </aside>
         </main>
       
       <EditSeasonModal
