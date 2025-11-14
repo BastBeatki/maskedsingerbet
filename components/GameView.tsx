@@ -227,6 +227,8 @@ const CounterBetsModal: React.FC<{
 }> = ({ mask, players, shows, counterBets, isOpen, onClose, onAddCounterBet, onDeleteCounterBet }) => {
     const [bettorId, setBettorId] = useState('');
     const [targetId, setTargetId] = useState('');
+    
+    const { isRevealed, revealedCelebrity } = mask;
 
     const getPlayerName = (id: string) => players.find(p => p.id === id)?.name || 'Unbekannter Spieler';
     const getShowName = (id: string) => shows.find(s => s.id === id)?.name || 'Unbekannte Show';
@@ -243,20 +245,33 @@ const CounterBetsModal: React.FC<{
     const latestTargetTip = targetTips.length > 0 ? targetTips[targetTips.length - 1] : null;
     
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={`Gegenwetten für ${mask.name}`}>
+        <Modal isOpen={isOpen} onClose={onClose} title={`${isRevealed ? 'Gegenwetten-Ergebnis' : 'Gegenwetten'} für ${mask.name}`}>
             <div className="mb-6">
-                <h3 className="text-lg font-bold mb-2">Aktive Gegenwetten</h3>
+                <h3 className="text-lg font-bold mb-2">{isRevealed ? 'Abgeschlossene' : 'Aktive'} Gegenwetten</h3>
                 {counterBets.length > 0 ? (
-                    <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
+                    <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
                         {counterBets.map(cb => {
                             const targetTip = mask.tips[cb.targetPlayerId]?.[cb.targetTipIndex];
+                            
+                            let result: 'win' | 'loss' | null = null;
+                            if (isRevealed && revealedCelebrity && targetTip) {
+                                const isTargetTipCorrect = targetTip.celebrityName.trim().toLowerCase() === revealedCelebrity.trim().toLowerCase();
+                                result = isTargetTipCorrect ? 'loss' : 'win';
+                            }
+                            
                             return (
-                                <div key={cb.id} className="bg-background p-2 rounded-lg flex justify-between items-center text-sm">
-                                    <span>
-                                        <strong style={{color: players.find(p=>p.id===cb.bettorPlayerId)?.color}}>{getPlayerName(cb.bettorPlayerId)}</strong> wettet gegen <strong style={{color: players.find(p=>p.id===cb.targetPlayerId)?.color}}>{getPlayerName(cb.targetPlayerId)}</strong>'s Tipp "{targetTip?.celebrityName || 'gelöschter Tipp'}"
+                                <div key={cb.id} className="bg-background p-2 rounded-lg flex justify-between items-center text-sm gap-2">
+                                    <span className="flex-grow">
+                                        <strong style={{color: players.find(p=>p.id===cb.bettorPlayerId)?.color}}>{getPlayerName(cb.bettorPlayerId)}</strong> wettete gegen <strong style={{color: players.find(p=>p.id===cb.targetPlayerId)?.color}}>{getPlayerName(cb.targetPlayerId)}</strong>'s Tipp "{targetTip?.celebrityName || 'gelöschter Tipp'}"
                                         <span className="text-xs text-text-secondary ml-2">(in {getShowName(cb.showId)})</span>
                                     </span>
-                                    <button onClick={() => onDeleteCounterBet(cb.id)} className="text-red-500 hover:text-red-400 font-bold ml-2">✕</button>
+                                    {isRevealed ? (
+                                        <span className={`flex-shrink-0 font-bold px-2 py-1 rounded text-xs ${result === 'win' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                                            {result === 'win' ? 'GEWONNEN' : 'VERLOREN'}
+                                        </span>
+                                    ) : (
+                                        <button onClick={() => onDeleteCounterBet(cb.id)} className="text-red-500 hover:text-red-400 font-bold ml-2 flex-shrink-0">✕</button>
+                                    )}
                                 </div>
                             );
                         })}
@@ -264,61 +279,63 @@ const CounterBetsModal: React.FC<{
                 ) : <p className="text-text-secondary">Noch keine Gegenwetten für diese Maske platziert.</p>}
             </div>
 
-            <div className="border-t border-border pt-4">
-                <h3 className="text-lg font-bold mb-4">Neue Gegenwette platzieren</h3>
-                 <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                           <label className="block text-sm font-medium text-text-secondary mb-1">Wettender</label>
-                            <select value={bettorId} onChange={e => { setBettorId(e.target.value); setTargetId(''); }} className="w-full bg-background border-2 border-border rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
-                                <option value="">Wettenden auswählen</option>
-                                {players.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-                            </select>
+            {!isRevealed && (
+                <div className="border-t border-border pt-4">
+                    <h3 className="text-lg font-bold mb-4">Neue Gegenwette platzieren</h3>
+                     <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                               <label className="block text-sm font-medium text-text-secondary mb-1">Wettender</label>
+                                <select value={bettorId} onChange={e => { setBettorId(e.target.value); setTargetId(''); }} className="w-full bg-background border-2 border-border rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
+                                    <option value="">Wettenden auswählen</option>
+                                    {players.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-text-secondary mb-1">Ziel</label>
+                                <select value={targetId} onChange={e => setTargetId(e.target.value)} className="w-full bg-background border-2 border-border rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent" disabled={!bettorId}>
+                                    <option value="">Ziel auswählen</option>
+                                    {targetablePlayers.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-text-secondary mb-1">Ziel</label>
-                            <select value={targetId} onChange={e => setTargetId(e.target.value)} className="w-full bg-background border-2 border-border rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent" disabled={!bettorId}>
-                                <option value="">Ziel auswählen</option>
-                                {targetablePlayers.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-                            </select>
-                        </div>
-                    </div>
-                 </div>
+                     </div>
 
-                {targetId && (
-                    <div className="mt-4">
-                        <label className="block text-sm font-medium text-text-secondary mb-2">Wette gegen den letzten Tipp des Ziels:</label>
-                        <div className="space-y-2">
-                             {latestTargetTip ? (() => {
-                                const existingBet = counterBets.some(cb => 
-                                    cb.bettorPlayerId === bettorId &&
-                                    cb.targetPlayerId === targetId &&
-                                    cb.maskId === mask.id
-                                );
-                                return (
-                                    <div className="bg-background p-3 rounded-lg flex items-center justify-between">
-                                        <div>
-                                            <p className="font-semibold">Tipp #{targetTips.length}: "{latestTargetTip.celebrityName}"</p>
-                                            <div className="flex items-center gap-2">
-                                                <p className="text-xs text-text-secondary">von {getShowName(latestTargetTip.showId)}</p>
-                                                {latestTargetTip.isFinal && <span className="text-xs font-bold text-yellow-400"> (FINAL)</span>}
+                    {targetId && (
+                        <div className="mt-4">
+                            <label className="block text-sm font-medium text-text-secondary mb-2">Wette gegen den letzten Tipp des Ziels:</label>
+                            <div className="space-y-2">
+                                 {latestTargetTip ? (() => {
+                                    const existingBet = counterBets.some(cb => 
+                                        cb.bettorPlayerId === bettorId &&
+                                        cb.targetPlayerId === targetId &&
+                                        cb.maskId === mask.id
+                                    );
+                                    return (
+                                        <div className="bg-background p-3 rounded-lg flex items-center justify-between">
+                                            <div>
+                                                <p className="font-semibold">Tipp #{targetTips.length}: "{latestTargetTip.celebrityName}"</p>
+                                                <div className="flex items-center gap-2">
+                                                    <p className="text-xs text-text-secondary">von {getShowName(latestTargetTip.showId)}</p>
+                                                    {latestTargetTip.isFinal && <span className="text-xs font-bold text-yellow-400"> (FINAL)</span>}
+                                                </div>
                                             </div>
+                                            <Button
+                                                variant="secondary"
+                                                onClick={() => onAddCounterBet(bettorId, targetId)}
+                                                disabled={!bettorId || mask.isRevealed || existingBet}
+                                                className="py-2 px-3 text-sm"
+                                            >
+                                                {existingBet ? 'Wette platziert' : 'Dagegen wetten'}
+                                            </Button>
                                         </div>
-                                        <Button
-                                            variant="secondary"
-                                            onClick={() => onAddCounterBet(bettorId, targetId)}
-                                            disabled={!bettorId || mask.isRevealed || existingBet}
-                                            className="py-2 px-3 text-sm"
-                                        >
-                                            {existingBet ? 'Wette platziert' : 'Dagegen wetten'}
-                                        </Button>
-                                    </div>
-                                );
-                             })() : <p className="text-center text-text-secondary p-4">Das Ziel hat noch keine Tipps für diese Maske.</p>}
+                                    );
+                                 })() : <p className="text-center text-text-secondary p-4">Das Ziel hat noch keine Tipps für diese Maske.</p>}
+                            </div>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
+            )}
         </Modal>
     )
 };
@@ -395,7 +412,7 @@ const MaskCard: React.FC<{
                         const lastTip = playerTips.length > 0 ? playerTips[playerTips.length - 1] : null;
                         
                         return (
-                            <div key={player.id} onClick={() => handlePlayerClick(player)} className={`bg-background p-3 rounded-lg ${isTippingActive ? 'cursor-pointer hover:bg-background/70' : 'cursor-not-allowed opacity-70'} transition-colors`}>
+                            <div key={player.id} onClick={() => handlePlayerClick(player)} className={`bg-background p-3 rounded-lg ${isTippingActive && !mask.isRevealed ? 'cursor-pointer hover:bg-background/70' : 'cursor-default'} transition-colors`}>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3 truncate">
                                         {player.imageUrl ? (
@@ -417,16 +434,22 @@ const MaskCard: React.FC<{
                     })}
                 </div>
                 
-                {!mask.isRevealed && (
-                    <div className="grid grid-cols-2 gap-2 mt-6">
-                        <Button onClick={() => setCounterBetModalOpen(true)} variant="secondary" className="w-full text-sm" disabled={!isTippingActive}>
-                            Gegenwetten {counterBets.length > 0 ? `(${counterBets.length})` : ''}
+                 <div className="mt-6">
+                    {!mask.isRevealed ? (
+                        <div className="grid grid-cols-2 gap-2">
+                            <Button onClick={() => setCounterBetModalOpen(true)} variant="secondary" className="w-full text-sm" disabled={!isTippingActive}>
+                                Gegenwetten {counterBets.length > 0 ? `(${counterBets.length})` : ''}
+                            </Button>
+                            <Button onClick={() => setRevealModalOpen(true)} variant="success" className="w-full text-sm" disabled={!isTippingActive}>
+                                Demaskieren
+                            </Button>
+                        </div>
+                    ) : (
+                         <Button onClick={() => setCounterBetModalOpen(true)} variant="secondary" className="w-full text-sm">
+                            Gegenwetten-Ergebnis {counterBets.length > 0 ? `(${counterBets.length})` : ''}
                         </Button>
-                        <Button onClick={() => setRevealModalOpen(true)} variant="success" className="w-full text-sm" disabled={!isTippingActive}>
-                            Demaskieren
-                        </Button>
-                    </div>
-                )}
+                    )}
+                </div>
             </Card>
 
             <RevealModal
