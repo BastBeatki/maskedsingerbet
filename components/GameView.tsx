@@ -374,9 +374,9 @@ const MaskCard: React.FC<{
     return (
         <>
             <Card className="flex flex-col">
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center justify-between mb-4">
                     <div className="flex-grow pr-4 min-w-0">
-                        <h3 className="text-2xl font-bold">{mask.name}</h3>
+                        <h3 className="text-2xl font-bold truncate">{mask.name}</h3>
                     </div>
                     {mask.imageUrl && (
                         <img src={mask.imageUrl} alt={mask.name} className="w-20 h-20 rounded-full object-cover border-2 border-border flex-shrink-0" />
