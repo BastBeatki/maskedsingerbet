@@ -411,8 +411,17 @@ const MaskCard: React.FC<{
                         const playerTips = mask.tips[player.id] || [];
                         const lastTip = playerTips.length > 0 ? playerTips[playerTips.length - 1] : null;
                         
+                        const hasCorrectGuess = mask.isRevealed && mask.revealedCelebrity && 
+                            playerTips.some(tip => tip.celebrityName.trim().toLowerCase() === mask.revealedCelebrity!.trim().toLowerCase());
+
+                        const playerRowClasses = [
+                            'bg-background p-3 rounded-lg transition-all duration-300',
+                            (isTippingActive && !mask.isRevealed) ? 'cursor-pointer hover:bg-tertiary/50' : 'cursor-default',
+                            hasCorrectGuess ? 'bg-green-900/30 ring-1 ring-green-500' : ''
+                        ].filter(Boolean).join(' ');
+
                         return (
-                            <div key={player.id} onClick={() => handlePlayerClick(player)} className={`bg-background p-3 rounded-lg ${isTippingActive && !mask.isRevealed ? 'cursor-pointer hover:bg-background/70' : 'cursor-default'} transition-colors`}>
+                            <div key={player.id} onClick={() => handlePlayerClick(player)} className={playerRowClasses}>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3 truncate">
                                         {player.imageUrl ? (
@@ -423,6 +432,11 @@ const MaskCard: React.FC<{
                                         <span className="font-medium truncate">{player.name}</span>
                                     </div>
                                     <div className="flex items-center gap-2 text-sm text-text-secondary flex-shrink-0">
+                                        {hasCorrectGuess && (
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                            </svg>
+                                        )}
                                         {lastTip?.isFinal && <span className="text-xs font-bold text-yellow-400">FINAL</span>}
                                         <span className="font-semibold truncate">
                                             {lastTip ? `"${lastTip.celebrityName}"` : 'Noch kein Tipp'}
