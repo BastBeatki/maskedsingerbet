@@ -160,15 +160,7 @@ export const calculateScores = (season: Season, allPlayers: Player[]): PlayerSco
 
   scores.forEach(s => s.totalScore = s.score + s.counterBetPoints);
   
-  return scores.sort((a, b) => {
-    if (b.correctMasks !== a.correctMasks) {
-        return b.correctMasks - a.correctMasks;
-    }
-    if (b.wonCounterBets !== a.wonCounterBets) {
-        return b.wonCounterBets - a.wonCounterBets;
-    }
-    return b.totalScore - a.totalScore;
-  });
+  return scores.sort((a, b) => b.totalScore - a.totalScore);
 };
 
 

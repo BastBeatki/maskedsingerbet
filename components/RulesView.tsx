@@ -55,13 +55,9 @@ export const RulesView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold text-accent mb-3">Rangliste (Reihenfolge der Wichtigkeit)</h2>
-            <ol className="list-decimal list-inside space-y-2 text-lg text-text-secondary">
-              <li>Anzahl korrekt erratener Masken <strong className="text-text-primary">(wichtigstes Kriterium)</strong></li>
-              <li>Anzahl gewonnener Gegenwetten (Tie-Breaker)</li>
-              <li>Gesamtpunktzahl (letztes Kriterium)</li>
-            </ol>
-            <p className="mt-3 text-lg text-text-secondary">Also: Eine korrekt erratene Maske schlägt viele kleine späte Gewinne. Die Punkte spiegeln das wider, zählen aber erst an dritter Stelle bei Gleichstand.</p>
+            <h2 className="text-2xl font-bold text-accent mb-3">Rangliste</h2>
+             <p className="text-lg text-text-secondary">Die Rangliste wird ausschließlich nach der <strong className="text-text-primary">Gesamtpunktzahl</strong> sortiert. Der Spieler mit den meisten Punkten steht an der Spitze.</p>
+             <p className="mt-3 text-lg text-text-secondary">Die Gesamtpunktzahl setzt sich aus den Punkten für korrekt erratene Masken und den Punkten aus gewonnenen (und verlorenen) Gegenwetten zusammen. Eine gute Strategie bei Gegenwetten kann also eine geringere Anzahl erratener Masken ausgleichen.</p>
           </div>
 
           <div className="!mt-10 p-4 bg-background rounded-lg border border-border">
