@@ -14,28 +14,28 @@ const Leaderboard: React.FC<{ scores: PlayerScore[], players: Player[] }> = ({ s
           const rankColor = index === 0 ? 'bg-green-500' : index === 1 ? 'bg-gray-500' : index === 2 ? 'bg-yellow-700' : 'bg-tertiary';
           
           return (
-            <div key={player.playerId} className="bg-background p-4 rounded-lg flex items-center gap-4">
+            <div key={player.playerId} className="bg-background p-3 sm:p-4 rounded-lg flex items-center gap-3">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg text-white flex-shrink-0 ${rankColor}`}>
                 {index + 1}
               </div>
-              <div className="flex items-center gap-3 flex-grow truncate">
+              <div className="flex items-center gap-3 flex-grow min-w-0">
                   {playerDetails?.imageUrl 
-                    ? <img src={playerDetails.imageUrl} alt={player.name} className="w-12 h-12 rounded-full object-cover"/> 
-                    : <div className="w-12 h-12 rounded-full" style={{ backgroundColor: player.color }}></div>
+                    ? <img src={playerDetails.imageUrl} alt={player.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0"/> 
+                    : <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex-shrink-0" style={{ backgroundColor: player.color }}></div>
                   }
-                  <span className="font-bold text-xl truncate">{player.name}</span>
+                  <span className="font-bold text-lg sm:text-xl truncate">{player.name}</span>
               </div>
-              <div className="hidden sm:block text-right">
-                  <div className="text-sm text-text-secondary">Masken</div>
-                  <div className="text-xl font-bold">{player.correctMasks}</div>
+              <div className="hidden sm:block text-right flex-shrink-0">
+                  <div className="text-xs text-text-secondary uppercase tracking-wider">Masken</div>
+                  <div className="text-lg font-bold">{player.correctMasks}</div>
               </div>
-              <div className="hidden sm:block text-right">
-                  <div className="text-sm text-text-secondary">Gegenwetten</div>
-                  <div className="text-xl font-bold">{player.wonCounterBets}</div>
+              <div className="hidden sm:block text-right flex-shrink-0">
+                  <div className="text-xs text-text-secondary uppercase tracking-wider">Wetten</div>
+                  <div className="text-lg font-bold">{player.wonCounterBets}</div>
               </div>
-              <div className="text-right">
-                  <div className="text-sm text-text-secondary">Punkte</div>
-                  <div className="text-2xl font-extrabold">{player.totalScore}</div>
+              <div className="text-right flex-shrink-0 pl-1">
+                  <div className="text-xs text-text-secondary uppercase tracking-wider">Punkte</div>
+                  <div className="text-xl sm:text-2xl font-extrabold">{player.totalScore}</div>
               </div>
             </div>
           );
@@ -607,14 +607,14 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                 </Card>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Left Column: Leaderboard */}
-                <div className="lg:col-span-1">
+            <div className="flex flex-col lg:flex-row gap-6 xl:gap-8 items-start">
+                {/* Left Column: Leaderboard - Fixed width on Desktop/Large Tablet */}
+                <div className="w-full lg:w-[400px] xl:w-[420px] flex-shrink-0">
                     <Leaderboard scores={scores} players={allPlayers} />
                 </div>
 
-                {/* Right Column: Masks Grid */}
-                <div className="lg:col-span-2">
+                {/* Right Column: Masks Grid - Takes remaining space */}
+                <div className="flex-1 w-full min-w-0">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-3xl font-bold">Masken</h2>
                     </div>
