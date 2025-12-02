@@ -475,25 +475,31 @@ const MaskCard: React.FC<{
                         return (
                             <div key={player.id} onClick={() => handlePlayerClick(player)} className={playerRowClasses}>
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3 truncate flex-grow min-w-0">
+                                    <div className="flex items-center min-w-0 truncate">
                                         {player.imageUrl ? (
-                                            <img src={player.imageUrl} alt={player.name} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+                                            <img src={player.imageUrl} alt={player.name} className="w-8 h-8 rounded-full object-cover flex-shrink-0 mr-3" />
                                         ) : (
-                                            <span className="w-8 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: player.color }}></span>
+                                            <span className="w-8 h-8 rounded-full flex-shrink-0 mr-3" style={{ backgroundColor: player.color }}></span>
                                         )}
-                                        <div className="flex items-center gap-2 min-w-0 truncate">
-                                            <span className="font-medium truncate flex-shrink-0">{player.name}</span>
+                                        <div className="flex items-center min-w-0 truncate">
+                                            <span className="font-medium truncate flex-shrink-0 mr-1">{player.name}</span>
                                             {latestTip && (
-                                                <>
-                                                    <span className="text-text-secondary/50">:</span>
-                                                    <div className="text-sm text-text-secondary truncate flex items-center gap-1 min-w-0">
-                                                        <span className="font-bold text-gray-300 truncate">"{latestTip.celebrityName}"</span>
-                                                        <span className="text-xs opacity-70 whitespace-nowrap hidden sm:inline">({getShowName(latestTip.showId)})</span>
+                                                <div className="flex items-center min-w-0 text-sm overflow-hidden">
+                                                    <div className="w-px h-3 bg-text-secondary/30 mx-2 flex-shrink-0"></div>
+                                                    <div className="flex items-center gap-2 min-w-0 truncate">
+                                                        <span className="font-bold text-gray-200 truncate" title={latestTip.celebrityName}>
+                                                            {latestTip.celebrityName}
+                                                        </span>
+                                                        <span className="text-xs text-text-secondary/60 whitespace-nowrap hidden sm:inline">
+                                                           in {getShowName(latestTip.showId)}
+                                                        </span>
                                                         {latestTip.isFinal && (
-                                                            <span className="text-[10px] font-bold text-yellow-500 border border-yellow-600/50 px-1 rounded flex-shrink-0">FINAL</span>
+                                                             <span className="text-[10px] font-bold text-yellow-500 bg-yellow-500/10 border border-yellow-500/20 px-1.5 py-0.5 rounded flex-shrink-0">
+                                                                FINAL
+                                                            </span>
                                                         )}
                                                     </div>
-                                                </>
+                                                </div>
                                             )}
                                         </div>
                                     </div>
