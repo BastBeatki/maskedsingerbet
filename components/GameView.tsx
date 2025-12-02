@@ -412,11 +412,8 @@ const MaskCard: React.FC<{
     const [isCounterBetModalOpen, setCounterBetModalOpen] = useState(false);
 
     const handlePlayerClick = (player: Player) => {
-        if(isTippingActive) {
-            setActiveTipPlayer(player);
-        } else {
-            alert("Bitte eine Show auswählen oder starten, um Tipps zu verwalten.");
-        }
+        // Allows viewing details even if tipping is not active, but adding tips requires logic in modal
+        setActiveTipPlayer(player);
     }
     
     const getShowName = (showId: string | undefined) => {
@@ -462,6 +459,7 @@ const MaskCard: React.FC<{
                 <div className="space-y-3 flex-grow">
                     {players.map(player => {
                         const playerTips = mask.tips[player.id] || [];
+                        const latestTip = playerTips.length > 0 ? playerTips[playerTips.length - 1] : null;
                         
                         const hasCorrectGuess = mask.isRevealed && mask.revealedCelebrity && 
                             playerTips.some(tip => tip.celebrityName.trim().toLowerCase() === mask.revealedCelebrity!.trim().toLowerCase());
@@ -470,22 +468,36 @@ const MaskCard: React.FC<{
 
                         const playerRowClasses = [
                             'bg-background p-3 rounded-lg transition-all duration-300',
-                            (isTippingActive && !mask.isRevealed) ? 'cursor-pointer hover:bg-tertiary/50' : 'cursor-default',
+                            'cursor-pointer hover:bg-tertiary/50',
                             hasCorrectGuess ? 'bg-green-900/30 ring-1 ring-green-500' : ''
                         ].filter(Boolean).join(' ');
 
                         return (
                             <div key={player.id} onClick={() => handlePlayerClick(player)} className={playerRowClasses}>
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3 truncate">
+                                    <div className="flex items-center gap-3 truncate flex-grow min-w-0">
                                         {player.imageUrl ? (
                                             <img src={player.imageUrl} alt={player.name} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
                                         ) : (
                                             <span className="w-8 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: player.color }}></span>
                                         )}
-                                        <span className="font-medium truncate">{player.name}</span>
+                                        <div className="flex items-center gap-2 min-w-0 truncate">
+                                            <span className="font-medium truncate flex-shrink-0">{player.name}</span>
+                                            {latestTip && (
+                                                <>
+                                                    <span className="text-text-secondary/50">:</span>
+                                                    <div className="text-sm text-text-secondary truncate flex items-center gap-1 min-w-0">
+                                                        <span className="font-bold text-gray-300 truncate">"{latestTip.celebrityName}"</span>
+                                                        <span className="text-xs opacity-70 whitespace-nowrap hidden sm:inline">({getShowName(latestTip.showId)})</span>
+                                                        {latestTip.isFinal && (
+                                                            <span className="text-[10px] font-bold text-yellow-500 border border-yellow-600/50 px-1 rounded flex-shrink-0">FINAL</span>
+                                                        )}
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-2 text-sm text-text-secondary flex-shrink-0">
+                                    <div className="flex items-center gap-2 text-sm text-text-secondary flex-shrink-0 pl-2">
                                         {playerMaskPoints !== null && playerMaskPoints !== undefined && (
                                             <span className={`font-bold px-2 py-0.5 rounded text-xs ${playerMaskPoints > 0 ? 'bg-green-600 text-white' : playerMaskPoints < 0 ? 'bg-red-600 text-white' : 'bg-tertiary text-gray-300'}`}>
                                                 {playerMaskPoints > 0 ? '+' : ''}{playerMaskPoints}
