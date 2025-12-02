@@ -347,6 +347,34 @@ export const useAppManager = () => {
     });
   };
 
+  const toggleTipFinal = (seasonId: string, maskId: string, playerId: string, tipIndex: number) => {
+      withSeason(seasonId, season => {
+          const newMasks = season.masks.map(mask => {
+              if (mask.id === maskId) {
+                  const playerTips = [...(mask.tips[playerId] || [])];
+                  if (playerTips[tipIndex]) {
+                      const currentTip = playerTips[tipIndex];
+                      
+                      // Logic check: if we are enabling Final, make sure no OTHER tip is Final
+                      if (!currentTip.isFinal) {
+                          const otherFinal = playerTips.some((t, i) => i !== tipIndex && t.isFinal);
+                          if (otherFinal) {
+                              alert("Another tip is already marked as Final. Unmark it first.");
+                              return mask;
+                          }
+                      }
+
+                      // Update status
+                      playerTips[tipIndex] = { ...currentTip, isFinal: !currentTip.isFinal };
+                      return { ...mask, tips: { ...mask.tips, [playerId]: playerTips } };
+                  }
+              }
+              return mask;
+          });
+          return { ...season, masks: newMasks };
+      });
+  };
+
   // --- Counter-Bet Management ---
   const addCounterBet = (seasonId: string, maskId: string, bettorPlayerId: string, targetPlayerId: string) => {
     withSeason(seasonId, season => {
@@ -525,6 +553,7 @@ export const useAppManager = () => {
     revealMask,
     addOrUpdateTip,
     deleteLastTip,
+    toggleTipFinal,
     addCounterBet,
     deleteCounterBet,
     addShow,

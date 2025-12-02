@@ -119,12 +119,14 @@ const TipModal: React.FC<{
     mask: Mask;
     player: Player;
     shows: Show[];
+    activeShowId: string | null;
     isOpen: boolean;
     onClose: () => void;
     onSaveTip: (celebrityName: string, isFinal: boolean) => void;
     onDeleteLastTip: () => void;
+    onToggleTipFinal: (index: number) => void;
     tipPointsLookup: Record<string, number>;
-}> = ({ mask, player, shows, isOpen, onClose, onSaveTip, onDeleteLastTip, tipPointsLookup }) => {
+}> = ({ mask, player, shows, activeShowId, isOpen, onClose, onSaveTip, onDeleteLastTip, onToggleTipFinal, tipPointsLookup }) => {
     const [newTipName, setNewTipName] = useState('');
     const [isFinal, setIsFinal] = useState(false);
     const playerTips = mask.tips[player.id] || [];
@@ -161,12 +163,24 @@ const TipModal: React.FC<{
                 {playerTips.map((tip, index) => {
                     const points = mask.isRevealed ? (tipPointsLookup[`${mask.id}-${player.id}-${index}`] || 0) : null;
                     const isCorrect = mask.isRevealed && mask.revealedCelebrity?.toLowerCase() === tip.celebrityName.toLowerCase();
+                    const isEditable = !mask.isRevealed && activeShowId === tip.showId && index === playerTips.length - 1;
 
                     return (
                         <div key={index} className="bg-background p-3 rounded-lg flex justify-between items-center">
                             <div>
                                 <p className={`font-bold text-lg ${isCorrect ? 'text-green-400' : ''}`}>"{tip.celebrityName}"</p>
-                                <p className="text-sm text-text-secondary">Getippt in: {getShowName(tip.showId)}</p>
+                                <div className="flex items-center gap-2">
+                                    <p className="text-sm text-text-secondary">Getippt in: {getShowName(tip.showId)}</p>
+                                    {isEditable && (
+                                        <button 
+                                            onClick={() => onToggleTipFinal(index)}
+                                            className="text-xs text-accent hover:text-white underline ml-2"
+                                            title={tip.isFinal ? "Final-Status entfernen" : "Tipp nachträglich Final machen"}
+                                        >
+                                            {tip.isFinal ? "(Nicht mehr Final machen)" : "(Zu Final ändern)"}
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                             <div className="flex flex-col items-end gap-1">
                                 {tip.isFinal && (
@@ -382,15 +396,17 @@ const MaskCard: React.FC<{
     shows: Show[];
     counterBets: CounterBet[];
     isTippingActive: boolean;
+    activeShowId: string | null;
     onReveal: (celebrity: string, imageUrl?: string) => void;
     onSaveTip: (playerId: string, celebrityName: string, isFinal: boolean) => void;
     onDeleteLastTip: (playerId: string) => void;
+    onToggleTipFinal: (playerId: string, tipIndex: number) => void;
     onAddCounterBet: (bettorPlayerId: string, targetPlayerId: string) => void;
     onDeleteCounterBet: (id: string) => void;
     tipPointsLookup: Record<string, number>;
     counterBetPointsLookup: Record<string, { bettor: number; target: number }>;
     playerMaskPointsLookup: Record<string, number>;
-}> = ({ mask, players, shows, counterBets, isTippingActive, onReveal, onSaveTip, onDeleteLastTip, onAddCounterBet, onDeleteCounterBet, tipPointsLookup, counterBetPointsLookup, playerMaskPointsLookup }) => {
+}> = ({ mask, players, shows, counterBets, isTippingActive, activeShowId, onReveal, onSaveTip, onDeleteLastTip, onToggleTipFinal, onAddCounterBet, onDeleteCounterBet, tipPointsLookup, counterBetPointsLookup, playerMaskPointsLookup }) => {
     const [isRevealModalOpen, setRevealModalOpen] = useState(false);
     const [activeTipPlayer, setActiveTipPlayer] = useState<Player | null>(null);
     const [isCounterBetModalOpen, setCounterBetModalOpen] = useState(false);
@@ -509,10 +525,12 @@ const MaskCard: React.FC<{
                     mask={mask}
                     player={activeTipPlayer}
                     shows={shows}
+                    activeShowId={activeShowId}
                     isOpen={!!activeTipPlayer}
                     onClose={() => setActiveTipPlayer(null)}
                     onSaveTip={(celebrity, isFinal) => onSaveTip(activeTipPlayer.id, celebrity, isFinal)}
                     onDeleteLastTip={() => onDeleteLastTip(activeTipPlayer.id)}
+                    onToggleTipFinal={(index) => onToggleTipFinal(activeTipPlayer.id, index)}
                     tipPointsLookup={tipPointsLookup}
                 />
             )}
@@ -547,6 +565,7 @@ interface GameViewProps {
   onRevealMask: (maskId: string, celebrity: string, imageUrl?: string) => void;
   onAddOrUpdateTip: (maskId: string, playerId: string, celebrity: string, isFinal: boolean) => void;
   onDeleteLastTip: (maskId: string, playerId: string) => void;
+  onToggleTipFinal: (seasonId: string, maskId: string, playerId: string, tipIndex: number) => void;
   onAddCounterBet: (maskId: string, bettorPlayerId: string, targetPlayerId: string) => void;
   onDeleteCounterBet: (id: string) => void;
   onAddShow: () => void;
@@ -554,7 +573,7 @@ interface GameViewProps {
 }
 
 export const GameView: React.FC<GameViewProps> = (props) => {
-  const { season, allPlayers, onBack, onRevealMask, onAddOrUpdateTip, onDeleteLastTip, onAddCounterBet, onDeleteCounterBet, onAddShow, onSetActiveShowId } = props;
+  const { season, allPlayers, onBack, onRevealMask, onAddOrUpdateTip, onDeleteLastTip, onToggleTipFinal, onAddCounterBet, onDeleteCounterBet, onAddShow, onSetActiveShowId } = props;
   
   // Calculate scores on render. In a larger app, useMemo here.
   const { scores, tipPoints, counterBetPoints, playerMaskPoints } = calculateScores(season, allPlayers);
@@ -609,9 +628,11 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                                     shows={season.shows}
                                     counterBets={season.counterBets}
                                     isTippingActive={!!season.activeShowId}
+                                    activeShowId={season.activeShowId}
                                     onReveal={(celebrity, imageUrl) => onRevealMask(mask.id, celebrity, imageUrl)}
                                     onSaveTip={(playerId, celebrity, isFinal) => onAddOrUpdateTip(mask.id, playerId, celebrity, isFinal)}
                                     onDeleteLastTip={(playerId) => onDeleteLastTip(mask.id, playerId)}
+                                    onToggleTipFinal={(playerId, index) => onToggleTipFinal(season.id, mask.id, playerId, index)}
                                     onAddCounterBet={(bettor, target) => onAddCounterBet(mask.id, bettor, target)}
                                     onDeleteCounterBet={onDeleteCounterBet}
                                     tipPointsLookup={tipPoints}

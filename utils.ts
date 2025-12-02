@@ -90,15 +90,32 @@ export const calculateScores = (season: Season, allPlayers: Player[]): ScoreCalc
             const playerCorrectTips = allCorrectTips.filter(t => t.playerId === score.playerId);
             
             if (playerCorrectTips.length > 0) {
-                const playerFirstCorrectTip = playerCorrectTips[0]; // Already sorted by time
+                const playerFirstCorrectTip = playerCorrectTips[0]; // Already sorted by time (Earliest correct tip)
                 score.correctMasks += 1;
 
                 // Find the index of this tip in the player's original tip array to generate the lookup key
                 const originalPlayerTips = mask.tips[score.playerId] || [];
                 const tipIndex = originalPlayerTips.findIndex(t => t.createdAt === playerFirstCorrectTip.tip.createdAt);
 
+                // --- LOGIC UPGRADE: Check for "Same Show Final Upgrade" ---
+                // If the player's first correct tip is NOT final, but they have a LATER correct tip 
+                // in the SAME SHOW that IS final, we treat the first tip as Final for scoring.
+                // This handles the case where a player tips, realizes they can't edit, and tips again as Final immediately.
+                let isEffectiveFinal = playerFirstCorrectTip.tip.isFinal;
+                if (!isEffectiveFinal) {
+                    const sameShowFinalTip = playerCorrectTips.find(t => 
+                        t.tip.isFinal && 
+                        t.show.episodeNumber === playerFirstCorrectTip.show.episodeNumber
+                    );
+                    if (sameShowFinalTip) {
+                        isEffectiveFinal = true;
+                    }
+                }
+
                 let pointMultiplier = 1.0;
-                if (playerFirstCorrectTip.tip.isFinal) {
+                if (isEffectiveFinal) {
+                    // Note: We use the index of the FIRST tip to decide multiplier (First vs Second tip slot)
+                    // This rewards the "slot" used for the discovery, but upgraded to Final risk.
                     if (tipIndex === 0) {
                         pointMultiplier = FINAL_TIP_MULTIPLIER_FIRST;
                     } else if (tipIndex === 1) {
