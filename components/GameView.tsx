@@ -5,7 +5,7 @@ import { Button, Card, Input, Modal } from './common/UI';
 
 // --- Leaderboard ---
 const Leaderboard: React.FC<{ scores: PlayerScore[], players: Player[] }> = ({ scores, players }) => (
-  <Card className="mb-8">
+  <Card>
     <h2 className="text-3xl font-bold mb-4">Gesamt-Leaderboard</h2>
     {scores.length > 0 ? (
       <div className="space-y-2">
@@ -607,9 +607,9 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                 </Card>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-6 xl:gap-8 items-start">
+            <div className="flex flex-col xl:flex-row gap-8 items-start">
                 {/* Left Column: Leaderboard - Fixed width on Desktop/Large Tablet */}
-                <div className="w-full lg:w-[400px] xl:w-[420px] flex-shrink-0">
+                <div className="w-full xl:w-[400px] flex-shrink-0">
                     <Leaderboard scores={scores} players={allPlayers} />
                 </div>
 
