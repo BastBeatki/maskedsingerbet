@@ -20,8 +20,21 @@ const getPointsForShow = (episodeNumber: number): number => {
     return Math.round(BASE_POINTS_PER_MASK * 0.25); // Show 6+ = 5
 }
 
-export const calculateScores = (season: Season, allPlayers: Player[]): PlayerScore[] => {
-  if (!season || !season.playerIds || !allPlayers) return [];
+export interface ScoreCalculationResult {
+    scores: PlayerScore[];
+    tipPoints: Record<string, number>; // Key: `${maskId}-${playerId}-${tipIndex}`
+    counterBetPoints: Record<string, { bettor: number; target: number }>; // Key: counterBetId
+    playerMaskPoints: Record<string, number>; // Key: `${maskId}-${playerId}` -> Total points for this player on this mask
+}
+
+export const calculateScores = (season: Season, allPlayers: Player[]): ScoreCalculationResult => {
+  const tipPointsLookup: Record<string, number> = {};
+  const counterBetPointsLookup: Record<string, { bettor: number; target: number }> = {};
+  const playerMaskPointsLookup: Record<string, number> = {};
+
+  if (!season || !season.playerIds || !allPlayers) {
+      return { scores: [], tipPoints: {}, counterBetPoints: {}, playerMaskPoints: {} };
+  }
 
   const seasonPlayers = allPlayers.filter(p => season.playerIds.includes(p.id));
 
@@ -37,6 +50,11 @@ export const calculateScores = (season: Season, allPlayers: Player[]): PlayerSco
   }));
 
   const revealedMasks = season.masks.filter(mask => mask.isRevealed && mask.revealedCelebrity);
+
+  const addMaskPoints = (maskId: string, playerId: string, points: number) => {
+      const key = `${maskId}-${playerId}`;
+      playerMaskPointsLookup[key] = (playerMaskPointsLookup[key] || 0) + points;
+  };
 
   for (const mask of revealedMasks) {
     const actualCelebrity = mask.revealedCelebrity!.trim().toLowerCase();
@@ -75,12 +93,12 @@ export const calculateScores = (season: Season, allPlayers: Player[]): PlayerSco
                 const playerFirstCorrectTip = playerCorrectTips[0]; // Already sorted by time
                 score.correctMasks += 1;
 
+                // Find the index of this tip in the player's original tip array to generate the lookup key
+                const originalPlayerTips = mask.tips[score.playerId] || [];
+                const tipIndex = originalPlayerTips.findIndex(t => t.createdAt === playerFirstCorrectTip.tip.createdAt);
+
                 let pointMultiplier = 1.0;
                 if (playerFirstCorrectTip.tip.isFinal) {
-                    // Find the index of this tip in the player's original tip array
-                    const originalPlayerTips = mask.tips[score.playerId] || [];
-                    const tipIndex = originalPlayerTips.findIndex(t => t.createdAt === playerFirstCorrectTip.tip.createdAt);
-
                     if (tipIndex === 0) {
                         pointMultiplier = FINAL_TIP_MULTIPLIER_FIRST;
                     } else if (tipIndex === 1) {
@@ -103,6 +121,12 @@ export const calculateScores = (season: Season, allPlayers: Player[]): PlayerSco
                 }
 
                 score.score += awardedPoints;
+                
+                // Store specific points for this tip
+                if (tipIndex !== -1) {
+                    tipPointsLookup[`${mask.id}-${score.playerId}-${tipIndex}`] = awardedPoints;
+                    addMaskPoints(mask.id, score.playerId, awardedPoints);
+                }
             }
         }
     }
@@ -142,25 +166,40 @@ export const calculateScores = (season: Season, allPlayers: Player[]): PlayerSco
       const bettorLossPoints = Math.round(baseBettorLossPoints * decayFactor);
       const targetLossPoints = Math.round(baseTargetLossPoints * decayFactor);
 
+      const bettorResult = { bettor: 0, target: 0 };
+
       if (isTargetTipCorrect) {
-        // Counter-bet was WRONG, bettor loses points
+        // Counter-bet was WRONG (Target was right), bettor loses points
         bettorScore.counterBetPoints += bettorLossPoints;
+        bettorResult.bettor = bettorLossPoints;
+        addMaskPoints(mask.id, bettorScore.playerId, bettorLossPoints);
       } else {
-        // Counter-bet was CORRECT, bettor gains points, target loses points
+        // Counter-bet was CORRECT (Target was wrong), bettor gains points, target loses points
         bettorScore.counterBetPoints += winPoints;
+        bettorResult.bettor = winPoints;
+        addMaskPoints(mask.id, bettorScore.playerId, winPoints);
+
         if(targetLossPoints !== 0) {
             targetScore.counterBetPoints += targetLossPoints;
+            bettorResult.target = targetLossPoints;
+            addMaskPoints(mask.id, targetScore.playerId, targetLossPoints);
         }
         if(winPoints > 0) {
             bettorScore.wonCounterBets += 1;
         }
       }
+      counterBetPointsLookup[cb.id] = bettorResult;
     }
   }
 
   scores.forEach(s => s.totalScore = s.score + s.counterBetPoints);
   
-  return scores.sort((a, b) => b.totalScore - a.totalScore);
+  return {
+      scores: scores.sort((a, b) => b.totalScore - a.totalScore),
+      tipPoints: tipPointsLookup,
+      counterBetPoints: counterBetPointsLookup,
+      playerMaskPoints: playerMaskPointsLookup
+  };
 };
 
 
