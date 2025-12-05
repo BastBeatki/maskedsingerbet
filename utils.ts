@@ -13,11 +13,11 @@ const FINAL_TIP_MULTIPLIER_SECOND = 1.5; // 50% bonus
 
 const getPointsForShow = (episodeNumber: number): number => {
     if (episodeNumber <= 1) return Math.round(BASE_POINTS_PER_MASK * 1.0); // Show 1 = 20
-    if (episodeNumber === 2) return Math.round(BASE_POINTS_PER_MASK * 0.85); // Show 2 = 17
-    if (episodeNumber === 3) return Math.round(BASE_POINTS_PER_MASK * 0.70); // Show 3 = 14
-    if (episodeNumber === 4) return Math.round(BASE_POINTS_PER_MASK * 0.55); // Show 4 = 11
-    if (episodeNumber === 5) return Math.round(BASE_POINTS_PER_MASK * 0.40); // Show 5 = 8
-    return Math.round(BASE_POINTS_PER_MASK * 0.25); // Show 6+ = 5
+    if (episodeNumber === 2) return Math.round(BASE_POINTS_PER_MASK * 0.90); // Show 2 = 18 (was 17)
+    if (episodeNumber === 3) return Math.round(BASE_POINTS_PER_MASK * 0.80); // Show 3 = 16 (was 14)
+    if (episodeNumber === 4) return Math.round(BASE_POINTS_PER_MASK * 0.70); // Show 4 = 14 (was 11)
+    if (episodeNumber === 5) return Math.round(BASE_POINTS_PER_MASK * 0.60); // Show 5 = 12 (was 8)
+    return Math.round(BASE_POINTS_PER_MASK * 0.50); // Show 6+ = 10 (was 5)
 }
 
 export interface ScoreCalculationResult {
