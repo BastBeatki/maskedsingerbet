@@ -1,136 +1,52 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AppState, Season, Player, Mask, Tip, Show, CounterBet } from '../types';
 import { generateId, isValidAppState, isValidSeason } from '../utils';
 import { PLAYER_COLORS } from '../constants';
 
-// --- IndexedDB Helper Functions ---
-const DB_NAME = 'MaskedSingerTipperDB';
-const DB_VERSION = 1;
-const STORE_NAME = 'appStateStore';
-const STATE_KEY = 'mainState';
-
-const getDb = (): Promise<IDBDatabase> => {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, DB_VERSION);
-        request.onerror = () => reject(`IndexedDB error: ${request.error}`);
-        request.onsuccess = () => resolve(request.result);
-        request.onupgradeneeded = (event) => {
-            const db = (event.target as IDBOpenDBRequest).result;
-            if (!db.objectStoreNames.contains(STORE_NAME)) {
-                db.createObjectStore(STORE_NAME);
-            }
-        };
-    });
-};
-
-const saveStateDB = async (state: AppState): Promise<void> => {
-    const db = await getDb();
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(STORE_NAME, 'readwrite');
-        transaction.oncomplete = () => resolve();
-        transaction.onerror = () => reject(`Transaction error: ${transaction.error}`);
-        const store = transaction.objectStore(STORE_NAME);
-        store.put(state, STATE_KEY);
-    });
-};
-
-const loadStateDB = async (): Promise<AppState | null> => {
-    const db = await getDb();
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(STORE_NAME, 'readonly');
-        const store = transaction.objectStore(STORE_NAME);
-        const request = store.get(STATE_KEY);
-        request.onsuccess = () => resolve((request.result as AppState) || null);
-        request.onerror = () => reject(`Request error: ${request.error}`);
-    });
-};
-
-const clearStateDB = async (): Promise<void> => {
-    const db = await getDb();
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(STORE_NAME, 'readwrite');
-        transaction.oncomplete = () => resolve();
-        transaction.onerror = () => reject(`Transaction error while clearing: ${transaction.error}`);
-        const store = transaction.objectStore(STORE_NAME);
-        store.clear(); // Clears all data in the object store
-    });
-};
-
-
-const LEGACY_STORAGE_KEY = 'maskedSingerTipperState';
-const APP_STORAGE_KEY = 'maskedSingerTipperApp';
-
-const createDefaultState = (): AppState => ({
-  seasons: [],
-  players: [],
-});
+import { initializeStorage, saveStateDB, clearStateDB, createDefaultState, APP_STORAGE_KEY, LEGACY_STORAGE_KEY } from '../storage';
 
 export const useAppManager = () => {
   const [appState, setAppState] = useState<AppState>(createDefaultState());
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load initial state from IndexedDB or migrate from localStorage
+  const [storageReady, setStorageReady] = useState(false);
+  const [storageError, setStorageError] = useState<string | null>(null);
+  const [saveAttempt, setSaveAttempt] = useState(0);
+  const initialization = useRef<ReturnType<typeof initializeStorage> | null>(null);
+  const lastSaved = useRef<AppState | null>(null);
+  const saveRevision = useRef(0);
+
   useEffect(() => {
-    const initializeState = async () => {
-      try {
-        const stateFromDb = await loadStateDB();
-        
-        if (stateFromDb && isValidAppState(stateFromDb)) {
-          setAppState(stateFromDb);
-        } else {
-          // If no (or invalid) DB state, check localStorage for one-time migration
-          const savedAppState = localStorage.getItem(APP_STORAGE_KEY);
-          if (savedAppState) {
-            console.log("Found localStorage data, attempting migration to IndexedDB...");
-            let parsed = JSON.parse(savedAppState);
-
-            if (parsed.seasons && parsed.seasons.length > 0 && parsed.seasons[0].players && !parsed.players) {
-              console.log("Old data structure detected. Migrating players to global list...");
-              const allPlayersMap = new Map<string, Player>();
-              parsed.seasons.forEach((season: any) => {
-                  if (Array.isArray(season.players)) {
-                      season.players.forEach((player: Player) => {
-                          if (!allPlayersMap.has(player.id)) {
-                              allPlayersMap.set(player.id, player);
-                          }
-                      });
-                      season.playerIds = season.players.map((p: Player) => p.id);
-                  } else {
-                      season.playerIds = [];
-                  }
-                  delete season.players;
-              });
-              parsed.players = Array.from(allPlayersMap.values());
-              console.log("Migration complete.");
-            }
-
-            if (isValidAppState(parsed)) {
-              setAppState(parsed);
-              // The save effect will handle writing this to IndexedDB
-              localStorage.removeItem(APP_STORAGE_KEY);
-              console.log("Migration successful. localStorage cleared.");
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Failed to initialize state:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initializeState();
+    let cancelled = false;
+    // StrictMode's second effect uses the same initialization/migration transaction.
+    initialization.current ??= initializeStorage();
+    initialization.current.then(({ state, warning }) => {
+      if (cancelled) return;
+      lastSaved.current = state;
+      setAppState(state);
+      setStorageError(warning);
+      setStorageReady(true);
+    }).catch(error => {
+      if (!cancelled) setStorageError(String(error));
+    }).finally(() => { if (!cancelled) setIsLoading(false); });
+    return () => { cancelled = true; };
   }, []);
 
-  // Save state to IndexedDB whenever it changes
   useEffect(() => {
-    if (!isLoading) {
-      saveStateDB(appState).catch(err => console.error("Failed to save state to DB:", err));
-    }
-  }, [appState, isLoading]);
+    if (!storageReady || (appState === lastSaved.current && saveAttempt === 0)) return;
+    const revision = ++saveRevision.current;
+    saveStateDB(appState).then(() => {
+      if (revision === saveRevision.current) {
+        lastSaved.current = appState;
+        setStorageError(null);
+      }
+    }).catch(error => {
+      if (revision === saveRevision.current) setStorageError('Nicht gespeichert: ' + String(error));
+    });
+  }, [appState, storageReady, saveAttempt]);
 
   const updateAppState = (updater: (prevState: AppState) => AppState) => {
-    setAppState(updater);
+    if (storageReady) setAppState(updater);
   };
   
   const withSeason = (seasonId: string, updater: (season: Season) => Season) => {
@@ -489,10 +405,11 @@ export const useAppManager = () => {
   };
 
   const importState = (newState: any) => {
+    if (!storageReady) return;
     try {
         if (isValidAppState(newState)) {
             setAppState(newState);
-            alert("Data imported successfully!");
+            alert("Daten eingelesen. Falls die Speicherung fehlschlägt, erscheint ein Hinweis oben.");
         } else if (isValidSeason(newState)) { // Legacy import of a single season object
             console.log("Importing legacy single-season format.");
             const importedSeason = newState;
@@ -539,6 +456,9 @@ export const useAppManager = () => {
   return {
     appState,
     isLoading,
+    storageReady,
+    storageError,
+    retrySave: () => setSaveAttempt(value => value + 1),
     addSeason,
     updateSeason,
     deleteSeason,

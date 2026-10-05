@@ -5,6 +5,7 @@ import { downloadJson, readFileAsText } from '../utils';
 
 interface HomeViewProps {
   appState: AppState;
+  onPromiCheck: () => void;
   onNavigate: (view: 'game' | 'settings' | 'rules', seasonId?: string) => void;
   onImport: (state: AppState) => void;
   onReset: () => void;
@@ -73,6 +74,7 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                 <Card>
                     <h3 className="text-xl font-bold mb-4">Verwaltung & Daten</h3>
                      <div className="grid grid-cols-2 gap-3">
+                        <Button onClick={props.onPromiCheck} variant="secondary" className="col-span-2">Promi-Check · Katalog</Button>
                         <Button onClick={() => onNavigate('settings')} variant="secondary">Stammdaten</Button>
                         <Button onClick={() => onNavigate('rules')} variant="secondary">Spielregeln</Button>
                         <Button onClick={handleExport} variant="secondary" className="flex items-center justify-center gap-2">

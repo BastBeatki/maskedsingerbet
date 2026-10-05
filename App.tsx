@@ -3,9 +3,10 @@ import { useAppManager } from './hooks/useGameState';
 import { HomeView } from './components/HomeView';
 import { SettingsView } from './components/SettingsView';
 import { GameView } from './components/GameView';
+import { PromiCheckView } from './components/PromiCheckView';
 import { RulesView } from './components/RulesView';
 
-type View = 'home' | 'game' | 'settings' | 'rules';
+type View = 'home' | 'game' | 'settings' | 'rules' | 'promi';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -13,6 +14,9 @@ const App: React.FC = () => {
 
   const {
     isLoading,
+    storageReady,
+    storageError,
+    retrySave,
     appState,
     addSeason,
     updateSeason,
@@ -28,6 +32,7 @@ const App: React.FC = () => {
     revealMask,
     addOrUpdateTip,
     deleteLastTip,
+    toggleTipFinal,
     addCounterBet,
     deleteCounterBet,
     addShow,
@@ -61,6 +66,15 @@ const App: React.FC = () => {
     );
   }
 
+  if (!storageReady) {
+    return <main className="min-h-screen bg-background text-text-primary p-6">
+      <h1 className="text-2xl font-bold mb-4">Spielstand konnte nicht sicher geladen werden</h1>
+      <p role="alert" className="mb-4">{storageError}</p>
+      <p className="mb-4">Speicherung ist gesperrt. Vorhandene Daten bleiben erhalten. Kein Zurücksetzen und keine Browserdaten löschen.</p>
+      <button className="bg-primary rounded-lg p-3" onClick={() => window.location.reload()}>Erneut laden</button>
+    </main>;
+  }
+
   const activeSeason = activeSeasonId ? appState.seasons.find(s => s.id === activeSeasonId) : null;
 
   const renderView = () => {
@@ -74,6 +88,7 @@ const App: React.FC = () => {
                 onBack={handleBackToHome}
                 onRevealMask={(maskId, celebrity, imageUrl) => revealMask(activeSeasonId!, maskId, celebrity, imageUrl)}
                 onAddOrUpdateTip={(maskId, playerId, celebrity, isFinal) => addOrUpdateTip(activeSeasonId!, maskId, playerId, celebrity, isFinal)}
+                onToggleTipFinal={toggleTipFinal}
                 onDeleteLastTip={(maskId, playerId) => deleteLastTip(activeSeasonId!, maskId, playerId)}
                 onAddCounterBet={(maskId, bettor, target) => addCounterBet(activeSeasonId!, maskId, bettor, target)}
                 onDeleteCounterBet={(id) => deleteCounterBet(activeSeasonId!, id)}
@@ -105,10 +120,13 @@ const App: React.FC = () => {
         );
        case 'rules':
         return <RulesView onBack={handleBackToHome} />;
+      case 'promi':
+        return <PromiCheckView onBack={handleBackToHome} />;
       case 'home':
       default:
         return (
             <HomeView
+              onPromiCheck={() => handleNavigate('promi')}
               appState={appState}
               onNavigate={handleNavigate}
               onImport={importState}
@@ -123,7 +141,13 @@ const App: React.FC = () => {
      return null;
   };
 
-  return <div className="bg-background text-text-primary">{renderView()}</div>;
+  return <div className="bg-background text-text-primary">
+    {storageError && <div role="alert" className="bg-red-950 text-white p-4">
+      <p>{storageError}</p><p>Bei Speicherfehlern: Export sichern, bevor du die App schließt.</p>
+      <button className="underline mt-2" onClick={retrySave}>Speicherung erneut versuchen</button>
+    </div>}
+    {renderView()}
+  </div>;
 };
 
 export default App;
