@@ -219,6 +219,35 @@ try {
     assert.equal(await state(page), undefined);
     assert.equal(await page.evaluate(() => window.catalogWrites), 0);
   });
+  await check('season-10 shared duo and recurring costume decode; Elgonia gap and remote failure stay read-only', async page => {
+    await catalog(page);
+    await page.getByLabel('Staffel', { exact: true }).selectOption('10');
+    assert.equal(await page.locator('[data-testid=participation]').count(), 15);
+    assert.equal(await page.locator('[data-testid=participation] img').count(), 14);
+    assert.equal(await page.getByRole('img', { name: 'Flip-Flop', exact: true }).count(), 2);
+    assert.equal(await page.getByRole('img', { name: 'Mysterium', exact: true }).count(), 6);
+    assert.equal(await page.getByRole('img', { name: 'Elgonia: kein Bild verfügbar', exact: true }).count(), 1);
+    for (const width of [390, 1440]) {
+      await page.setViewportSize({ width, height: 1000 });
+      for (const img of await page.locator('[data-testid=participation] img').all()) {
+        await img.scrollIntoViewIfNeeded();
+        await page.waitForFunction(el => el.complete && el.naturalWidth > 0, await img.elementHandle());
+      }
+      assert.equal(await page.getByText('Temporäres externes Bild · Rechte ungeklärt').count(), 14);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      await page.getByRole('heading', { name: 'Promi-Check', exact: true }).scrollIntoViewIfNeeded();
+      await page.screenshot({ path: path.join(artifacts, (width === 390 ? 'mobile' : 'desktop') + '-season10-costumes.png'), fullPage: true });
+    }
+    await page.route(remoteHosts, route => route.abort());
+    await page.reload({ waitUntil: 'networkidle' }); await catalog(page);
+    await page.getByLabel('Staffel', { exact: true }).selectOption('10');
+    for (const card of await page.locator('[data-testid=participation]').all()) {
+      await card.scrollIntoViewIfNeeded(); await card.locator('img').waitFor({ state: 'detached' });
+    }
+    assert.equal(await page.getByRole('img', { name: /: kein Bild verfügbar$/ }).count(), 30);
+    assert.equal(await state(page), undefined);
+    assert.equal(await page.evaluate(() => window.catalogWrites), 0);
+  });
   await check('synthetic twelve existing costumes render read-only, export and reload preserve every field', async page => {
     const costumes = structuredClone(fixture);
     costumes.seasons[0].seasonName = 'Staffel 2026';

@@ -1,7 +1,7 @@
 {
   "asOf": "2026-10-06",
   "catalogAsOf": "2026-09-30",
-  "batch": "mask-first-season8-9-016",
+  "batch": "mask-first-season8-10-016",
   "coverage": {
     "people": {
       "covered": 4,
@@ -12,12 +12,12 @@
       "total": 126
     },
     "masks": {
-      "covered": 87,
+      "covered": 95,
       "total": 127,
-      "temporaryRemote": 87,
+      "temporaryRemote": 95,
       "localVerified": 0,
       "conditionalUserGameState": 12,
-      "withMatchingUserGameState": 99
+      "withMatchingUserGameState": 107
     },
     "season13": {
       "peopleCovered": 4,
@@ -82,10 +82,10 @@
       "status": "COMPLETE_TEMPORARY_REMOTE"
     },
     "season10": {
-      "masksCovered": 0,
+      "masksCovered": 8,
       "masksTotal": 9,
-      "temporaryRemote": 0,
-      "status": "NOT_YET_BATCHED"
+      "temporaryRemote": 8,
+      "status": "PARTIAL_TEMPORARY_REMOTE"
     }
   },
   "missingPeople": [
@@ -940,67 +940,12 @@
   ],
   "missingMasks": [
     {
-      "key": "[10,\"Floh\"]",
-      "season": 10,
-      "name": "Floh",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[10,\"Flip-Flop\"]",
-      "season": 10,
-      "name": "Flip-Flop",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[10,\"Krokodil\"]",
-      "season": 10,
-      "name": "Krokodil",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
       "key": "[10,\"Elgonia\"]",
       "season": 10,
       "name": "Elgonia",
       "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[10,\"Robodog\"]",
-      "season": 10,
-      "name": "Robodog",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[10,\"Zuckerwatte\"]",
-      "season": 10,
-      "name": "Zuckerwatte",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[10,\"Tapsi, der Babylöwe\"]",
-      "season": 10,
-      "name": "Tapsi, der Babylöwe",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[10,\"Couchpotato\"]",
-      "season": 10,
-      "name": "Couchpotato",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[10,\"Mysterium\"]",
-      "season": 10,
-      "name": "Mysterium",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
+      "candidatePage": null,
+      "reason": "Geeignetes vollständig maskiertes Standbild noch offen. Joyn DE/AT/CH liefern Videovorschauen; ergänzender Joyn-Artikel zeigt demaskierte Person und wurde verworfen. News.de verlangt schriftliche Zustimmung; TV Spielfilm HTTP 403 ohne Umgehung. Augsburger Quelle geprüft, keine ausreichend belegte passende Variante übernommen."
     },
     {
       "key": "[11,\"Panda\"]",
@@ -1220,5 +1165,5 @@
       "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     }
   ],
-  "rightsNote": "87 TEMPORARY_REMOTE und zwölf bedingte USER_GAMESTATE: RIGHTS_UNRESOLVED. Keine lokal lizenzgeprüften Masken. 40 öffentliche Manifest-Lücken; davon zwölf aus eindeutigem Spielstand wiederverwendbar, dann 28 verbleibende Bildlücken. Credits sind keine Lizenz."
+  "rightsNote": "95 TEMPORARY_REMOTE und zwölf bedingte USER_GAMESTATE: RIGHTS_UNRESOLVED. Keine lokal lizenzgeprüften Masken. 32 öffentliche Manifest-Lücken; davon zwölf aus eindeutigem Spielstand wiederverwendbar, dann 20 verbleibende Bildlücken. Credits sind keine Lizenz."
 }
