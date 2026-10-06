@@ -14,6 +14,7 @@ fs.mkdirSync(artifacts, { recursive: true });
 const browser = await chromium.connectOverCDP(endpoint);
 const results = [];
 const costumeNames = JSON.parse(fs.readFileSync(new URL('../data/promi-catalog-2026-09-30.json', import.meta.url))).records.filter(r => r.season === 13).map(r => r.mask_name);
+const remoteHosts = /^https:\/\/(?:mim\.p7s1\.io|c\.nau\.ch|www\.24rhein\.de|www\.connect-living\.de)\//;
 const tinyImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aJ1kAAAAASUVORK5CYII=';
 const fixture = {
   players: [{ id: 'p', name: 'Testspieler', color: '#123456' }],
@@ -60,24 +61,24 @@ async function check(name, fn, options = {}) {
   } finally { await context.close(); }
 }
 try {
-  await check('five season-1 remote costumes decode; blocked remote URLs fall back without writes', async page => {
+  await check('all ten season-1 remote costumes decode; blocked sender and publisher URLs fall back without writes', async page => {
     await catalog(page);
     await page.getByLabel('Staffel', { exact: true }).selectOption('1');
     assert.equal(await page.locator('[data-testid=participation]').count(), 10);
     const images = page.locator('[data-testid=participation] img');
-    assert.equal(await images.count(), 5);
+    assert.equal(await images.count(), 10);
     for (const img of await images.all()) {
       await img.scrollIntoViewIfNeeded();
       await page.waitForFunction(el => el.complete && el.naturalWidth > 0, await img.elementHandle());
     }
-    assert.equal(await page.getByText('Temporäres externes Bild · Rechte ungeklärt').count(), 5);
+    assert.equal(await page.getByText('Temporäres externes Bild · Rechte ungeklärt').count(), 10);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     await page.getByRole('heading', { name: 'Promi-Check', exact: true }).scrollIntoViewIfNeeded();
     await page.screenshot({ path: path.join(artifacts, 'mobile-season1-costumes.png'), fullPage: true });
-    await page.route('https://mim.p7s1.io/**', route => route.abort());
+    await page.route(remoteHosts, route => route.abort());
     await page.reload({ waitUntil: 'networkidle' }); await catalog(page);
     await page.getByLabel('Staffel', { exact: true }).selectOption('1');
-    for (const name of ['Astronaut', 'Engel', 'Kudu', 'Monster', 'Kakadu']) {
+    for (const name of ['Astronaut', 'Engel', 'Kudu', 'Monster', 'Kakadu', 'Grashüpfer', 'Panther', 'Eichhörnchen', 'Schmetterling', 'Oktopus']) {
       const fallback = page.getByRole('img', { name: name + ': kein Bild verfügbar', exact: true });
       await page.getByRole('heading', { name, exact: true }).scrollIntoViewIfNeeded();
       await fallback.waitFor();
@@ -91,7 +92,7 @@ try {
   });
   await check('season-2 and season-3 costumes decode; shared duo image and complete remote failure preserve read-only behavior', async page => {
     await catalog(page);
-    for (const [season, rows, images] of [['2', 10, 4], ['3', 11, 11]]) {
+    for (const [season, rows, images] of [['2', 10, 10], ['3', 11, 11]]) {
       await page.getByLabel('Staffel', { exact: true }).selectOption(season);
       assert.equal(await page.locator('[data-testid=participation]').count(), rows);
       const assets = page.locator('[data-testid=participation] img');
@@ -108,14 +109,44 @@ try {
     const duo = page.getByRole('img', { name: 'Erdmännchen', exact: true });
     assert.equal(await duo.count(), 2);
     assert.equal(await duo.nth(0).getAttribute('src'), await duo.nth(1).getAttribute('src'));
-    await page.route('https://mim.p7s1.io/**', route => route.abort());
+    await page.route(remoteHosts, route => route.abort());
     await page.reload({ waitUntil: 'networkidle' }); await catalog(page);
-    await page.getByLabel('Staffel', { exact: true }).selectOption('3');
+    for (const [season, fallbacks] of [['2', 20], ['3', 22]]) {
+      await page.getByLabel('Staffel', { exact: true }).selectOption(season);
+      for (const card of await page.locator('[data-testid=participation]').all()) {
+        await card.scrollIntoViewIfNeeded();
+        await card.locator('img').waitFor({ state: 'detached' });
+      }
+      assert.equal(await page.getByRole('img', { name: /: kein Bild verfügbar$/ }).count(), fallbacks);
+    }
+    assert.equal(await state(page), undefined);
+    assert.equal(await page.evaluate(() => window.catalogWrites), 0);
+  });
+  await check('all ten season-4 costumes decode on mobile and desktop; failure falls back without writes', async page => {
+    await catalog(page);
+    await page.getByLabel('Staffel', { exact: true }).selectOption('4');
+    assert.equal(await page.locator('[data-testid=participation]').count(), 10);
+    const assets = page.locator('[data-testid=participation] img');
+    assert.equal(await assets.count(), 10);
+    for (const img of await assets.all()) {
+      await img.scrollIntoViewIfNeeded();
+      await page.waitForFunction(el => el.complete && el.naturalWidth > 0, await img.elementHandle());
+    }
+    assert.equal(await page.getByText('Temporäres externes Bild · Rechte ungeklärt').count(), 10);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    await page.getByRole('heading', { name: 'Promi-Check', exact: true }).scrollIntoViewIfNeeded();
+    await page.screenshot({ path: path.join(artifacts, 'mobile-season4-costumes.png'), fullPage: true });
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    await page.screenshot({ path: path.join(artifacts, 'desktop-season4-costumes.png'), fullPage: true });
+    await page.route(remoteHosts, route => route.abort());
+    await page.reload({ waitUntil: 'networkidle' }); await catalog(page);
+    await page.getByLabel('Staffel', { exact: true }).selectOption('4');
     for (const card of await page.locator('[data-testid=participation]').all()) {
       await card.scrollIntoViewIfNeeded();
       await card.locator('img').waitFor({ state: 'detached' });
     }
-    assert.equal(await page.getByRole('img', { name: /: kein Bild verfügbar$/ }).count(), 22);
+    assert.equal(await page.getByRole('img', { name: /: kein Bild verfügbar$/ }).count(), 20);
     assert.equal(await state(page), undefined);
     assert.equal(await page.evaluate(() => window.catalogWrites), 0);
   });

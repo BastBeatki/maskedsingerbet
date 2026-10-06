@@ -56,15 +56,20 @@ export interface ImageAsset {
   readonly termsUrl?: string;
   readonly licenseStatus: 'FILE_LICENSE_REVIEWED' | 'RIGHTS_UNRESOLVED';
 }
+// Only reviewed manifest URLs may use the additional public publisher image paths.
+const reviewedPublisherImages = new Set<string>(Object.values(manifest.masks)
+  .flatMap(asset => asset?.sourceType === 'TEMPORARY_REMOTE' && asset.licenseStatus === 'RIGHTS_UNRESOLVED' ? [asset.src] : []));
 export function resolveImageAsset(value: unknown): ImageAsset | null {
   if (!value || typeof value !== 'object') return null;
   const asset = value as Record<string, unknown>;
   const local = asset.licenseStatus === 'FILE_LICENSE_REVIEWED' &&
     (asset.sourceType === undefined || asset.sourceType === 'LOCAL_VERIFIED') &&
     typeof asset.src === 'string' && /^\/catalog-images\/[a-z0-9-]+\.webp$/.test(asset.src);
-  // Explicit temporary sender images; no arbitrary hosts, credentials, scripts or data URLs.
+  // Explicit temporary sender/publisher images; no arbitrary URLs, credentials, scripts or data URLs.
+  const publisher = typeof asset.src === 'string' && reviewedPublisherImages.has(asset.src) &&
+    /^https:\/\/(?:c\.nau\.ch\/i\/[A-Za-z0-9]+\/900\/[a-z0-9-]+\.jpg|www\.24rhein\.de\/asset\/[a-z0-9-]+\.webp|www\.connect-living\.de\/bilder\/[0-9]+\/landscapex1200-c2\/masked-singer-2020-[a-z-]+-kostuem\.jpg)$/.test(asset.src);
   const remote = asset.sourceType === 'TEMPORARY_REMOTE' && asset.licenseStatus === 'RIGHTS_UNRESOLVED' &&
-    typeof asset.src === 'string' && /^https:\/\/mim\.p7s1\.io\/pis\/ld\/[A-Za-z0-9_-]+\/profile:original$/.test(asset.src);
+    typeof asset.src === 'string' && (publisher || /^https:\/\/mim\.p7s1\.io\/pis\/ld\/[A-Za-z0-9_-]+\/profile:original$/.test(asset.src));
   if ((!local && !remote) ||
     !['source', 'authorUrl', local ? 'licenseUrl' : 'termsUrl'].every(key => typeof asset[key] === 'string' && /^https:\/\/[^\s]+$/.test(asset[key] as string)) ||
     !['rights', 'author', 'title', 'changes'].every(key => typeof asset[key] === 'string' && (asset[key] as string).trim())) return null;

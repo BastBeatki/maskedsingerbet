@@ -1,7 +1,7 @@
 {
   "asOf": "2026-10-06",
   "catalogAsOf": "2026-09-30",
-  "batch": "mask-first-season2-3-batch",
+  "batch": "mask-first-season1-2-completion-and-season4-014-v3",
   "coverage": {
     "people": {
       "covered": 4,
@@ -12,12 +12,12 @@
       "total": 126
     },
     "masks": {
-      "covered": 19,
+      "covered": 40,
       "total": 127,
-      "temporaryRemote": 19,
+      "temporaryRemote": 40,
       "localVerified": 0,
       "conditionalUserGameState": 12,
-      "withMatchingUserGameState": 31
+      "withMatchingUserGameState": 52
     },
     "season13": {
       "peopleCovered": 4,
@@ -28,21 +28,28 @@
       "conditionalUserGameState": 12
     },
     "season1": {
-      "masksCovered": 5,
+      "masksCovered": 10,
       "masksTotal": 10,
-      "temporaryRemote": 5
+      "temporaryRemote": 10,
+      "status": "COMPLETE_TEMPORARY_REMOTE"
     },
     "season2": {
-      "masksCovered": 4,
+      "masksCovered": 10,
       "masksTotal": 10,
-      "temporaryRemote": 4,
-      "status": "BATCH_REVIEWED"
+      "temporaryRemote": 10,
+      "status": "COMPLETE_TEMPORARY_REMOTE"
     },
     "season3": {
       "masksCovered": 10,
       "masksTotal": 10,
       "temporaryRemote": 10,
-      "status": "BATCH_REVIEWED"
+      "status": "COMPLETE_TEMPORARY_REMOTE"
+    },
+    "season4": {
+      "masksCovered": 10,
+      "masksTotal": 10,
+      "temporaryRemote": 10,
+      "status": "COMPLETE_TEMPORARY_REMOTE"
     }
   },
   "missingPeople": [
@@ -897,164 +904,6 @@
   ],
   "missingMasks": [
     {
-      "key": "[1,\"Grashüpfer\"]",
-      "season": 1,
-      "name": "Grashüpfer",
-      "status": "UNSUITABLE_UNMASKED_CANDIDATE",
-      "candidatePage": null,
-      "reason": "Geprüfter Sender-Kandidat zeigt demaskierten Promi; kein geeignetes Kostümbild in diesem Batch."
-    },
-    {
-      "key": "[1,\"Panther\"]",
-      "season": 1,
-      "name": "Panther",
-      "status": "UNSUITABLE_UNMASKED_CANDIDATE",
-      "candidatePage": null,
-      "reason": "Geprüfter Sender-Kandidat zeigt demaskierten Promi; kein geeignetes Kostümbild in diesem Batch."
-    },
-    {
-      "key": "[1,\"Eichhörnchen\"]",
-      "season": 1,
-      "name": "Eichhörnchen",
-      "status": "UNSUITABLE_UNMASKED_CANDIDATE",
-      "candidatePage": null,
-      "reason": "Geprüfter Sender-Kandidat zeigt demaskierten Promi; kein geeignetes Kostümbild in diesem Batch."
-    },
-    {
-      "key": "[1,\"Schmetterling\"]",
-      "season": 1,
-      "name": "Schmetterling",
-      "status": "UNSUITABLE_UNMASKED_CANDIDATE",
-      "candidatePage": null,
-      "reason": "Geprüfter Sender-Kandidat zeigt demaskierten Promi; kein geeignetes Kostümbild in diesem Batch."
-    },
-    {
-      "key": "[1,\"Oktopus\"]",
-      "season": 1,
-      "name": "Oktopus",
-      "status": "UNSUITABLE_UNMASKED_CANDIDATE",
-      "candidatePage": null,
-      "reason": "Geprüfter Sender-Kandidat zeigt demaskierten Promi; kein geeignetes Kostümbild in diesem Batch."
-    },
-    {
-      "key": "[2,\"Drache\"]",
-      "season": 2,
-      "name": "Drache",
-      "status": "UNSUITABLE_OR_RESTRICTED_CANDIDATES",
-      "candidatePage": null,
-      "reason": "Individuelle Senderbilder zeigen demaskierte Personen. Roboter-Indizbild trägt zeitlich abgelaufene Freigabe; t-online-Galerie untersagt Dritteinbindung ohne Erlaubnis. Keine geeignete einbindbare Alternative in diesem Batch."
-    },
-    {
-      "key": "[2,\"Hase\"]",
-      "season": 2,
-      "name": "Hase",
-      "status": "UNSUITABLE_OR_RESTRICTED_CANDIDATES",
-      "candidatePage": null,
-      "reason": "Individuelle Senderbilder zeigen demaskierte Personen. Roboter-Indizbild trägt zeitlich abgelaufene Freigabe; t-online-Galerie untersagt Dritteinbindung ohne Erlaubnis. Keine geeignete einbindbare Alternative in diesem Batch."
-    },
-    {
-      "key": "[2,\"Chamäleon\"]",
-      "season": 2,
-      "name": "Chamäleon",
-      "status": "UNSUITABLE_OR_RESTRICTED_CANDIDATES",
-      "candidatePage": null,
-      "reason": "Individuelle Senderbilder zeigen demaskierte Personen. Roboter-Indizbild trägt zeitlich abgelaufene Freigabe; t-online-Galerie untersagt Dritteinbindung ohne Erlaubnis. Keine geeignete einbindbare Alternative in diesem Batch."
-    },
-    {
-      "key": "[2,\"Roboter\"]",
-      "season": 2,
-      "name": "Roboter",
-      "status": "UNSUITABLE_OR_RESTRICTED_CANDIDATES",
-      "candidatePage": null,
-      "reason": "Individuelle Senderbilder zeigen demaskierte Personen. Roboter-Indizbild trägt zeitlich abgelaufene Freigabe; t-online-Galerie untersagt Dritteinbindung ohne Erlaubnis. Keine geeignete einbindbare Alternative in diesem Batch."
-    },
-    {
-      "key": "[2,\"Göttin\"]",
-      "season": 2,
-      "name": "Göttin",
-      "status": "UNSUITABLE_OR_RESTRICTED_CANDIDATES",
-      "candidatePage": null,
-      "reason": "Individuelle Senderbilder zeigen demaskierte Personen. Roboter-Indizbild trägt zeitlich abgelaufene Freigabe; t-online-Galerie untersagt Dritteinbindung ohne Erlaubnis. Keine geeignete einbindbare Alternative in diesem Batch."
-    },
-    {
-      "key": "[2,\"Dalmatiner\"]",
-      "season": 2,
-      "name": "Dalmatiner",
-      "status": "UNSUITABLE_OR_RESTRICTED_CANDIDATES",
-      "candidatePage": null,
-      "reason": "Individuelle Senderbilder zeigen demaskierte Personen. Roboter-Indizbild trägt zeitlich abgelaufene Freigabe; t-online-Galerie untersagt Dritteinbindung ohne Erlaubnis. Keine geeignete einbindbare Alternative in diesem Batch."
-    },
-    {
-      "key": "[4,\"Dinosaurier\"]",
-      "season": 4,
-      "name": "Dinosaurier",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[4,\"Leopard\"]",
-      "season": 4,
-      "name": "Leopard",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[4,\"Flamingo\"]",
-      "season": 4,
-      "name": "Flamingo",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[4,\"Schildkröte\"]",
-      "season": 4,
-      "name": "Schildkröte",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[4,\"Monstronaut\"]",
-      "season": 4,
-      "name": "Monstronaut",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[4,\"Stier\"]",
-      "season": 4,
-      "name": "Stier",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[4,\"Küken\"]",
-      "season": 4,
-      "name": "Küken",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[4,\"Quokka\"]",
-      "season": 4,
-      "name": "Quokka",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[4,\"Einhorn\"]",
-      "season": 4,
-      "name": "Einhorn",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[4,\"Schwein\"]",
-      "season": 4,
-      "name": "Schwein",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
       "key": "[5,\"Mülli Müller\"]",
       "season": 5,
       "name": "Mülli Müller",
@@ -1664,5 +1513,5 @@
       "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     }
   ],
-  "rightsNote": "19 TEMPORARY_REMOTE und 12 bedingte USER_GAMESTATE: RIGHTS_UNRESOLVED. Keine lizenzgeprüften Masken. 108 öffentliche Manifest-Lücken; davon 12 aus eindeutigem Spielstand wiederverwendbar, dann 96 verbleibende Bildlücken. Fehlender Urheber-Credit wird als unbekannt angegeben, nicht erfunden."
+  "rightsNote": "40 TEMPORARY_REMOTE und zwölf bedingte USER_GAMESTATE: RIGHTS_UNRESOLVED. Keine lokal lizenzgeprüften Masken. 87 öffentliche Manifest-Lücken; davon zwölf aus eindeutigem Spielstand wiederverwendbar, dann 75 verbleibende Bildlücken. Urheber-Credits stammen von den jeweiligen Quellseiten; sie sind keine Lizenz."
 }

@@ -80,15 +80,28 @@ test('truncated data or inconsistent record-count metadata fails visibly', () =>
   assert.throws(() => extractCatalog({ ...document, _record_count: 133 }));
 });
 
-test('temporary sender masks stay explicitly unresolved and reject arbitrary URLs/statuses', () => {
+test('temporary sender and publisher masks stay explicitly unresolved and reject arbitrary URLs/statuses', () => {
   const assets = Object.values(manifest.masks).filter(Boolean);
-  assert.equal(assets.length, 19);
+  assert.equal(assets.length, 40);
   for (const asset of assets) {
     assert.ok(resolveImageAsset(asset));
     assert.equal(asset!.sourceType, 'TEMPORARY_REMOTE');
     assert.equal(asset!.licenseStatus, 'RIGHTS_UNRESOLVED');
     assert.equal(resolveImageAsset({ ...asset, src: 'https://example.com/image.webp' }), null);
     assert.equal(resolveImageAsset({ ...asset, licenseStatus: 'FILE_LICENSE_REVIEWED' }), null);
+  }
+});
+
+test('publisher image paths require exact reviewed URLs and reject credentials, queries and unreviewed files', () => {
+  const assets = Object.values(manifest.masks).filter(asset => asset && !asset.src.startsWith('https://mim.p7s1.io/'));
+  assert.equal(assets.length, 21);
+  for (const asset of assets) {
+    assert.ok(resolveImageAsset(asset));
+    for (const src of [asset!.src + '?track=1', asset!.src.replace('https://', 'http://'),
+      asset!.src.replace('https://', 'https://user:password@'), asset!.src.replace(/[^/]+$/, 'unreviewed.jpg'),
+      asset!.src.replace(/https:\/\/[^/]+/, 'https://example.com')]) {
+      assert.equal(resolveImageAsset({ ...asset, src }), null);
+    }
   }
 });
 
