@@ -82,7 +82,7 @@ test('truncated data or inconsistent record-count metadata fails visibly', () =>
 
 test('temporary sender masks stay explicitly unresolved and reject arbitrary URLs/statuses', () => {
   const assets = Object.values(manifest.masks).filter(Boolean);
-  assert.equal(assets.length, 5);
+  assert.equal(assets.length, 19);
   for (const asset of assets) {
     assert.ok(resolveImageAsset(asset));
     assert.equal(asset!.sourceType, 'TEMPORARY_REMOTE');
