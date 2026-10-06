@@ -2,7 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import document from '../data/promi-catalog-2026-09-30.json';
 import manifest from '../data/promi-image-manifest.json';
-import { extractCatalog, getCatalog, filterCatalog, participationKey, maskKey, catalogImages, resolveImageAsset } from '../catalog';
+import { extractCatalog, getCatalog, filterCatalog, participationKey, maskKey, catalogImages, resolveImageAsset, gameStateMaskImages } from '../catalog';
+import type { Season } from '../types';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 
@@ -77,6 +78,35 @@ test('missing, unreviewed or unsafe image entries resolve to a fallback', () => 
 test('truncated data or inconsistent record-count metadata fails visibly', () => {
   assert.throws(() => extractCatalog({ ...document, records: document.records.slice(1) }));
   assert.throws(() => extractCatalog({ ...document, _record_count: 133 }));
+});
+
+test('temporary sender masks stay explicitly unresolved and reject arbitrary URLs/statuses', () => {
+  const assets = Object.values(manifest.masks).filter(Boolean);
+  assert.equal(assets.length, 5);
+  for (const asset of assets) {
+    assert.ok(resolveImageAsset(asset));
+    assert.equal(asset!.sourceType, 'TEMPORARY_REMOTE');
+    assert.equal(asset!.licenseStatus, 'RIGHTS_UNRESOLVED');
+    assert.equal(resolveImageAsset({ ...asset, src: 'https://example.com/image.webp' }), null);
+    assert.equal(resolveImageAsset({ ...asset, licenseStatus: 'FILE_LICENSE_REVIEWED' }), null);
+  }
+});
+
+test('existing season-13 costumes are reused read-only, including display-only aliases', () => {
+  const src = 'data:image/png;base64,aGVsbG8=';
+  const season = { id: 'synthetic', seasonName: 'Staffel 2026', playerIds: [], shows: [], activeShowId: null, counterBets: [],
+    masks: getCatalog().rows.filter(r => r.season === 13).map((row, i) => ({ id: String(i), name: row.mask_name === 'Mr. Mic' ? 'MR. MIC' : row.mask_name === 'P.S.' ? 'P.S' : row.mask_name, imageUrl: src, tips: {}, isRevealed: false })) } satisfies Season;
+  const before = JSON.stringify(season);
+  const images = gameStateMaskImages([season]);
+  assert.equal(images.size, 12);
+  assert.ok([...images.values()].every(a => a.src === src && a.sourceType === 'USER_GAMESTATE' && a.licenseStatus === 'RIGHTS_UNRESOLVED'));
+  assert.equal(JSON.stringify(season), before);
+  assert.equal(gameStateMaskImages([season, { ...season, id: 'ambiguous' }]).size, 0);
+  assert.equal(gameStateMaskImages([{ ...season, seasonName: 'Unzugeordnet' }]).size, 0);
+  const duplicate = structuredClone(season); duplicate.masks.push({ ...duplicate.masks[0], id: 'duplicate' });
+  assert.equal(gameStateMaskImages([duplicate]).size, 11);
+  const unsafe = structuredClone(season); unsafe.masks[0].imageUrl = 'data:image/svg+xml;base64,aGVsbG8=';
+  assert.equal(gameStateMaskImages([unsafe]).size, 11);
 });
 test('missing fields and duplicate participation identities are rejected', () => {
   const bad = structuredClone(document);

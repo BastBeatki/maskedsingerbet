@@ -121,7 +121,7 @@ const App: React.FC = () => {
        case 'rules':
         return <RulesView onBack={handleBackToHome} />;
       case 'promi':
-        return <PromiCheckView onBack={handleBackToHome} />;
+        return <PromiCheckView onBack={handleBackToHome} seasons={appState.seasons} />;
       case 'home':
       default:
         return (

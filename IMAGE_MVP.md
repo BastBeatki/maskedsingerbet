@@ -1,47 +1,46 @@
-# Promi-Bilder: erster Zwischenstand, 06.10.2026
+# Maskenbilder: Zwischenstand 06.10.2026
 
-Auftrag: `JH-MASKED-IMAGES-MVP-20261006-010`, Version 1. Isolierter Branch `feature/promi-images-mvp`, Ausgangspunkt `8a4dccb13b64610efd529ab47a69c0ffcdb26ba0`. Dieser Batch ist der beauftragte Zwischenstopp, nicht der vollständige Bilder-MVP.
+Aktueller Auftrag: `JH-MASKED-IMAGES-MVP-20261006-012`, Version 1. Branch `feature/promi-images-mvp`, Fortsetzung des Vier-Porträt-Batches `dddf806`. Dieser geprüfte Zwischenstand ist noch kein vollständiger Staffel-1–3-MVP. Maskenbilder haben Vorrang; keine weiteren Porträts in diesem Batch.
 
-## Ergebnis und Coverage
+## Coverage
 
-- Vier lokale Commons-Fotos, insgesamt 76.732 Byte, maximal 512 px, WebP. Keine Hotlinks, keine API zur Laufzeit und keine neue App-Abhängigkeit.
-- Bekannte Personen: **4/125 unterschiedliche Katalognamen**; Teilnahmezeilen mit bekannten Personen: **4/126**. Masken: **0/127 Staffel-/Maskenschlüssel**.
-- Staffel 13 laut unverändertem Katalog: **4/4 bekannte Personen**, **0/12 Masken**. Acht noch unbekannte Identitäten bleiben ohne Foto. Das ist der Katalogstand vom 30.09.2026, kein Live-Datenstand.
-- Isabel Edvardsson, Ben Zucker, Stefan Mross und Prince Damien sind bebildert. Alle anderen Personen sind noch nicht in diesem Batch bearbeitet; die vollständige Lückenliste steht in `data/promi-image-gaps.json`.
-- Bildnachweise stehen beim Foto: Urheberlink, Lizenzlink und Originalquelle. WebP-Dateien stehen jeweils unter der im Manifest angegebenen CC-BY-SA-Lizenz. Größen-/Formatänderung ist auch im UI erklärt. Bilddarstellung ohne zusätzlichen Ausschnitt.
-- Fehlende, defekte oder unvollständig belegte Assets erhalten einen Platzhalter. Unbekannte Personen können durch das Manifest nicht versehentlich bebildert werden.
+| Bereich | Kostümbilder | Status |
+| --- | --- | --- |
+| Staffel 1 | 5/10 | Astronaut, Engel, Kudu, Monster, Kakadu: TEMPORARY_REMOTE / RIGHTS_UNRESOLVED |
+| Staffel 2 | 0/10 | Folgebatch |
+| Staffel 3 | 0/10 | Folgebatch; 11 Teilnahmezeilen teilen 10 Maskenschlüssel |
+| Staffel 13 | 12/12 bedingt | USER_GAMESTATE / RIGHTS_UNRESOLVED: aus eindeutig passendem lokalem Spielstand |
+| Manifest insgesamt | 5/127 | Keine lokal lizenzgeprüften Masken; 122 ohne öffentliches Asset |
+| Mit vorhandenem passenden Spielstand | 17/127 | 5 remote + 12 bestehende Nutzerbilder; 110 verbleibende Bildlücken |
 
-## Quellen und Rechte
+Porträts separat: **4/125 unterschiedliche bekannte Personen**, 4/126 bekannte Teilnahmezeilen. Isabel Edvardsson, Ben Zucker, Stefan Mross und Prince Damien bleiben als lokale Commons-WebPs erhalten (`LOCAL_VERIFIED`, `FILE_LICENSE_REVIEWED`; 76.732 Byte). Quellen, Autoren, Lizenzlinks und Datei-Hashes im Manifest; dateiseitig geprüfte CC-BY-SA-Lizenzen sind keine pauschale Garantie für Persönlichkeitsrechte oder beliebige Nutzung. Acht unbekannte Identitäten bleiben ohne Porträt. Katalogstand 30.09.2026 unverändert.
 
-Jeder eingebundene Manifest-Eintrag enthält Originaldateiseite, Urheber, Lizenzname/-URL, Beschreibung, Prüfdatum, Downloadquelle, Commons-SHA1 sowie lokale SHA256/Größe/Abmessungen. `FILE_LICENSE_REVIEWED` bezeichnet die auf der Commons-Dateiseite geprüfte Urheberlizenz; es ist keine pauschale Aussage über Persönlichkeitsrechte oder eine Garantie für beliebige Nutzungszwecke.
+Die zwölf Nutzerbilder zählen nicht zur allgemeinen öffentlichen Coverage. Eine frische Preview hat ohne eigenen passenden Spielstand nur fünf Kostümbilder. Browser-Spielstände der Production-Domain sind auf einer Preview-Domain nicht automatisch verfügbar. Kein privater Export wurde in eine gehostete Preview importiert.
 
-Die Dateibeschreibungen identifizieren jeweils die abgebildete Person; alle vier lokalen Bilder und ihre Darstellung wurden zusätzlich visuell geprüft. Ben Zuckers Foto nennt Olaf Kosinsky einschließlich gefordertem Homepage-Link. Keine E-Mail an Fotografen gesendet; die Bitte um URL-Mitteilung auf der Quelldateiseite ist separat von der CC-Lizenz zu lesen. Keine Endorsement-Aussage.
+## Vorhandene Staffel-13-Bilder
 
-Primäre Maskenkandidaten: [Joyn, Staffel-13-Maskenübersicht](https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735). Diese Webseite enthält Senderbilder/Credits, aber eine Quellenangabe allein belegt keine Wiederverwendungslizenz. Kein Maskenfoto heruntergeladen oder hotverlinkt.
+Der vorhandene lokale Nutzerexport enthält zwölf eingebettete PNG/JPEG/WebP-Kostümbilder in `Staffel 2026`. Alle wurden visuell geprüft; eine separate lesende Prüfung bestätigte zwölf Zuordnungen und unveränderten Datei-/Objektinhalt.
 
-[Seven.One-Presselounge-AGB](https://presse.prosiebensat1.com/service/agb), insbesondere 4.2–4.4, haben Anforderungen an Berechtigte, redaktionelle Nutzung, IPTC-Nennung, Bearbeitung, Weitergabe und Lizenzzeit. Die [Joyn-AGB 2026](https://static.joyn.de/Joyn_AGB_2026.pdf), Abschnitt 2.7, gewähren normale private Dienstnutzung; sie wurden nicht als Freigabe zum Rehosting von BTS-Standbildern interpretiert. Der genaue Anwendungsbereich der Pressebedingungen auf einzelne BTS-Assets ist nicht abschließend geklärt. Für den dauerhaft gehosteten Tipper ist keine passende Erlaubnis festgestellt. Status deshalb **RIGHTS_UNRESOLVED**, keine Behauptung einer verifizierten Maskenlizenz oder eines generellen rechtlichen Verbots. Ältere 115 Maskenschlüssel sind im ersten Batch nicht einzeln recherchiert.
+`App.tsx` reicht nur vorhandene Staffeln als lesende Props an den Promi-Check weiter. Die Anzeige akzeptiert genau eine Staffel namens `Staffel 2026` oder `Staffel 13` mit mindestens acht unterschiedlichen passenden Maskennamen. Bei mehrdeutigen Staffeln oder Maskennamen wird nicht geraten. Großschreibung, Leerzeichen und Punkte werden nur für die Zuordnung normalisiert (`MR. MIC` / `Mr. Mic`, `P.S` / `P.S.`). Gespeicherte Namen und Katalogschlüssel bleiben unverändert. Nur eingebettete PNG/JPEG/WebP-Bilder, keine SVGs oder externen Nutzer-URLs. Keine Bildkopie im Manifest, kein neuer Speicher, kein Upload.
 
-## Datenstand: separate Folgemaßnahme
+## Quellen und offene Rechte
 
-Die [offizielle Enthüllungsübersicht nach Folge 3](https://www.joyn.de/bts/serien/the-masked-singer/the-masked-singer2026-alle-enthuellungen-nach-folge3-190242) nennt zusätzlich Evelyn Burdecki / Cosma und Mathias Mester / Luigi Eishörnchen. Beide sind im beauftragten Katalog noch unbekannt. Der Bilderauftrag erhält sämtliche Kataloginhalte und Schlüssel unverändert; daher weder Identitäten ergänzt noch zusätzliche Personenfotos in diese Null-Schlüssel geschrieben. Eine freigegebene separate Katalogaktualisierung ist nötig, wenn vor der nächsten Sendung der Live-Stand abgebildet werden soll. Keine vollständige aktuelle Staffelprüfung behauptet.
+Die fünf URLs stammen aus öffentlichen Joyn/BTS-Senderseiten: [Astronaut](https://www.joyn.de/bts/serien/the-masked-singer/news/the-masked-singer-der-astronaut-liefert-ein-weiteres-indiz-5483), [Engel](https://www.joyn.de/bts/serien/the-masked-singer/news/the-masked-singer-der-engel-verrat-ein-neues-indiz-5481), [Kudu](https://www.joyn.de/bts/serien/the-masked-singer/the-masked-singer-steckt-daniel-aminati-hinter-dem-kudu-5538), [Monster](https://www.joyn.de/bts/serien/the-masked-singer/news/the-masked-singer-deutschland-ein-neues-indiz-zum-monster-5215), [Kakadu](https://www.joyn.de/bts/serien/the-masked-singer/the-masked-singer-deutschland-neues-indiz-zum-kakadu-5540). Credits laut Quellseiten: ProSieben / Boris Breuer. Astronaut und Kakadu zeigen nähere Ansichten; Engel/Kudu/Monster zeigen Ganzkörper im vorhandenen Senderlayout. Die referenzierten Dateien bleiben unverändert, Anzeige mit object-contain, kein Ausschnitt.
 
-## Reproduktion und Tests
+Keine Wiederverwendungslizenz festgestellt. [Joyn-AGB 2026](https://static.joyn.de/Joyn_AGB_2026.pdf) sind als Bedingungen verlinkt, ausdrücklich nicht als Bildlizenz. Sie regeln insbesondere Streaminginhalte und private Dienstnutzung. Der genaue Anwendungsbereich der [Presselounge-AGB](https://presse.prosiebensat1.com/service/agb) auf öffentliche BTS-Standbilder bleibt offen; sie sind keine App-Freigabe. Die Einbindung folgt der beauftragten temporären Strategie mit offenem Rechtestatus und ist keine rechtliche Freigabe. Keine geschützte Presseanmeldung, Videoextraktion, Referer-Spoofing oder andere Schutzumgehung. Requests senden keinen Referer. Verfügbarkeit und spätere Bedingungen können sich ändern.
 
-```powershell
-python scripts/fetch-catalog-images.py data/image-batches/season13.json
-npm.cmd run typecheck
-npm.cmd test
-npm.cmd run build
-```
+TEMPORARY_REMOTE und RIGHTS_UNRESOLVED stehen sichtbar neben externen Bildern; Nutzerbilder erhalten ebenfalls keinen erfundenen Lizenzstatus. Fehlerhafte URLs führen zu Platzhaltern und blockieren keine Karte oder App.
 
-Der Entwicklungs-Downloader benötigt Python/Pillow und Netzwerkzugriff; die Anwendung braucht beides nicht. Er lädt ausschließlich explizit geprüfte Zuordnungen, kontrolliert die konkrete Lizenz nochmals und ändert das bestehende Manifest erst nach erfolgreichem Download des gesamten Batches. Keine automatische Veröffentlichungsentscheidung aus Suchtreffern.
+## Lücken und Folgebatch
 
-Typecheck, 28 Katalog-/Persistenztests und Build bestanden. Fünf Browserprüfungen mit frischen Chromium-Kontexten bestanden: echte Bilddekodierung, Credits/Unbekannte/Suche, absichtlich blockiertes Bild plus Wiederherstellung, synthetischer Import/Export mit tiefer Gleichheit, Home/Game/beide Settings-Ansichten, Final-Tipp-Persistenz und Reload, ungültiger Import, mobile und Desktop-Ansicht. Im neuen und bereits befüllten synthetischen Spielstand erzeugt Katalognutzung keine IndexedDB-`put`-Aufrufe. Keine realen Nutzerprofile oder privaten Backups im Bildtest verwendet. Kein realer iPad/Safari-Test in diesem Run.
+Staffel 1: **Grashüpfer, Panther, Eichhörnchen, Schmetterling, Oktopus**. Geprüfte individuelle Sender-Hero-Bilder zeigen bereits demaskierte Menschen und wurden deshalb nicht als Kostümbilder eingebunden. Keine Aussage, dass geeignete Bilder nicht existieren. Staffel 2–3 sind noch nicht einzeln bebildert. Die geprüfte Staffel-3-Übersicht enthält ein Gruppenbild statt einzeln zuordenbarer Assets. Vollständige Lückenliste: `data/promi-image-gaps.json`.
 
-`tests/browser-images.mjs` nutzt ein vorhandenes Playwright-Paket und einen isolierten lokalen CDP-Browser. `JARVIS_PLAYWRIGHT_PACKAGE` kann auf dessen vorhandene Installation zeigen. Aufruf: `node tests/browser-images.mjs <local-cdp-url> <artifact-directory> [local-base-url]`.
+Nächster Batch: fünf Staffel-1-Lücken kurz nachrecherchieren, danach zügig Masken von Staffel 2–3 bearbeiten und schwierige Fälle dokumentieren. Porträts bleiben sekundär. Basti pflegt aktuelle Masken und Enthüllungen selbst in der App; keine externe Katalog-/Spielstandaktualisierung empfohlen oder ausgeführt.
 
-Katalog-Arbeitskopie gegenüber dem Run-Start unverändert; Git normalisiert deren CRLF-Zeilenenden, und der normalisierte Inhalt entspricht exakt dem Ausgangscommit. Spiel-/Punkte-/Persistenzcode und Datenbankschema unverändert. Prüfartefakte/Screenshots liegen außerhalb des Repositories unter `../../_workshop/masked-images-20261006/`. Arbeitskopie-SHA256: `638c6e738cfd019f57e52406ecc489c6fe80f0da69ea1412583c2381336ae047`; Git speichert dieselbe Katalogdatei mit LF. Die älteren Hashangaben in `WORKSHOP.md` beziehen sich auf diese LF-Fassung.
+## Verifikation
 
-## Nächster Schritt
+Typecheck, **30 Tests**, Build und **sieben Browserprüfungen** bestanden. Fünf echte externe Masken und vier lokale Porträts dekodieren. Simulierter Ausfall aller Senderbilder sowie eines lokalen Porträts erzeugt Platzhalter. Mobile 390 px und Desktop 1440 px ohne horizontalen Überlauf oder App-Fehler.
 
-Preview visuell abnehmen. Dann weitere geprüfte Commons-Porträts in Batches ergänzen; zuerst Staffel 12/11, dann ältere Staffeln. Maskenrechte anhand konkreter Erlaubnis/geeigneter Lizenz klären; bis dahin Platzhalter. Separates Katalogupdate für nachträglich enthüllte Personen beauftragen. Kein Merge oder Production-Release durch diesen Auftrag.
+Browserprüfungen verwenden frische Kontexte und synthetische Spielstände: zwölf eingebettete Testbilder, Aliaszuordnung, acht unbekannte Identitäten, Suche/Filter/Navigation, exakt gleicher Import/Export, Reload, Home/Game/beide Settings, Final-Tipp-Persistenz und ungültiger Import. Katalognutzung erzeugt keine IndexedDB-Schreibzugriffe. Der echte Nutzerexport wurde separat ausschließlich lesend geprüft, nicht in Browsertests importiert. Kein realer iPad/Safari-Test.
+
+Keine Änderungen an Katalogdaten, Punkten, Tipps, Speicherlogik/-schema, Import/Export, Enthüllungslogik oder privatem Export. Einzige App-Verdrahtung außerhalb des Bildrenderers: lesende seasons-Prop. Preview und finaler Commit werden im festen Airtable-Rückkanal dokumentiert; main/Production bleiben unangetastet.

@@ -13,6 +13,8 @@ assert.ok(artifacts);
 fs.mkdirSync(artifacts, { recursive: true });
 const browser = await chromium.connectOverCDP(endpoint);
 const results = [];
+const costumeNames = JSON.parse(fs.readFileSync(new URL('../data/promi-catalog-2026-09-30.json', import.meta.url))).records.filter(r => r.season === 13).map(r => r.mask_name);
+const tinyImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aJ1kAAAAASUVORK5CYII=';
 const fixture = {
   players: [{ id: 'p', name: 'Testspieler', color: '#123456' }],
   seasons: [{ id: 's', seasonName: 'Bildtest', playerIds: ['p'],
@@ -58,6 +60,65 @@ async function check(name, fn, options = {}) {
   } finally { await context.close(); }
 }
 try {
+  await check('five season-1 remote costumes decode; blocked remote URLs fall back without writes', async page => {
+    await catalog(page);
+    await page.getByLabel('Staffel', { exact: true }).selectOption('1');
+    assert.equal(await page.locator('[data-testid=participation]').count(), 10);
+    const images = page.locator('[data-testid=participation] img');
+    assert.equal(await images.count(), 5);
+    for (const img of await images.all()) {
+      await img.scrollIntoViewIfNeeded();
+      await page.waitForFunction(el => el.complete && el.naturalWidth > 0, await img.elementHandle());
+    }
+    assert.equal(await page.getByText('Temporäres externes Bild · Rechte ungeklärt').count(), 5);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    await page.getByRole('heading', { name: 'Promi-Check', exact: true }).scrollIntoViewIfNeeded();
+    await page.screenshot({ path: path.join(artifacts, 'mobile-season1-costumes.png'), fullPage: true });
+    await page.route('https://mim.p7s1.io/**', route => route.abort());
+    await page.reload({ waitUntil: 'networkidle' }); await catalog(page);
+    await page.getByLabel('Staffel', { exact: true }).selectOption('1');
+    for (const name of ['Astronaut', 'Engel', 'Kudu', 'Monster', 'Kakadu']) {
+      const fallback = page.getByRole('img', { name: name + ': kein Bild verfügbar', exact: true });
+      await page.getByRole('heading', { name, exact: true }).scrollIntoViewIfNeeded();
+      await fallback.waitFor();
+    }
+    assert.equal(await state(page), undefined);
+    assert.equal(await page.evaluate(() => window.catalogWrites), 0);
+    await page.getByLabel('Staffel', { exact: true }).selectOption('2');
+    assert.equal(await page.locator('[data-testid=participation]').count(), 10);
+    await page.getByLabel('Staffel', { exact: true }).selectOption('3');
+    assert.equal(await page.locator('[data-testid=participation]').count(), 11);
+  });
+  await check('synthetic twelve existing costumes render read-only, export and reload preserve every field', async page => {
+    const costumes = structuredClone(fixture);
+    costumes.seasons[0].seasonName = 'Staffel 2026';
+    costumes.seasons[0].masks = costumeNames.map((name, i) => ({ id: 'costume' + i,
+      name: name === 'Mr. Mic' ? 'MR. MIC' : name === 'P.S.' ? 'P.S' : name,
+      imageUrl: tinyImage, isRevealed: false, tips: {} }));
+    await page.locator('#import-file-input').setInputFiles({ name: 'synthetic-costumes.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(costumes)) });
+    await page.getByRole('heading', { name: 'Staffel 2026', exact: true }).waitFor();
+    await page.waitForFunction(() => window.catalogWrites >= 1);
+    const writes = await page.evaluate(() => window.catalogWrites);
+    await catalog(page);
+    assert.equal(await page.locator('[data-testid=participation] img').count(), 16);
+    for (const name of costumeNames) {
+      const img = page.getByRole('img', { name, exact: true }); await img.scrollIntoViewIfNeeded();
+      await page.waitForFunction(el => el.complete && el.naturalWidth > 0, await img.elementHandle());
+    }
+    assert.equal(await page.getByText('Bild aus deinem Spielstand · Rechte ungeklärt', { exact: true }).count(), 12);
+    assert.equal(await page.getByText('Noch nicht enthüllt', { exact: true }).count(), 8);
+    assert.equal(await page.evaluate(() => window.catalogWrites), writes);
+    assert.deepEqual(await state(page), costumes);
+    await page.getByRole('button', { name: 'Zurück zur Startseite' }).click();
+    const pending = page.waitForEvent('download'); await page.getByRole('button', { name: 'Export', exact: true }).click();
+    const stream = await (await pending).createReadStream(); const chunks = [];
+    for await (const chunk of stream) chunks.push(chunk);
+    assert.deepEqual(JSON.parse(Buffer.concat(chunks).toString('utf8')), costumes);
+    await page.reload({ waitUntil: 'networkidle' }); await catalog(page);
+    assert.equal(await page.locator('[data-testid=participation] img').count(), 16);
+    assert.deepEqual(await state(page), costumes);
+    assert.equal(await page.evaluate(() => window.catalogWrites), 0);
+  });
   await check('mobile: four real images and credits, eight unknowns, search, no game-state writes', async page => {
     await catalog(page);
     assert.equal(await page.getByText('Noch nicht enthüllt', { exact: true }).count(), 8);

@@ -1,7 +1,7 @@
 {
   "asOf": "2026-10-06",
   "catalogAsOf": "2026-09-30",
-  "batch": "season13-first",
+  "batch": "mask-first-season1-checkpoint",
   "coverage": {
     "people": {
       "covered": 4,
@@ -12,15 +12,35 @@
       "total": 126
     },
     "masks": {
-      "covered": 0,
-      "total": 127
+      "covered": 5,
+      "total": 127,
+      "temporaryRemote": 5,
+      "localVerified": 0,
+      "conditionalUserGameState": 12,
+      "withMatchingUserGameState": 17
     },
     "season13": {
       "peopleCovered": 4,
       "peopleTotal": 4,
       "masksCovered": 0,
       "masksTotal": 12,
-      "unknownPeople": 8
+      "unknownPeople": 8,
+      "conditionalUserGameState": 12
+    },
+    "season1": {
+      "masksCovered": 5,
+      "masksTotal": 10,
+      "temporaryRemote": 5
+    },
+    "season2": {
+      "masksCovered": 0,
+      "masksTotal": 10,
+      "status": "NEXT_BATCH"
+    },
+    "season3": {
+      "masksCovered": 0,
+      "masksTotal": 10,
+      "status": "NEXT_BATCH"
     }
   },
   "missingPeople": [
@@ -875,74 +895,44 @@
   ],
   "missingMasks": [
     {
-      "key": "[1,\"Astronaut\"]",
-      "season": 1,
-      "name": "Astronaut",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
       "key": "[1,\"Grashüpfer\"]",
       "season": 1,
       "name": "Grashüpfer",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[1,\"Engel\"]",
-      "season": 1,
-      "name": "Engel",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[1,\"Monster\"]",
-      "season": 1,
-      "name": "Monster",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[1,\"Kudu\"]",
-      "season": 1,
-      "name": "Kudu",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
+      "status": "UNSUITABLE_UNMASKED_CANDIDATE",
+      "candidatePage": null,
+      "reason": "Geprüfter Sender-Kandidat zeigt demaskierten Promi; kein geeignetes Kostümbild in diesem Batch."
     },
     {
       "key": "[1,\"Panther\"]",
       "season": 1,
       "name": "Panther",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
+      "status": "UNSUITABLE_UNMASKED_CANDIDATE",
+      "candidatePage": null,
+      "reason": "Geprüfter Sender-Kandidat zeigt demaskierten Promi; kein geeignetes Kostümbild in diesem Batch."
     },
     {
       "key": "[1,\"Eichhörnchen\"]",
       "season": 1,
       "name": "Eichhörnchen",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[1,\"Kakadu\"]",
-      "season": 1,
-      "name": "Kakadu",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
+      "status": "UNSUITABLE_UNMASKED_CANDIDATE",
+      "candidatePage": null,
+      "reason": "Geprüfter Sender-Kandidat zeigt demaskierten Promi; kein geeignetes Kostümbild in diesem Batch."
     },
     {
       "key": "[1,\"Schmetterling\"]",
       "season": 1,
       "name": "Schmetterling",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
+      "status": "UNSUITABLE_UNMASKED_CANDIDATE",
+      "candidatePage": null,
+      "reason": "Geprüfter Sender-Kandidat zeigt demaskierten Promi; kein geeignetes Kostümbild in diesem Batch."
     },
     {
       "key": "[1,\"Oktopus\"]",
       "season": 1,
       "name": "Oktopus",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
+      "status": "UNSUITABLE_UNMASKED_CANDIDATE",
+      "candidatePage": null,
+      "reason": "Geprüfter Sender-Kandidat zeigt demaskierten Promi; kein geeignetes Kostümbild in diesem Batch."
     },
     {
       "key": "[2,\"Faultier\"]",
@@ -1683,85 +1673,86 @@
       "key": "[13,\"Emily Wau\"]",
       "season": 13,
       "name": "Emily Wau",
-      "status": "RIGHTS_UNRESOLVED",
-      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+      "status": "USER_GAMESTATE_ONLY",
+      "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     },
     {
       "key": "[13,\"Bubble\"]",
       "season": 13,
       "name": "Bubble",
-      "status": "RIGHTS_UNRESOLVED",
-      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+      "status": "USER_GAMESTATE_ONLY",
+      "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     },
     {
       "key": "[13,\"Hippo Jones\"]",
       "season": 13,
       "name": "Hippo Jones",
-      "status": "RIGHTS_UNRESOLVED",
-      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+      "status": "USER_GAMESTATE_ONLY",
+      "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     },
     {
       "key": "[13,\"Perla\"]",
       "season": 13,
       "name": "Perla",
-      "status": "RIGHTS_UNRESOLVED",
-      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+      "status": "USER_GAMESTATE_ONLY",
+      "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     },
     {
       "key": "[13,\"Professor Dr. Dr. Schweinstein\"]",
       "season": 13,
       "name": "Professor Dr. Dr. Schweinstein",
-      "status": "RIGHTS_UNRESOLVED",
-      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+      "status": "USER_GAMESTATE_ONLY",
+      "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     },
     {
       "key": "[13,\"Momo\"]",
       "season": 13,
       "name": "Momo",
-      "status": "RIGHTS_UNRESOLVED",
-      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+      "status": "USER_GAMESTATE_ONLY",
+      "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     },
     {
       "key": "[13,\"Mr. Mic\"]",
       "season": 13,
       "name": "Mr. Mic",
-      "status": "RIGHTS_UNRESOLVED",
-      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+      "status": "USER_GAMESTATE_ONLY",
+      "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     },
     {
       "key": "[13,\"Erdbär\"]",
       "season": 13,
       "name": "Erdbär",
-      "status": "RIGHTS_UNRESOLVED",
-      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+      "status": "USER_GAMESTATE_ONLY",
+      "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     },
     {
       "key": "[13,\"Cosma\"]",
       "season": 13,
       "name": "Cosma",
-      "status": "RIGHTS_UNRESOLVED",
-      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+      "status": "USER_GAMESTATE_ONLY",
+      "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     },
     {
       "key": "[13,\"P.S.\"]",
       "season": 13,
       "name": "P.S.",
-      "status": "RIGHTS_UNRESOLVED",
-      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+      "status": "USER_GAMESTATE_ONLY",
+      "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     },
     {
       "key": "[13,\"Yeti Cat\"]",
       "season": 13,
       "name": "Yeti Cat",
-      "status": "RIGHTS_UNRESOLVED",
-      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+      "status": "USER_GAMESTATE_ONLY",
+      "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     },
     {
       "key": "[13,\"Luigi Eishörnchen\"]",
       "season": 13,
       "name": "Luigi Eishörnchen",
-      "status": "RIGHTS_UNRESOLVED",
-      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+      "status": "USER_GAMESTATE_ONLY",
+      "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     }
-  ]
+  ],
+  "rightsNote": "Alle fünf Remote-Masken und zwölf bedingten Nutzerbilder: RIGHTS_UNRESOLVED. 122 Manifest-Masken ohne öffentliches Asset, davon zwölf lokal bedingt wiederverwendbar. Bei passendem Spielstand verbleiben 110 echte Bildlücken."
 }

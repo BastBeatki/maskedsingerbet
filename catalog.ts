@@ -1,5 +1,6 @@
 import document from './data/promi-catalog-2026-09-30.json';
 import manifest from './data/promi-image-manifest.json';
+import type { Season } from './types';
 
 export interface Participation {
   readonly season: number;
@@ -50,17 +51,42 @@ export function filterCatalog(rows: readonly Participation[], query = '', season
 export interface ImageAsset {
   readonly src: string; readonly source: string; readonly rights: string;
   readonly licenseUrl: string; readonly author: string; readonly authorUrl: string;
-  readonly title: string; readonly changes: string; readonly licenseStatus: 'FILE_LICENSE_REVIEWED';
+  readonly title: string; readonly changes: string;
+  readonly sourceType?: 'LOCAL_VERIFIED' | 'TEMPORARY_REMOTE' | 'USER_GAMESTATE';
+  readonly termsUrl?: string;
+  readonly licenseStatus: 'FILE_LICENSE_REVIEWED' | 'RIGHTS_UNRESOLVED';
 }
 export function resolveImageAsset(value: unknown): ImageAsset | null {
   if (!value || typeof value !== 'object') return null;
   const asset = value as Record<string, unknown>;
-  // Reject incomplete/unreviewed entries without affecting the read-only catalog or game.
-  if (asset.licenseStatus !== 'FILE_LICENSE_REVIEWED' || typeof asset.src !== 'string' ||
-    !/^\/catalog-images\/[a-z0-9-]+\.webp$/.test(asset.src) ||
-    !['source', 'licenseUrl', 'authorUrl'].every(key => typeof asset[key] === 'string' && /^https:\/\/[^\s]+$/.test(asset[key] as string)) ||
+  const local = asset.licenseStatus === 'FILE_LICENSE_REVIEWED' &&
+    (asset.sourceType === undefined || asset.sourceType === 'LOCAL_VERIFIED') &&
+    typeof asset.src === 'string' && /^\/catalog-images\/[a-z0-9-]+\.webp$/.test(asset.src);
+  // Explicit temporary sender images; no arbitrary hosts, credentials, scripts or data URLs.
+  const remote = asset.sourceType === 'TEMPORARY_REMOTE' && asset.licenseStatus === 'RIGHTS_UNRESOLVED' &&
+    typeof asset.src === 'string' && /^https:\/\/mim\.p7s1\.io\/pis\/ld\/[A-Za-z0-9_-]+\/profile:original$/.test(asset.src);
+  if ((!local && !remote) ||
+    !['source', 'authorUrl', local ? 'licenseUrl' : 'termsUrl'].every(key => typeof asset[key] === 'string' && /^https:\/\/[^\s]+$/.test(asset[key] as string)) ||
     !['rights', 'author', 'title', 'changes'].every(key => typeof asset[key] === 'string' && (asset[key] as string).trim())) return null;
   return value as ImageAsset;
+}
+
+export function gameStateMaskImages(seasons: readonly Season[]): ReadonlyMap<string, ImageAsset> {
+  const rows = getCatalog().rows.filter(row => row.season === 13);
+  const canonical = new Map(rows.map(row => [normalizeSearchText(row.mask_name).replace(/[.\s]/g, ''), maskKey(row)]));
+  const candidates = seasons.filter(season => ['Staffel 2026', 'Staffel 13'].includes(season.seasonName) &&
+    new Set(season.masks.map(mask => canonical.get(normalizeSearchText(mask.name).replace(/[.\s]/g, ''))).filter(Boolean)).size >= 8);
+  const result = new Map<string, ImageAsset>();
+  // Ambiguous seasons or duplicate names stay empty instead of guessing. Read only: no writes/renames.
+  if (candidates.length !== 1) return result;
+  for (const row of rows) {
+    const matches = candidates[0].masks.filter(mask => canonical.get(normalizeSearchText(mask.name).replace(/[.\s]/g, '')) === maskKey(row));
+    const src = matches.length === 1 ? matches[0].imageUrl : undefined;
+    if (!src || !/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(src)) continue;
+    result.set(maskKey(row), { src, source: '', rights: 'Rechte ungeklärt', licenseUrl: '', author: '', authorUrl: '',
+      title: row.mask_name, changes: 'Unverändert aus deinem lokalen Spielstand', sourceType: 'USER_GAMESTATE', licenseStatus: 'RIGHTS_UNRESOLVED' });
+  }
+  return result;
 }
 export function catalogImages(row: Participation): { mask: ImageAsset | null; celebrity: ImageAsset | null } {
   // The manifest is separate from user data. Duo/special-case rows share a mask, not a person image.

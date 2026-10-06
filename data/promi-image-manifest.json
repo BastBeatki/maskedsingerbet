@@ -1,16 +1,91 @@
 {
-  "version": 2,
+  "version": 3,
   "catalogAsOf": "2026-09-30",
-  "description": "Optional local image assets. Null means explicit fallback. Populate only with verified source and usage rights; no game-state data.",
+  "description": "Optional local portraits with reviewed file licenses and explicitly temporary remote costumes with unresolved rights. Null means fallback; no user game-state data.",
   "masks": {
-    "[1,\"Astronaut\"]": null,
+    "[1,\"Astronaut\"]": {
+      "src": "https://mim.p7s1.io/pis/ld/26cczChLCVyZ-c1vEwXRnAkyC0iLrbdROGPlWBa7lfnzV-tWZn2C-k2kY_VX2NPv0_BZHkKSgwsTVK0b02llK47s9YTrnZfZom7neb2By0KI-0egspoljH8rYKHC2t5mI0Fx_tOwt_g9r5O6pe82PxA/profile:original",
+      "source": "https://www.joyn.de/bts/serien/the-masked-singer/news/the-masked-singer-der-astronaut-liefert-ein-weiteres-indiz-5483",
+      "rights": "Rechte ungeklärt",
+      "licenseUrl": "",
+      "author": "ProSieben / Boris Breuer",
+      "authorUrl": "https://www.joyn.de/bts/serien/the-masked-singer/news/the-masked-singer-der-astronaut-liefert-ein-weiteres-indiz-5483",
+      "title": "Astronaut – Staffel 1",
+      "changes": "Unveränderte externe Bildreferenz; Darstellung mit object-contain",
+      "sourceType": "TEMPORARY_REMOTE",
+      "licenseStatus": "RIGHTS_UNRESOLVED",
+      "checkedAt": "2026-10-06",
+      "verification": "Kostüm visuell geprüft; Quelle und URL erreichbar; keine Wiederverwendungslizenz festgestellt",
+      "termsNote": "Keine ausdrückliche Hotlink-Freigabe. Keine Schutzumgehung. BTS-Standbilder nicht als Streamingkopie behandelt; Anwendungsbereich der Presse-AGB offen.",
+      "termsUrl": "https://static.joyn.de/Joyn_AGB_2026.pdf"
+    },
     "[1,\"Grashüpfer\"]": null,
-    "[1,\"Engel\"]": null,
-    "[1,\"Monster\"]": null,
-    "[1,\"Kudu\"]": null,
+    "[1,\"Engel\"]": {
+      "src": "https://mim.p7s1.io/pis/ld/6cf5zChLCVyZ-c1vEwXRnAkyC0iLrbdROGPlWBa7lfnzV-tWZn2C-k2kY_VX2NPv0_BZHkKSgwsTVK0b02llK47s9YTrnZfZpxDAqm9Yf2xdD58Ew7b640TeYpOHK7AEfTRSQzsURCd3q5kz_dOEULE/profile:original",
+      "source": "https://www.joyn.de/bts/serien/the-masked-singer/news/the-masked-singer-der-engel-verrat-ein-neues-indiz-5481",
+      "rights": "Rechte ungeklärt",
+      "licenseUrl": "",
+      "author": "ProSieben / Boris Breuer",
+      "authorUrl": "https://www.joyn.de/bts/serien/the-masked-singer/news/the-masked-singer-der-engel-verrat-ein-neues-indiz-5481",
+      "title": "Engel – Staffel 1",
+      "changes": "Unveränderte externe Bildreferenz; Darstellung mit object-contain",
+      "sourceType": "TEMPORARY_REMOTE",
+      "licenseStatus": "RIGHTS_UNRESOLVED",
+      "checkedAt": "2026-10-06",
+      "verification": "Kostüm visuell geprüft; Quelle und URL erreichbar; keine Wiederverwendungslizenz festgestellt",
+      "termsNote": "Keine ausdrückliche Hotlink-Freigabe. Keine Schutzumgehung. BTS-Standbilder nicht als Streamingkopie behandelt; Anwendungsbereich der Presse-AGB offen.",
+      "termsUrl": "https://static.joyn.de/Joyn_AGB_2026.pdf"
+    },
+    "[1,\"Monster\"]": {
+      "src": "https://mim.p7s1.io/pis/ld/56a1zChLCVyZ-c1vEwXRnAkyC0iLrbdROGPlWBa7lfnzV-tWZn2C-k2kY_VX2NPv0_BZHkKSgwsTVK0b02llK47s9YTrnZfZ9YhOeANfWz57MWaT5bVclrEX-tTXkVN3CgaRz8CcgRr0X4fvjInlbEg/profile:original",
+      "source": "https://www.joyn.de/bts/serien/the-masked-singer/news/the-masked-singer-deutschland-ein-neues-indiz-zum-monster-5215",
+      "rights": "Rechte ungeklärt",
+      "licenseUrl": "",
+      "author": "ProSieben / Boris Breuer",
+      "authorUrl": "https://www.joyn.de/bts/serien/the-masked-singer/news/the-masked-singer-deutschland-ein-neues-indiz-zum-monster-5215",
+      "title": "Monster – Staffel 1",
+      "changes": "Unveränderte externe Bildreferenz; Darstellung mit object-contain",
+      "sourceType": "TEMPORARY_REMOTE",
+      "licenseStatus": "RIGHTS_UNRESOLVED",
+      "checkedAt": "2026-10-06",
+      "verification": "Kostüm visuell geprüft; Quelle und URL erreichbar; keine Wiederverwendungslizenz festgestellt",
+      "termsNote": "Keine ausdrückliche Hotlink-Freigabe. Keine Schutzumgehung. BTS-Standbilder nicht als Streamingkopie behandelt; Anwendungsbereich der Presse-AGB offen.",
+      "termsUrl": "https://static.joyn.de/Joyn_AGB_2026.pdf"
+    },
+    "[1,\"Kudu\"]": {
+      "src": "https://mim.p7s1.io/pis/ld/6172zChLCVyZ-c1vEwXRnAkyC0iLrbdROGPlWBa7lfnzV-tWZn2C-k2kY_VX2NPv0_BZHkKSgwsTVK0b02llK47s9YTrnZfZ9iog5lCZzMdJQyOFPJKci9xpp3BTKPgJt8Q0pvHsrd4EhhsLz0thgwk/profile:original",
+      "source": "https://www.joyn.de/bts/serien/the-masked-singer/the-masked-singer-steckt-daniel-aminati-hinter-dem-kudu-5538",
+      "rights": "Rechte ungeklärt",
+      "licenseUrl": "",
+      "author": "ProSieben / Boris Breuer",
+      "authorUrl": "https://www.joyn.de/bts/serien/the-masked-singer/the-masked-singer-steckt-daniel-aminati-hinter-dem-kudu-5538",
+      "title": "Kudu – Staffel 1",
+      "changes": "Unveränderte externe Bildreferenz; Darstellung mit object-contain",
+      "sourceType": "TEMPORARY_REMOTE",
+      "licenseStatus": "RIGHTS_UNRESOLVED",
+      "checkedAt": "2026-10-06",
+      "verification": "Kostüm visuell geprüft; Quelle und URL erreichbar; keine Wiederverwendungslizenz festgestellt",
+      "termsNote": "Keine ausdrückliche Hotlink-Freigabe. Keine Schutzumgehung. BTS-Standbilder nicht als Streamingkopie behandelt; Anwendungsbereich der Presse-AGB offen.",
+      "termsUrl": "https://static.joyn.de/Joyn_AGB_2026.pdf"
+    },
     "[1,\"Panther\"]": null,
     "[1,\"Eichhörnchen\"]": null,
-    "[1,\"Kakadu\"]": null,
+    "[1,\"Kakadu\"]": {
+      "src": "https://mim.p7s1.io/pis/ld/edc1zChLCVyZ-c1vEwXRnAkyC0iLrbdROGPlWBa7lfnzV-tWZn2C-k2kY_VX2NPv0_BZHkKSgwsTVK0b02llK47s9YTrnZfZ8BrYgjI79rIMZl5EpG7woVCz0lhSintn0iwLkUB-cwZo_p77tOs6uVw/profile:original",
+      "source": "https://www.joyn.de/bts/serien/the-masked-singer/the-masked-singer-deutschland-neues-indiz-zum-kakadu-5540",
+      "rights": "Rechte ungeklärt",
+      "licenseUrl": "",
+      "author": "ProSieben / Boris Breuer",
+      "authorUrl": "https://www.joyn.de/bts/serien/the-masked-singer/the-masked-singer-deutschland-neues-indiz-zum-kakadu-5540",
+      "title": "Kakadu – Staffel 1",
+      "changes": "Unveränderte externe Bildreferenz; Darstellung mit object-contain",
+      "sourceType": "TEMPORARY_REMOTE",
+      "licenseStatus": "RIGHTS_UNRESOLVED",
+      "checkedAt": "2026-10-06",
+      "verification": "Kostüm visuell geprüft; Quelle und URL erreichbar; keine Wiederverwendungslizenz festgestellt",
+      "termsNote": "Keine ausdrückliche Hotlink-Freigabe. Keine Schutzumgehung. BTS-Standbilder nicht als Streamingkopie behandelt; Anwendungsbereich der Presse-AGB offen.",
+      "termsUrl": "https://static.joyn.de/Joyn_AGB_2026.pdf"
+    },
     "[1,\"Schmetterling\"]": null,
     "[1,\"Oktopus\"]": null,
     "[2,\"Faultier\"]": null,
@@ -273,7 +348,8 @@
       "width": 384,
       "height": 512,
       "bytes": 18688,
-      "downloadSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Isabell_Edvardsson_%28cropped%29.jpg/960px-Isabell_Edvardsson_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "downloadSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Isabell_Edvardsson_%28cropped%29.jpg/960px-Isabell_Edvardsson_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "sourceType": "LOCAL_VERIFIED"
     },
     "[13,\"Bubble\",\"Ben Zucker\"]": {
       "src": "/catalog-images/ben-zucker.webp",
@@ -294,7 +370,8 @@
       "width": 458,
       "height": 512,
       "bytes": 26908,
-      "downloadSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/2019-05-05_ZDF_Fernsehgarten_Ben_Zucker_by_Olaf_Kosinsky_1110.jpg/960px-2019-05-05_ZDF_Fernsehgarten_Ben_Zucker_by_Olaf_Kosinsky_1110.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "downloadSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/2019-05-05_ZDF_Fernsehgarten_Ben_Zucker_by_Olaf_Kosinsky_1110.jpg/960px-2019-05-05_ZDF_Fernsehgarten_Ben_Zucker_by_Olaf_Kosinsky_1110.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "sourceType": "LOCAL_VERIFIED"
     },
     "[13,\"Hippo Jones\",\"Stefan Mross\"]": {
       "src": "/catalog-images/stefan-mross.webp",
@@ -315,7 +392,8 @@
       "width": 403,
       "height": 512,
       "bytes": 20642,
-      "downloadSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Stefan_Mross_01.JPG/960px-Stefan_Mross_01.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      "downloadSource": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Stefan_Mross_01.JPG/960px-Stefan_Mross_01.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "sourceType": "LOCAL_VERIFIED"
     },
     "[13,\"Perla\",\"Prince Damien\"]": {
       "src": "/catalog-images/prince-damien.webp",
@@ -336,7 +414,8 @@
       "width": 212,
       "height": 486,
       "bytes": 10494,
-      "downloadSource": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Prince_Damien_DSDS-Autogrammstunde.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+      "downloadSource": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Prince_Damien_DSDS-Autogrammstunde.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "sourceType": "LOCAL_VERIFIED"
     },
     "[13,\"Professor Dr. Dr. Schweinstein\",null]": null,
     "[13,\"Momo\",null]": null,
