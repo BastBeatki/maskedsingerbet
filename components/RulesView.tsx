@@ -10,9 +10,16 @@ export const RulesView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           <h1 className="text-4xl sm:text-5xl font-extrabold text-text-primary">Spielerklärung</h1>
         </div>
         <Card className="space-y-8">
+          <section>
+            <h2 className="text-2xl font-bold text-accent mb-3">TOURNAMENT · tournament-v1</h2>
+            <p className="text-text-secondary">Für neue Turnier-Spielstände in den Staffeleinstellungen vor dem ersten Tipp auswählen. Bestehende Spielstände bleiben CLASSIC. Letzte Identität bei Enthüllung zählt; offene Tipps beliebig änderbar, jeder Identitätswechsel −1. Final endgültig gesperrt.</p>
+            <p className="text-text-secondary mt-2">Richtig: max(8, 20 − 4 × (Ratechance − 1)) − min(3, ganze 15 Minuten seit Öffnung). Final richtig: zusätzlich abgerundet 6 × Zeitwert am Sperrzeitpunkt / 20. Falsch: −2 offen oder −6 final, kein Tipp: 0. Alle Spieler erhalten ihre eigene Wertung.</p>
+            <p className="text-text-secondary mt-2">Basti startet beim Auftritt/Indiz eine Ratechance für die betreffende Maske, weitere nur bei wesentlich neuen Informationen. Die Enthüllung braucht keinen Vorwarn-Button. Gegenwetten behalten ihre Einsätze; der Abschlag von 15% bezieht sich auf maskenspezifische Ratechancen. Nach jeder Enthüllung zeigt „Punkte erklären“ die gespeicherte Abrechnung.</p>
+          </section>
+          <h2 className="text-2xl font-bold">Bisheriges Regelwerk · CLASSIC (classic-v1)</h2>
           <div>
             <h2 className="text-2xl font-bold text-accent mb-3">Ziel</h2>
-            <p className="text-lg text-text-secondary">Sammle über die Staffel die meisten wichtigen Erfolge: korrekt erratene Masken, gewonnene Gegenwetten, dann Punkte.</p>
+            <p className="text-lg text-text-secondary">Sammle über die Staffel die meisten Gesamtpunkte aus Tipps und Gegenwetten. Erratene Masken und gewonnene Wetten werden zusätzlich angezeigt.</p>
           </div>
           
           <div>

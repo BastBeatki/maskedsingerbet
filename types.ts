@@ -16,6 +16,9 @@ export interface Tip {
   showId: string;
   createdAt: number; // Timestamp
   isFinal?: boolean; // Kennzeichnet einen "Volles Risiko"-Tipp
+  opportunityId?: string;
+  finalizedAt?: number;
+  finalOpportunityId?: string;
 }
 
 export interface Mask {
@@ -23,12 +26,16 @@ export interface Mask {
   name: string;
   imageUrl?: string;
   tips: {
-    [playerId: string]: Tip[]; // Array of up to 3 tips
+    [playerId: string]: Tip[]; // CLASSIC: up to 3; TOURNAMENT: immutable event history
   };
   revealedCelebrity?: string;
   isRevealed: boolean;
   revealedInShowId?: string;
   celebrityImageUrl?: string;
+  opportunities?: RateOpportunity[];
+  scoringAudit?: RevealAudit;
+  priorChanceCount?: number;
+  legacyTips?: Mask['tips'];
 }
 
 export interface CounterBet {
@@ -37,7 +44,10 @@ export interface CounterBet {
   maskId: string;
   bettorPlayerId: string; // The one placing the bet
   targetPlayerId: string; // The one whose tip is being bet against
-  targetTipIndex: number; // The index of the tip in the target's tip array (0, 1, or 2)
+  targetTipIndex: number; // Stable index in the player's saved tip history
+  opportunityId?: string;
+  createdAt?: number;
+  targetWasFinal?: boolean;
 }
 
 export interface Season {
@@ -49,6 +59,27 @@ export interface Season {
   shows: Show[];
   activeShowId: string | null;
   counterBets: CounterBet[];
+  ruleset?: RulesetVersion;
+  tournamentTransition?: { sourceSeasonId: string; preparedAt: number };
+  legacyOpenCounterBets?: CounterBet[];
+}
+
+export type RulesetVersion = 'classic-v1' | 'tournament-v1';
+export interface RateOpportunity { id: string; showId: string; openedAt: number }
+export interface ScoreComponent { label: string; points: number }
+export interface PlayerMaskAudit {
+  playerId: string; playerName: string; correct: boolean;
+  tipIndex: number | null; tipPoints: number; counterBetPoints: number; total: number;
+  wonCounterBets: number; components: ScoreComponent[];
+  explanation: string;
+}
+export interface RevealAudit {
+  schema: 1; ruleset: RulesetVersion; revealedAt: number; actualCelebrity: string;
+  players: PlayerMaskAudit[];
+  tipPoints: Record<string, number>;
+  counterBetPoints: Record<string, { bettor: number; target: number }>;
+  // Snapshot the evidence used at settlement, including final-lock and bet timestamps.
+  evidence: { tips: Mask['tips']; opportunities: RateOpportunity[]; counterBets: CounterBet[]; shows: Show[]; priorChanceCount?: number };
 }
 
 export interface AppState {

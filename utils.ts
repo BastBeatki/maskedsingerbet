@@ -1,4 +1,5 @@
 import { AppState, Season, Player, Mask, PlayerScore, Tip, Show, CounterBet } from './types';
+import { validRulesetData } from './rulesetValidation';
 
 export const generateId = (): string => {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
@@ -27,7 +28,7 @@ export interface ScoreCalculationResult {
     playerMaskPoints: Record<string, number>; // Key: `${maskId}-${playerId}` -> Total points for this player on this mask
 }
 
-export const calculateScores = (season: Season, allPlayers: Player[]): ScoreCalculationResult => {
+export const calculateClassicScores = (season: Season, allPlayers: Player[]): ScoreCalculationResult => {
   const tipPointsLookup: Record<string, number> = {};
   const counterBetPointsLookup: Record<string, { bettor: number; target: number }> = {};
   const playerMaskPointsLookup: Record<string, number> = {};
@@ -305,7 +306,7 @@ export const isValidSeason = (season: any): season is Season => {
         }
     }
 
-    return true;
+    return validRulesetData(season);
 };
 
 export const isValidAppState = (state: any): state is AppState => {
@@ -327,3 +328,6 @@ export const isValidAppState = (state: any): state is AppState => {
     }
     return true;
 };
+
+// Compatibility export for existing callers and historical CLASSIC data.
+export const calculateScores = calculateClassicScores;

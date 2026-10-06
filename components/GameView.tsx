@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Season, Mask, Player, PlayerScore, Tip, Show, CounterBet } from '../types';
-import { calculateScores, fileToBase64 } from '../utils';
+import { Season, Mask, Player, PlayerScore, Tip, Show, CounterBet, RevealAudit } from '../types';
+import { fileToBase64 } from '../utils';
+import { calculateActiveScores, buildRevealAudit, rulesetOf } from '../rulesets';
+import { ScoringDetails, RulesetComparison } from './ScoringDetails';
 import { Button, Card, Input, Modal } from './common/UI';
 
 // --- Leaderboard ---
@@ -126,7 +128,9 @@ const TipModal: React.FC<{
     onDeleteLastTip: () => void;
     onToggleTipFinal: (index: number) => void;
     tipPointsLookup: Record<string, number>;
-}> = ({ mask, player, shows, activeShowId, isOpen, onClose, onSaveTip, onDeleteLastTip, onToggleTipFinal, tipPointsLookup }) => {
+    tournament: boolean;
+    canTip: boolean;
+}> = ({ mask, player, shows, activeShowId, isOpen, onClose, onSaveTip, onDeleteLastTip, onToggleTipFinal, tipPointsLookup, tournament, canTip }) => {
     const [newTipName, setNewTipName] = useState('');
     const [isFinal, setIsFinal] = useState(false);
     const playerTips = mask.tips[player.id] || [];
@@ -163,7 +167,7 @@ const TipModal: React.FC<{
                 {playerTips.map((tip, index) => {
                     const points = mask.isRevealed ? (tipPointsLookup[`${mask.id}-${player.id}-${index}`] || 0) : null;
                     const isCorrect = mask.isRevealed && mask.revealedCelebrity?.toLowerCase() === tip.celebrityName.toLowerCase();
-                    const isEditable = !mask.isRevealed && activeShowId === tip.showId && index === playerTips.length - 1;
+                    const isEditable = !mask.isRevealed && (tournament ? canTip : activeShowId === tip.showId) && index === playerTips.length - 1;
 
                     return (
                         <div key={index} className="bg-background p-3 rounded-lg flex justify-between items-center">
@@ -171,7 +175,7 @@ const TipModal: React.FC<{
                                 <p className={`font-bold text-lg ${isCorrect ? 'text-green-400' : ''}`}>"{tip.celebrityName}"</p>
                                 <div className="flex items-center gap-2">
                                     <p className="text-sm text-text-secondary">Getippt in: {getShowName(tip.showId)}</p>
-                                    {isEditable && (
+                                    {isEditable && (!tournament || !tip.isFinal) && (
                                         <button 
                                             onClick={() => onToggleTipFinal(index)}
                                             className="text-xs text-accent hover:text-white underline ml-2"
@@ -189,8 +193,8 @@ const TipModal: React.FC<{
                                     </span>
                                 )}
                                 {mask.isRevealed && (
-                                    <span className={`px-2 py-1 rounded font-bold text-sm ${points && points > 0 ? 'bg-green-600/30 text-green-300' : 'bg-gray-700 text-gray-400'}`}>
-                                        {points && points > 0 ? `+${points}` : '0'} Pkt.
+                                    <span className={`px-2 py-1 rounded font-bold text-sm ${points && points > 0 ? 'bg-green-600/30 text-green-300' : points && points < 0 ? 'bg-red-600/30 text-red-300' : 'bg-gray-700 text-gray-400'}`}>
+                                        {points ? `${points > 0 ? '+' : ''}${points}` : '0'} Pkt.
                                     </span>
                                 )}
                             </div>
@@ -200,9 +204,10 @@ const TipModal: React.FC<{
                  {playerTips.length === 0 && <p className="text-text-secondary">Noch keine Tipps abgegeben.</p>}
             </div>
 
-            {!mask.isRevealed && !hasFinalTip && (
+            {tournament && !mask.isRevealed && !canTip && <p className="mt-4">Für diese Maske zuerst eine Ratechance starten und eine Show auswählen.</p>}
+            {!mask.isRevealed && !hasFinalTip && (!tournament || canTip) && (
                 <div className="mt-6 border-t border-border pt-4">
-                    {playerTips.length < 3 ? (
+                    {tournament || playerTips.length < 3 ? (
                         <form onSubmit={handleSave} className="space-y-4">
                             <Input
                                 type="text"
@@ -211,7 +216,7 @@ const TipModal: React.FC<{
                                 onChange={(e) => setNewTipName(e.target.value)}
                                 required
                             />
-                            {playerTips.length < 2 && (
+                            {(tournament || playerTips.length < 2) && (
                                 <div className="flex items-center gap-3 bg-background p-3 rounded-lg">
                                     <input
                                         id="final-tip-checkbox"
@@ -231,7 +236,7 @@ const TipModal: React.FC<{
                     ) : (
                         <p className="text-center font-semibold text-text-secondary">Maximum von 3 Tipps erreicht.</p>
                     )}
-                     {playerTips.length > 0 && (
+                     {playerTips.length > 0 && !tournament && (
                         <Button variant="danger" onClick={onDeleteLastTip} className="w-full mt-2">Letzten Tipp löschen</Button>
                     )}
                 </div>
@@ -252,7 +257,8 @@ const CounterBetsModal: React.FC<{
     onAddCounterBet: (bettorPlayerId: string, targetPlayerId: string) => void;
     onDeleteCounterBet: (id: string) => void;
     counterBetPointsLookup: Record<string, { bettor: number; target: number }>;
-}> = ({ mask, players, shows, counterBets, isOpen, onClose, onAddCounterBet, onDeleteCounterBet, counterBetPointsLookup }) => {
+    tournament: boolean;
+}> = ({ mask, players, shows, counterBets, isOpen, onClose, onAddCounterBet, onDeleteCounterBet, counterBetPointsLookup, tournament }) => {
     const [bettorId, setBettorId] = useState('');
     const [targetId, setTargetId] = useState('');
     
@@ -317,9 +323,9 @@ const CounterBetsModal: React.FC<{
                                                 {result === 'win' ? 'Gewonnen' : 'Verloren'}
                                             </span>
                                         </div>
-                                    ) : (
+                                    ) : !tournament ? (
                                         <button onClick={() => onDeleteCounterBet(cb.id)} className="text-red-500 hover:text-red-400 font-bold ml-2 flex-shrink-0">✕</button>
-                                    )}
+                                    ) : null}
                                 </div>
                             );
                         })}
@@ -406,10 +412,16 @@ const MaskCard: React.FC<{
     tipPointsLookup: Record<string, number>;
     counterBetPointsLookup: Record<string, { bettor: number; target: number }>;
     playerMaskPointsLookup: Record<string, number>;
-}> = ({ mask, players, shows, counterBets, isTippingActive, activeShowId, onReveal, onSaveTip, onDeleteLastTip, onToggleTipFinal, onAddCounterBet, onDeleteCounterBet, tipPointsLookup, counterBetPointsLookup, playerMaskPointsLookup }) => {
+    tournament: boolean;
+    audit?: RevealAudit;
+    onStartOpportunity: () => void;
+    transitioning: boolean;
+    onSetPriorChances: (count: number) => void;
+}> = ({ mask, players, shows, counterBets, isTippingActive, activeShowId, onReveal, onSaveTip, onDeleteLastTip, onToggleTipFinal, onAddCounterBet, onDeleteCounterBet, tipPointsLookup, counterBetPointsLookup, playerMaskPointsLookup, tournament, audit, onStartOpportunity, transitioning, onSetPriorChances }) => {
     const [isRevealModalOpen, setRevealModalOpen] = useState(false);
     const [activeTipPlayer, setActiveTipPlayer] = useState<Player | null>(null);
     const [isCounterBetModalOpen, setCounterBetModalOpen] = useState(false);
+    const [priorCount, setPriorCount] = useState(String(mask.priorChanceCount ?? ''));
 
     const handlePlayerClick = (player: Player) => {
         // Allows viewing details even if tipping is not active, but adding tips requires logic in modal
@@ -455,13 +467,39 @@ const MaskCard: React.FC<{
                         </div>
                     </div>
                 )}
+
+                {tournament && !mask.isRevealed && <div className="mb-4 text-sm">
+                  {transitioning && !mask.opportunities?.length && <div className="mb-3">
+                    <Input type="number" min="0" max="1000" step="1" aria-label={`${mask.name}: Vergangene Ratechancen`} label="Tatsächlich vergangene Ratechancen" value={priorCount} onChange={e => setPriorCount(e.target.value)} />
+                    <p className="text-text-secondary mt-1">0 bei neuer Maske; frühere Auftritte/Indizblöcke ehrlich mitzählen. Keine automatische Ableitung aus alten Tippdaten.</p>
+                    <Button variant="secondary" className="w-full mt-2" disabled={!priorCount.trim() || !Number.isSafeInteger(Number(priorCount)) || Number(priorCount) < 0 || Number(priorCount) > 1000}
+                      onClick={() => onSetPriorChances(Number(priorCount))}>Vergangene Ratechancen festlegen</Button>
+                  </div>}
+                  <p className="text-text-secondary">{(mask.priorChanceCount ?? 0) + (mask.opportunities?.length ?? 0)} Ratechancen gespeichert. Beim ersten Auftritt/Indiz dieser Maske starten; bei wesentlich neuen Infos die nächste Chance öffnen. Keine Chance für abwesende Masken.</p>
+                  <Button disabled={!activeShowId || transitioning && mask.priorChanceCount === undefined} variant="secondary" className="mt-2 w-full" onClick={() => {
+                    if (mask.opportunities?.at(-1)?.showId === activeShowId && !window.confirm('Wesentlich neue Informationen zu dieser Maske gesehen? Eine weitere Ratechance senkt nur neue Tipps; alte Tipps behalten ihren Wert.')) return;
+                    onStartOpportunity();
+                  }}>{mask.opportunities?.at(-1)?.showId === activeShowId ? 'Weitere Ratechance starten' : 'Ratechance starten'}</Button>
+                </div>}
+                {mask.legacyTips && !mask.isRevealed && <details className="mb-4 text-sm">
+                  <summary className="cursor-pointer py-2">Alte Tipps ansehen und neu bestätigen</summary>
+                  {players.map(player => {
+                    const oldTip = mask.legacyTips?.[player.id]?.at(-1);
+                    return oldTip ? <div key={player.id} className="mt-2 p-2 bg-background rounded-lg break-words">
+                      <p>{player.name}: „{oldTip.celebrityName}“{oldTip.isFinal ? ' (früher final)' : ''}</p>
+                      <Button variant="secondary" className="mt-2 w-full text-sm" disabled={!isTippingActive || !!mask.tips[player.id]?.length}
+                        onClick={() => onSaveTip(player.id, oldTip.celebrityName, oldTip.isFinal === true)}>{oldTip.isFinal ? 'Als neuen finalen Tipp bestätigen' : 'Als neuen offenen Tipp bestätigen'}</Button>
+                    </div> : null;
+                  })}
+                  <p className="text-text-secondary mt-2">Der neue Tipp wird jetzt datiert. Die alten Rate-/Sperrzeiten sind unbekannt; der alte Verlauf bleibt im Export archiviert. Gegenwetten aus dem Original müssen neu gesetzt werden.</p>
+                </details>}
                 
                 <div className="space-y-3 flex-grow">
                     {players.map(player => {
                         const playerTips = mask.tips[player.id] || [];
                         const latestTip = playerTips.length > 0 ? playerTips[playerTips.length - 1] : null;
                         
-                        const hasCorrectGuess = mask.isRevealed && mask.revealedCelebrity && 
+                        const hasCorrectGuess = tournament ? audit?.players.find(p => p.playerId === player.id)?.correct : mask.isRevealed && mask.revealedCelebrity &&
                             playerTips.some(tip => tip.celebrityName.trim().toLowerCase() === mask.revealedCelebrity!.trim().toLowerCase());
 
                         const playerMaskPoints = mask.isRevealed ? playerMaskPointsLookup[`${mask.id}-${player.id}`] : null;
@@ -473,7 +511,7 @@ const MaskCard: React.FC<{
                         ].filter(Boolean).join(' ');
 
                         return (
-                            <div key={player.id} onClick={() => handlePlayerClick(player)} className={playerRowClasses}>
+                            <button type="button" key={player.id} aria-label={`${player.name}: Tipps für ${mask.name}`} onClick={() => handlePlayerClick(player)} className={`${playerRowClasses} w-full text-left`}>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center min-w-0 truncate">
                                         {player.imageUrl ? (
@@ -516,10 +554,11 @@ const MaskCard: React.FC<{
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                            </button>
                         );
                     })}
                 </div>
+                {audit && <ScoringDetails audit={audit} stored={tournament} />}
 
                 <div className="mt-4 pt-4 border-t border-border flex justify-between items-center">
                    <div className="text-sm text-text-secondary">
@@ -550,6 +589,8 @@ const MaskCard: React.FC<{
                     onDeleteLastTip={() => onDeleteLastTip(activeTipPlayer.id)}
                     onToggleTipFinal={(index) => onToggleTipFinal(activeTipPlayer.id, index)}
                     tipPointsLookup={tipPointsLookup}
+                    tournament={tournament}
+                    canTip={isTippingActive}
                 />
             )}
 
@@ -563,6 +604,7 @@ const MaskCard: React.FC<{
                 onAddCounterBet={onAddCounterBet}
                 onDeleteCounterBet={onDeleteCounterBet}
                 counterBetPointsLookup={counterBetPointsLookup}
+                tournament={tournament}
             />
 
             <RevealModal 
@@ -588,13 +630,16 @@ interface GameViewProps {
   onDeleteCounterBet: (id: string) => void;
   onAddShow: () => void;
   onSetActiveShowId: (id: string) => void;
+  onStartOpportunity: (maskId: string) => void;
+  onSetPriorChances: (maskId: string, count: number) => void;
 }
 
 export const GameView: React.FC<GameViewProps> = (props) => {
   const { season, allPlayers, onBack, onRevealMask, onAddOrUpdateTip, onDeleteLastTip, onToggleTipFinal, onAddCounterBet, onDeleteCounterBet, onAddShow, onSetActiveShowId } = props;
   
   // Calculate scores on render. In a larger app, useMemo here.
-  const { scores, tipPoints, counterBetPoints, playerMaskPoints } = calculateScores(season, allPlayers);
+  const { scores, tipPoints, counterBetPoints, playerMaskPoints } = calculateActiveScores(season, allPlayers);
+  const tournament = rulesetOf(season) === 'tournament-v1';
   const activeShow = season.shows.find(s => s.id === season.activeShowId);
 
   return (
@@ -606,14 +651,16 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                     <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
                         {season.seasonName}
                     </h1>
+                    <p className="text-text-secondary mt-2">{rulesetOf(season)}</p>
                 </div>
                 
-                <Card className="flex flex-col gap-2 min-w-[300px]">
+                <Card className="flex flex-col gap-2 w-full md:w-auto md:min-w-[300px]">
                      <div className="flex justify-between items-center mb-2">
                         <span className="text-text-secondary font-bold">Aktuelle Show:</span>
                         {activeShow ? <span className="text-accent font-bold">{activeShow.name}</span> : <span className="text-red-400">Keine Show aktiv</span>}
                      </div>
                      <select 
+                        aria-label="Aktuelle Show"
                         value={season.activeShowId || ''} 
                         onChange={(e) => onSetActiveShowId(e.target.value)}
                         className="bg-background border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
@@ -625,6 +672,13 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                 </Card>
             </div>
 
+            {tournament && <Card className="mb-6">
+              <h2 className="text-xl font-bold">Turnier-Wertung</h2>
+              <p className="mt-2">Letzter Tipp zählt. Richtig: 20 Punkte, −4 je weiterer Ratechance (Grundwert mindestens 8), −1 je 15 Minuten seit Öffnung (maximal −3). Jeder Identitätswechsel kostet 1 Punkt. Falsch: −2 offen / −6 final. Final richtig: bis zu +6 Bonus zum Sperrzeitpunkt. Kein Pionier-Abzug für andere Spieler.</p>
+              <p className="text-sm text-text-secondary mt-2">Frühe Tipps behalten ihre Chance und Uhrzeit, auch über spätere Auftritte hinweg. Neue Ratechancen starten nur für die tatsächlich auftretende Maske. Final bleibt gesperrt; offene Tipps können bis zur manuellen Enthüllung beliebig oft geändert werden. Beim Pausieren läuft der kleine Zeitabschlag weiter, maximal drei Punkte.</p>
+              {season.tournamentTransition && <p className="mt-3 text-sm text-yellow-300">Separate Turnier-Kopie: Abgerechnete Punkte bleiben CLASSIC. Neue Wertung ab Umstellung; offene Tipps neu bestätigen. {season.legacyOpenCounterBets?.length ?? 0} alte offene Gegenwetten archiviert. Das CLASSIC-Original bleibt zum Zurückgehen erhalten.</p>}
+            </Card>}
+            <RulesetComparison season={season} players={allPlayers} />
             <div className="flex flex-col xl:flex-row gap-8 items-start">
                 {/* Left Column: Leaderboard - Fixed width on Desktop/Large Tablet */}
                 <div className="w-full xl:w-[400px] flex-shrink-0">
@@ -645,7 +699,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                                     players={allPlayers.filter(p => season.playerIds.includes(p.id))}
                                     shows={season.shows}
                                     counterBets={season.counterBets}
-                                    isTippingActive={!!season.activeShowId}
+                                    isTippingActive={!!activeShow && (!tournament || !!mask.opportunities?.length && activeShow.episodeNumber >= season.shows.find(s => s.id === mask.opportunities!.at(-1)!.showId)!.episodeNumber)}
                                     activeShowId={season.activeShowId}
                                     onReveal={(celebrity, imageUrl) => onRevealMask(mask.id, celebrity, imageUrl)}
                                     onSaveTip={(playerId, celebrity, isFinal) => onAddOrUpdateTip(mask.id, playerId, celebrity, isFinal)}
@@ -656,6 +710,11 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                                     tipPointsLookup={tipPoints}
                                     counterBetPointsLookup={counterBetPoints}
                                     playerMaskPointsLookup={playerMaskPoints}
+                                    tournament={tournament}
+                                    audit={mask.isRevealed && mask.revealedCelebrity ? (tournament ? mask.scoringAudit : buildRevealAudit(season, mask, allPlayers, mask.scoringAudit?.revealedAt ?? 0, 'classic-v1')) : undefined}
+                                    onStartOpportunity={() => props.onStartOpportunity(mask.id)}
+                                    transitioning={!!season.tournamentTransition}
+                                    onSetPriorChances={count => props.onSetPriorChances(mask.id, count)}
                                 />
                             ))}
                         </div>

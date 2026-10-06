@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Player, Mask, Season, Show } from '../types';
+import { Player, Mask, Season, Show, RulesetVersion } from '../types';
+import { canChangeRuleset, rulesetOf } from '../rulesets';
 import { Button, Card, Input, Modal } from './common/UI';
 import { fileToBase64 } from '../utils';
 import { PLAYER_COLORS } from '../constants';
@@ -18,6 +19,8 @@ interface SettingsViewProps {
   onDeleteMask: (id: string) => void;
   onDeleteShow: (id: string) => void;
   onBack: () => void;
+  onSetRuleset: (version: RulesetVersion) => void;
+  onCreateTournamentCopy: () => void;
 }
 
 const SettingsHeader: React.FC<{onBack: () => void; title: string}> = ({ onBack, title }) => (
@@ -259,6 +262,25 @@ export const SettingsView: React.FC<SettingsViewProps> = (props) => {
         <div className="max-w-5xl mx-auto">
             <SettingsHeader onBack={props.onBack} title={`Einstellungen: ${props.season.seasonName}`}/>
             <div className="space-y-8">
+                <Card>
+                    <h2 className="text-2xl font-bold mb-3">Regelwerk dieser Staffel</h2>
+                    <label>Wertung
+                      <select aria-label="Regelwerk" value={rulesetOf(props.season)} disabled={!canChangeRuleset(props.season)}
+                        onChange={e => props.onSetRuleset(e.target.value as RulesetVersion)} className="block w-full bg-background p-3 mt-2 rounded-lg border border-border">
+                        <option value="classic-v1">CLASSIC · classic-v1 (bisherige Wertung)</option>
+                        <option value="tournament-v1">TOURNAMENT · tournament-v1 (maskenspezifische Ratechancen)</option>
+                      </select>
+                    </label>
+                    <p className="text-sm text-text-secondary mt-3">Vor dem ersten Tipp frei wählbar. Bestehende Tipps und Ergebnisse behalten ihr Regelwerk. Für alte Spielstände fehlen Ratechance- und Final-Sperrzeiten; ein nachträglicher Turnierwechsel ist deshalb gesperrt.</p>
+                    {rulesetOf(props.season) === 'classic-v1' && new URLSearchParams(window.location.search).get('rulesetDebug') === '1' && <div className="mt-4 border-t border-border pt-4">
+                      <h3 className="font-bold">Sicherer Einstieg ab jetzt · Testkopie</h3>
+                      <p className="text-sm text-text-secondary mt-2">Eine separate Turnier-Kopie übernimmt abgerechnete CLASSIC-Punkte. Das Original bleibt erhalten. Offene Tipps und Gegenwetten werden archiviert; in der Kopie bestätigst du Tipps neu und legst die tatsächlich vergangenen Ratechancen pro offener Maske fest. Alte Zeit- und Final-Boni werden nicht erfunden. Zurückgehen: einfach das CLASSIC-Original öffnen.</p>
+                      <Button className="mt-3" variant="secondary" onClick={() => {
+                        if (!window.confirm('Turnier-Testkopie erstellen? Alte Ergebnisse bleiben als CLASSIC-Abrechnung erhalten. Offene Tipps/Gegenwetten bleiben im Original und als Archiv; Tipps werden in der Kopie neu bestätigt, Ratechancen einmalig angegeben.')) return;
+                        props.onCreateTournamentCopy(); props.onBack();
+                      }}>Turnier-Testkopie erstellen</Button>
+                    </div>}
+                </Card>
                 <Card>
                     <form onSubmit={handleSaveSeasonDetails} className="space-y-4">
                         <h2 className="text-2xl font-bold mb-2">Season Details</h2>

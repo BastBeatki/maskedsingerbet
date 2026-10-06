@@ -30,6 +30,10 @@ const App: React.FC = () => {
     updateMask,
     deleteMask,
     revealMask,
+    setRuleset,
+    startOpportunity,
+    createTournamentCopy,
+    setPriorChanceCount,
     addOrUpdateTip,
     deleteLastTip,
     toggleTipFinal,
@@ -94,6 +98,8 @@ const App: React.FC = () => {
                 onDeleteCounterBet={(id) => deleteCounterBet(activeSeasonId!, id)}
                 onAddShow={() => addShow(activeSeasonId!)}
                 onSetActiveShowId={(id) => setActiveShowId(activeSeasonId!, id)}
+                onStartOpportunity={(maskId) => startOpportunity(activeSeasonId!, maskId)}
+                onSetPriorChances={(maskId, count) => setPriorChanceCount(activeSeasonId!, maskId, count)}
               />
             );
         }
@@ -116,6 +122,8 @@ const App: React.FC = () => {
             onUpdateMask={(id, name, img) => activeSeasonId && updateMask(activeSeasonId, id, name, img)}
             onDeleteMask={(id) => activeSeasonId && deleteMask(activeSeasonId, id)}
             onDeleteShow={(id) => activeSeasonId && deleteShow(activeSeasonId, id)}
+            onSetRuleset={(version) => activeSeasonId && setRuleset(activeSeasonId, version)}
+            onCreateTournamentCopy={() => activeSeasonId && createTournamentCopy(activeSeasonId)}
           />
         );
        case 'rules':

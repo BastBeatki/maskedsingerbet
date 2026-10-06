@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Button, Card, Input } from './common/UI';
 import { catalogImages, filterCatalog, getCatalog, gameStateMaskImages, maskKey, participationKey, type ImageAsset } from '../catalog';
 import type { Season } from '../types';
+import { celebrityInfoLink } from '../celebrityLinks';
 
 const ImageCredit: React.FC<{ asset: ImageAsset | null }> = ({ asset }) => asset?.sourceType === 'USER_GAMESTATE' ?
   <p className="text-xs text-text-secondary mt-1">Bild aus deinem Spielstand · Rechte ungeklärt</p> : asset?.sourceType === 'TEMPORARY_REMOTE' ?
@@ -55,12 +56,15 @@ export const PromiCheckView: React.FC<{ onBack: () => void; seasons?: readonly S
       {rows.map(row => {
         const images = catalogImages(row);
         const costume = userMasks.get(maskKey(row)) ?? images.mask;
+        const infoLink = images.celebrity ? null : celebrityInfoLink(row.celebrity_name);
         return <article key={participationKey(row)} data-testid="participation"><Card className="min-w-0 h-full">
           <div className="flex gap-3 mb-3"><CatalogImage costume key={costume?.src ?? 'mask-fallback'} src={costume?.src} label={row.mask_name} />
             <div className="min-w-0 break-words"><p className="text-sm text-text-secondary">Staffel {row.season}{row.placement !== null ? ` · Platz ${row.placement}` : ''}</p>
               <h2 className="text-xl font-bold">{row.mask_name}</h2><p>{row.result}</p><ImageCredit asset={costume} /></div></div>
           <div className="flex gap-3 items-center"><CatalogImage key={images.celebrity?.src ?? 'person-fallback'} src={images.celebrity?.src} label={row.celebrity_name ?? 'Promi noch unbekannt'} />
-            <div className="break-words min-w-0"><p className="font-semibold">{row.celebrity_name ?? 'Noch nicht enthüllt'}</p><ImageCredit asset={images.celebrity} /></div></div>
+            <div className="break-words min-w-0"><p className="font-semibold">{row.celebrity_name ?? 'Noch nicht enthüllt'}</p><ImageCredit asset={images.celebrity} />
+              {infoLink && <a href={infoLink} target="_blank" rel="noopener noreferrer" className="inline-block mt-2 py-2 underline text-accent">Infos &amp; Bild ansehen ↗</a>}
+            </div></div>
           {row.reveal_episode !== null && <p className="text-sm mt-3">Enthüllung: Show {row.reveal_episode}{row.reveal_date ? ` · ${row.reveal_date}` : ''}</p>}
           {row.special_case && <p className="text-sm mt-3 text-yellow-300">Sonderfall: {row.special_case}</p>}
           {row.notes && <p className="text-sm text-text-secondary mt-2">{row.notes}</p>}

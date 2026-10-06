@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { AppState, Season, Player, Mask, Tip, Show, CounterBet } from '../types';
+import { AppState, Season, Player, Mask, Tip, Show, CounterBet, RulesetVersion } from '../types';
 import { generateId, isValidAppState, isValidSeason } from '../utils';
 import { PLAYER_COLORS } from '../constants';
+import { buildRevealAudit, rulesetOf } from '../rulesets';
+import { changeRuleset, openOpportunity, submitTournamentTip, settleTournamentMask, prepareTournamentCopy, setPriorChances } from '../tournamentActions';
 
 import { initializeStorage, saveStateDB, clearStateDB, createDefaultState, APP_STORAGE_KEY, LEGACY_STORAGE_KEY } from '../storage';
 
@@ -49,10 +51,10 @@ export const useAppManager = () => {
     if (storageReady) setAppState(updater);
   };
   
-  const withSeason = (seasonId: string, updater: (season: Season) => Season) => {
+  const withSeason = (seasonId: string, updater: (season: Season, players: Player[]) => Season) => {
     updateAppState(prev => ({
       ...prev,
-      seasons: prev.seasons.map(s => s.id === seasonId ? updater(s) : s),
+      seasons: prev.seasons.map(s => s.id === seasonId ? updater(s, prev.players) : s),
     }));
   };
 
@@ -67,6 +69,7 @@ export const useAppManager = () => {
       shows: [],
       activeShowId: null,
       counterBets: [],
+      ruleset: 'classic-v1',
     };
     updateAppState(prev => ({ ...prev, seasons: [...prev.seasons, newSeason] }));
   };
@@ -112,11 +115,12 @@ export const useAppManager = () => {
     updateAppState(prev => {
         const newSeasons = prev.seasons.map(season => {
             const newMasks = season.masks.map(mask => {
+                if (rulesetOf(season) === 'tournament-v1') return mask;
                 const newTips = { ...mask.tips };
                 delete newTips[id];
                 return { ...mask, tips: newTips };
             });
-            const newCounterBets = season.counterBets.filter(cb => cb.bettorPlayerId !== id && cb.targetPlayerId !== id);
+            const newCounterBets = rulesetOf(season) === 'tournament-v1' ? season.counterBets : season.counterBets.filter(cb => cb.bettorPlayerId !== id && cb.targetPlayerId !== id);
             return {
                 ...season,
                 playerIds: season.playerIds.filter(pid => pid !== id),
@@ -192,21 +196,60 @@ export const useAppManager = () => {
   };
 
   const revealMask = (seasonId: string, id: string, celebrityName: string, celebrityImageUrl?: string) => {
-    withSeason(seasonId, season => ({
+    const at = Date.now();
+    withSeason(seasonId, (season, players) => {
+      if (rulesetOf(season) === 'tournament-v1') {
+        try { return settleTournamentMask(season, id, celebrityName, celebrityImageUrl, players, at); }
+        catch (error) { alert(String(error)); return season; }
+      }
+      return ({
         ...season,
-        masks: season.masks.map(m => m.id === id ? { 
+        masks: season.masks.map(m => {
+          if (m.id !== id) return m;
+          const revealed = {
             ...m, 
             isRevealed: true, 
             revealedCelebrity: celebrityName,
             celebrityImageUrl: celebrityImageUrl,
             revealedInShowId: season.activeShowId || undefined
-        } : m),
-    }));
+          };
+          return { ...revealed, scoringAudit: buildRevealAudit(season, revealed, players, at, 'classic-v1') };
+        }),
+      });
+    });
+  };
+
+  const setRuleset = (seasonId: string, version: RulesetVersion) => withSeason(seasonId, season => {
+    try { return changeRuleset(season, version); } catch (error) { alert(String(error)); return season; }
+  });
+  const createTournamentCopy = (seasonId: string) => {
+    const id = generateId(), at = Date.now();
+    updateAppState(prev => {
+      const source = prev.seasons.find(s => s.id === seasonId);
+      if (!source) return prev;
+      try { return { ...prev, seasons: [...prev.seasons, prepareTournamentCopy(source, prev.players, id, at)] }; }
+      catch (error) { alert(String(error)); return prev; }
+    });
+  };
+  const setPriorChanceCount = (seasonId: string, maskId: string, count: number) => withSeason(seasonId, season => {
+    try { return setPriorChances(season, maskId, count); } catch (error) { alert(String(error)); return season; }
+  });
+  const startOpportunity = (seasonId: string, maskId: string) => {
+    const id = generateId(), at = Date.now();
+    withSeason(seasonId, season => {
+      if (rulesetOf(season) !== 'tournament-v1') return season;
+      try { return openOpportunity(season, maskId, id, at); } catch (error) { alert(String(error)); return season; }
+    });
   };
 
   // --- Tip Management ---
   const addOrUpdateTip = (seasonId: string, maskId: string, playerId: string, celebrityName: string, isFinal: boolean) => {
+    const at = Date.now();
     withSeason(seasonId, season => {
+        if (rulesetOf(season) === 'tournament-v1') {
+          try { return submitTournamentTip(season, maskId, playerId, celebrityName, isFinal, at); }
+          catch (error) { alert(String(error)); return season; }
+        }
         if (!season.activeShowId) {
             alert("Please start or select a show before adding a tip.");
             return season;
@@ -245,6 +288,7 @@ export const useAppManager = () => {
 
   const deleteLastTip = (seasonId: string, maskId: string, playerId: string) => {
      withSeason(seasonId, season => {
+        if (rulesetOf(season) === 'tournament-v1') { alert('Turniertipps bleiben im Verlauf. Ändere die Identität mit einem neuen Tipp.'); return season; }
         const newMasks = season.masks.map(mask => {
             if (mask.id === maskId) {
                 const playerTips = mask.tips[playerId] || [];
@@ -264,7 +308,14 @@ export const useAppManager = () => {
   };
 
   const toggleTipFinal = (seasonId: string, maskId: string, playerId: string, tipIndex: number) => {
+      const at = Date.now();
       withSeason(seasonId, season => {
+          if (rulesetOf(season) === 'tournament-v1') {
+              const tips = season.masks.find(m => m.id === maskId)?.tips[playerId] ?? [];
+              if (tipIndex !== tips.length - 1 || !tips[tipIndex]) return season;
+              try { return submitTournamentTip(season, maskId, playerId, tips[tipIndex].celebrityName, true, at); }
+              catch (error) { alert(String(error)); return season; }
+          }
           const newMasks = season.masks.map(mask => {
               if (mask.id === maskId) {
                   const playerTips = [...(mask.tips[playerId] || [])];
@@ -293,7 +344,16 @@ export const useAppManager = () => {
 
   // --- Counter-Bet Management ---
   const addCounterBet = (seasonId: string, maskId: string, bettorPlayerId: string, targetPlayerId: string) => {
+    const at = Date.now(), id = generateId();
     withSeason(seasonId, season => {
+        const mask = season.masks.find(m => m.id === maskId);
+        const tournament = rulesetOf(season) === 'tournament-v1';
+        const op = mask?.opportunities?.at(-1);
+        if (tournament && (!mask || mask.isRevealed || !op || at < op.openedAt ||
+            !season.shows.some(s => s.id === season.activeShowId && s.episodeNumber >= season.shows.find(show => show.id === op.showId)!.episodeNumber) ||
+            !season.playerIds.includes(bettorPlayerId) || !season.playerIds.includes(targetPlayerId))) {
+          alert('Gegenwette nur für eine offene Maske mit Ratechance, gültiger aktueller Show und Staffelspielern.'); return season;
+        }
         if (!season.activeShowId) {
             alert("Please start a show to place a counter-bet.");
             return season;
@@ -323,12 +383,13 @@ export const useAppManager = () => {
         const lastTipIndex = targetTips.length - 1;
 
         const newCounterBet: CounterBet = {
-            id: generateId(),
+            id,
             showId: season.activeShowId,
             maskId,
             bettorPlayerId,
             targetPlayerId,
             targetTipIndex: lastTipIndex,
+            ...(tournament ? { createdAt: at, opportunityId: op!.id, targetWasFinal: targetTips[lastTipIndex].isFinal === true } : {}),
         };
         
         return { ...season, counterBets: [...season.counterBets, newCounterBet] };
@@ -336,10 +397,13 @@ export const useAppManager = () => {
   };
 
   const deleteCounterBet = (seasonId: string, id: string) => {
-    withSeason(seasonId, season => ({
+    withSeason(seasonId, season => {
+      if (rulesetOf(season) === 'tournament-v1') { alert('Turnier-Gegenwetten bleiben für die Abrechnung gespeichert.'); return season; }
+      return ({
         ...season,
         counterBets: season.counterBets.filter(cb => cb.id !== id),
-    }));
+      });
+    });
   };
 
   // --- Show Management ---
@@ -361,6 +425,10 @@ export const useAppManager = () => {
     }
 
     withSeason(seasonId, (currentSeason) => {
+        if (rulesetOf(currentSeason) === 'tournament-v1' && currentSeason.masks.some(m =>
+            m.opportunities?.some(op => op.showId === showId) || m.scoringAudit?.evidence.shows.some(s => s.id === showId))) {
+          alert('Eine Show mit Turnierereignissen kann nicht gelöscht werden. Der Verlauf bleibt erhalten.'); return currentSeason;
+        }
         const updatedShows = currentSeason.shows.filter(s => s.id !== showId);
 
         const updatedMasks = currentSeason.masks.map(mask => {
@@ -471,6 +539,10 @@ export const useAppManager = () => {
     updateMask,
     deleteMask,
     revealMask,
+    setRuleset,
+    createTournamentCopy,
+    setPriorChanceCount,
+    startOpportunity,
     addOrUpdateTip,
     deleteLastTip,
     toggleTipFinal,
