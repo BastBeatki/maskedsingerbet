@@ -47,10 +47,25 @@ export function filterCatalog(rows: readonly Participation[], query = '', season
     a.mask_name.localeCompare(b.mask_name, 'de-DE'));
 }
 
-export interface ImageAsset { readonly src: string; readonly source: string; readonly rights: string }
+export interface ImageAsset {
+  readonly src: string; readonly source: string; readonly rights: string;
+  readonly licenseUrl: string; readonly author: string; readonly authorUrl: string;
+  readonly title: string; readonly changes: string; readonly licenseStatus: 'FILE_LICENSE_REVIEWED';
+}
+export function resolveImageAsset(value: unknown): ImageAsset | null {
+  if (!value || typeof value !== 'object') return null;
+  const asset = value as Record<string, unknown>;
+  // Reject incomplete/unreviewed entries without affecting the read-only catalog or game.
+  if (asset.licenseStatus !== 'FILE_LICENSE_REVIEWED' || typeof asset.src !== 'string' ||
+    !/^\/catalog-images\/[a-z0-9-]+\.webp$/.test(asset.src) ||
+    !['source', 'licenseUrl', 'authorUrl'].every(key => typeof asset[key] === 'string' && /^https:\/\/[^\s]+$/.test(asset[key] as string)) ||
+    !['rights', 'author', 'title', 'changes'].every(key => typeof asset[key] === 'string' && (asset[key] as string).trim())) return null;
+  return value as ImageAsset;
+}
 export function catalogImages(row: Participation): { mask: ImageAsset | null; celebrity: ImageAsset | null } {
   // The manifest is separate from user data. Duo/special-case rows share a mask, not a person image.
-  const masks: Record<string, ImageAsset | null> = manifest.masks;
-  const celebrities: Record<string, ImageAsset | null> = manifest.celebrities;
-  return { mask: masks[maskKey(row)] ?? null, celebrity: celebrities[participationKey(row)] ?? null };
+  const masks: Record<string, unknown> = manifest.masks;
+  const celebrities: Record<string, unknown> = manifest.celebrities;
+  return { mask: resolveImageAsset(masks[maskKey(row)]),
+    celebrity: row.celebrity_name === null ? null : resolveImageAsset(celebrities[participationKey(row)]) };
 }

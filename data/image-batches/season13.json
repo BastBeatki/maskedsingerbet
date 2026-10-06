@@ -1,0 +1,54 @@
+{
+  "batch": "season13-first",
+  "reviewedAt": "2026-10-06",
+  "assets": [
+    {
+      "id": "isabel-edvardsson",
+      "name": "Isabel Edvardsson",
+      "file": "File:Isabell Edvardsson (cropped).jpg",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "author": "9EkieraM1",
+      "authorUrl": "https://commons.wikimedia.org/wiki/User:9EkieraM1",
+      "identityReviewed": true,
+      "licenseReviewed": true,
+      "expectedOriginalSha1": "bf60b8e9408e123d79a2400145e9e5890e1ff06a"
+    },
+    {
+      "id": "ben-zucker",
+      "name": "Ben Zucker",
+      "file": "File:2019-05-05 ZDF Fernsehgarten Ben Zucker by Olaf Kosinsky 1110.jpg",
+      "license": "CC BY-SA 3.0 de",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en",
+      "author": "Olaf Kosinsky (kosinsky.eu)",
+      "authorUrl": "https://kosinsky.eu/",
+      "identityReviewed": true,
+      "licenseReviewed": true,
+      "expectedOriginalSha1": "e2d8dbf38e42b1d377ce7c4ff43a9c245c7c91cb"
+    },
+    {
+      "id": "stefan-mross",
+      "name": "Stefan Mross",
+      "file": "File:Stefan Mross 01.JPG",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "author": "Sigismund von Dobschütz",
+      "authorUrl": "https://commons.wikimedia.org/wiki/User:Seeteufel",
+      "identityReviewed": true,
+      "licenseReviewed": true,
+      "expectedOriginalSha1": "1af7a008911b360491bbe5dfc145531e14285547"
+    },
+    {
+      "id": "prince-damien",
+      "name": "Prince Damien",
+      "file": "File:Prince Damien DSDS-Autogrammstunde.jpg",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "author": "CHR!S",
+      "authorUrl": "https://commons.wikimedia.org/wiki/User:CHR!S",
+      "identityReviewed": true,
+      "licenseReviewed": true,
+      "expectedOriginalSha1": "e8fb61cb10c98ca85392d7e483cb145eb1c48f87"
+    }
+  ]
+}

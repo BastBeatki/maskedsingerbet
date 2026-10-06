@@ -1,0 +1,1767 @@
+{
+  "asOf": "2026-10-06",
+  "catalogAsOf": "2026-09-30",
+  "batch": "season13-first",
+  "coverage": {
+    "people": {
+      "covered": 4,
+      "total": 125
+    },
+    "knownParticipations": {
+      "covered": 4,
+      "total": 126
+    },
+    "masks": {
+      "covered": 0,
+      "total": 127
+    },
+    "season13": {
+      "peopleCovered": 4,
+      "peopleTotal": 4,
+      "masksCovered": 0,
+      "masksTotal": 12,
+      "unknownPeople": 8
+    }
+  },
+  "missingPeople": [
+    {
+      "name": "Alec Völkel",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[3,\"Alien\",\"Alec Völkel\"]"
+      ]
+    },
+    {
+      "name": "Alexander Klaws",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[5,\"Mülli Müller\",\"Alexander Klaws\"]"
+      ]
+    },
+    {
+      "name": "Amira Aly",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[12,\"Eggi\",\"Amira Aly\"]"
+      ]
+    },
+    {
+      "name": "Andrea Sawatzki",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[5,\"Axolotl\",\"Andrea Sawatzki\"]"
+      ]
+    },
+    {
+      "name": "Angelo Kelly",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[2,\"Kakerlake\",\"Angelo Kelly\"]"
+      ]
+    },
+    {
+      "name": "Anna Loos",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[8,\"Seepferdchen\",\"Anna Loos\"]"
+      ]
+    },
+    {
+      "name": "Annemarie Carpendale",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[5,\"Teddy\",\"Annemarie Carpendale\"]"
+      ]
+    },
+    {
+      "name": "Annett Louisan",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Zuckerwatte\",\"Annett Louisan\"]"
+      ]
+    },
+    {
+      "name": "Armin Rohde",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[7,\"Goldi\",\"Armin Rohde\"]"
+      ]
+    },
+    {
+      "name": "Barbara Becker",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[12,\"Smiley\",\"Barbara Becker\"]"
+      ]
+    },
+    {
+      "name": "Ben Blümel",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[3,\"Anubis\",\"Ben Blümel\"]"
+      ]
+    },
+    {
+      "name": "Brigitte Nielsen",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[12,\"Kiss\",\"Brigitte Nielsen\"]"
+      ]
+    },
+    {
+      "name": "Bülent Ceylan",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[1,\"Engel\",\"Bülent Ceylan\"]"
+      ]
+    },
+    {
+      "name": "Bürger Lars Dietrich",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[7,\"Werwolf\",\"Bürger Lars Dietrich\"]"
+      ]
+    },
+    {
+      "name": "Carolin Niemczyk",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[5,\"Mops\",\"Carolin Niemczyk\"]"
+      ]
+    },
+    {
+      "name": "Caroline Beil",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[2,\"Roboter\",\"Caroline Beil\"]"
+      ]
+    },
+    {
+      "name": "Cassandra Steen",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[4,\"Leopard\",\"Cassandra Steen\"]"
+      ]
+    },
+    {
+      "name": "Cherno Jobatey",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[6,\"Möwe\",\"Cherno Jobatey\"]"
+      ]
+    },
+    {
+      "name": "Christina Stürmer",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[5,\"Heldin\",\"Christina Stürmer\"]"
+      ]
+    },
+    {
+      "name": "Clemens Schick",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[12,\"Harry Otter\",\"Clemens Schick\"]"
+      ]
+    },
+    {
+      "name": "Daniel Aminati",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[1,\"Kudu\",\"Daniel Aminati\"]"
+      ]
+    },
+    {
+      "name": "Daniel Boschmann",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[8,\"Waschbär\",\"Daniel Boschmann\"]"
+      ]
+    },
+    {
+      "name": "Daniel Donskoy",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[7,\"Maulwurf\",\"Daniel Donskoy\"]"
+      ]
+    },
+    {
+      "name": "Daniela Katzenberger",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[3,\"Erdmännchen\",\"Daniela Katzenberger\"]"
+      ]
+    },
+    {
+      "name": "Dieter Hallervorden",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[2,\"Chamäleon\",\"Dieter Hallervorden\"]"
+      ]
+    },
+    {
+      "name": "Eko Fresh",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[11,\"Willi Weihnacht\",\"Eko Fresh\"]"
+      ]
+    },
+    {
+      "name": "Ella Endlich",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[6,\"Zebra\",\"Ella Endlich\"]"
+      ]
+    },
+    {
+      "name": "Eva Padberg",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[9,\"Feuerlöscher\",\"Eva Padberg\"]"
+      ]
+    },
+    {
+      "name": "Evil Jared Hasselhoff",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[12,\"Dude\",\"Evil Jared Hasselhoff\"]"
+      ]
+    },
+    {
+      "name": "Felicitas Woll",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[8,\"Igel\",\"Felicitas Woll\"]"
+      ]
+    },
+    {
+      "name": "Felix von Jascheroff",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[7,\"Black Mamba\",\"Felix von Jascheroff\"]"
+      ]
+    },
+    {
+      "name": "Franziska Knuppe",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[2,\"Fledermaus\",\"Franziska Knuppe\"]"
+      ]
+    },
+    {
+      "name": "Franziska van Almsick",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[4,\"Einhorn\",\"Franziska van Almsick\"]"
+      ]
+    },
+    {
+      "name": "Gil Ofarim",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[1,\"Grashüpfer\",\"Gil Ofarim\"]"
+      ]
+    },
+    {
+      "name": "Giovanni Zarrella",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Mysterium\",\"Giovanni Zarrella\"]"
+      ]
+    },
+    {
+      "name": "Gregor Meyle",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[2,\"Drache\",\"Gregor Meyle\"]"
+      ]
+    },
+    {
+      "name": "Guildo Horn",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[4,\"Stier\",\"Guildo Horn\"]"
+      ]
+    },
+    {
+      "name": "Heiko Lochmann",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Flip-Flop\",\"Heiko Lochmann\"]"
+      ]
+    },
+    {
+      "name": "Heinz Hoenig",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[1,\"Kakadu\",\"Heinz Hoenig\"]"
+      ]
+    },
+    {
+      "name": "Hendrik Duryn",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[9,\"Mustang\",\"Hendrik Duryn\"]"
+      ]
+    },
+    {
+      "name": "Henning Baum",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[4,\"Quokka\",\"Henning Baum\"]"
+      ]
+    },
+    {
+      "name": "Hugo Egon Balder",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Couchpotato\",\"Hugo Egon Balder\"]"
+      ]
+    },
+    {
+      "name": "Inka Bause",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[8,\"Toast\",\"Inka Bause\"]"
+      ]
+    },
+    {
+      "name": "Ireen Sheer",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Mysterium\",\"Ireen Sheer\"]"
+      ]
+    },
+    {
+      "name": "Jan Josef Liefers",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[8,\"Känguru\",\"Jan Josef Liefers\"]"
+      ]
+    },
+    {
+      "name": "Jasna Fritzi Bauer",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[6,\"Seestern\",\"Jasna Fritzi Bauer\"]"
+      ]
+    },
+    {
+      "name": "Jeanette Biedermann",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[6,\"Discokugel\",\"Jeanette Biedermann\"]"
+      ]
+    },
+    {
+      "name": "Jeannine Michaelsen",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[6,\"Brilli\",\"Jeannine Michaelsen\"]"
+      ]
+    },
+    {
+      "name": "Jenke von Wilmsdorff",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[9,\"Marsmaus\",\"Jenke von Wilmsdorff\"]"
+      ]
+    },
+    {
+      "name": "Jennifer Weist",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[9,\"Eisprinzessin\",\"Jennifer Weist\"]"
+      ]
+    },
+    {
+      "name": "Jens Riewa",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[5,\"Chili\",\"Jens Riewa\"]"
+      ]
+    },
+    {
+      "name": "Jessica Schwarz",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[11,\"Feuersalamander\",\"Jessica Schwarz\"]"
+      ]
+    },
+    {
+      "name": "Joana Zimmer",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[6,\"Galax'Sis\",\"Joana Zimmer\"]"
+      ]
+    },
+    {
+      "name": "Jochen Schropp",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[3,\"Hummer\",\"Jochen Schropp\"]"
+      ]
+    },
+    {
+      "name": "Joris",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[11,\"Pirat\",\"Joris\"]"
+      ]
+    },
+    {
+      "name": "Judith Rakers",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[4,\"Küken\",\"Judith Rakers\"]"
+      ]
+    },
+    {
+      "name": "Jutta Speidel",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[7,\"Walross\",\"Jutta Speidel\"]"
+      ]
+    },
+    {
+      "name": "Katja Burkard",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[7,\"Brokkoli\",\"Katja Burkard\"]"
+      ]
+    },
+    {
+      "name": "Katja Ebstein",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[9,\"Okapi\",\"Katja Ebstein\"]"
+      ]
+    },
+    {
+      "name": "Katrin Müller-Hohenstein",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[4,\"Schwein\",\"Katrin Müller-Hohenstein\"]"
+      ]
+    },
+    {
+      "name": "Leslie Clio",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[7,\"Zahnfee\",\"Leslie Clio\"]"
+      ]
+    },
+    {
+      "name": "Loi",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[11,\"Panda\",\"Loi\"]"
+      ]
+    },
+    {
+      "name": "Lou Bega",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[11,\"Schneemann\",\"Lou Bega\"]"
+      ]
+    },
+    {
+      "name": "Luca Hänni",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[8,\"Schuhschnabel\",\"Luca Hänni\"]"
+      ]
+    },
+    {
+      "name": "Lucas Cordalis",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[3,\"Erdmännchen\",\"Lucas Cordalis\"]"
+      ]
+    },
+    {
+      "name": "Lucy Diakovska",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[1,\"Oktopus\",\"Lucy Diakovska\"]"
+      ]
+    },
+    {
+      "name": "Madita van Hülsen",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[11,\"Lauch\",\"Madita van Hülsen\"]"
+      ]
+    },
+    {
+      "name": "Mandy Capristo",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[11,\"Qualle\",\"Mandy Capristo\"]"
+      ]
+    },
+    {
+      "name": "Marcus Schenkenberg",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[1,\"Eichhörnchen\",\"Marcus Schenkenberg\"]"
+      ]
+    },
+    {
+      "name": "Maren Kroymann",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[11,\"Lady Ananas\",\"Maren Kroymann\"]"
+      ]
+    },
+    {
+      "name": "Marianne Rosenberg",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[8,\"Pilz\",\"Marianne Rosenberg\"]"
+      ]
+    },
+    {
+      "name": "Mark Keller",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[6,\"Dornteufel\",\"Mark Keller\"]"
+      ]
+    },
+    {
+      "name": "Max Mutzke",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[1,\"Astronaut\",\"Max Mutzke\"]"
+      ]
+    },
+    {
+      "name": "Melissa Khalaj",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[8,\"Frotteefant\",\"Melissa Khalaj\"]"
+      ]
+    },
+    {
+      "name": "Meltem Kaptan",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[12,\"Muuhnika\",\"Meltem Kaptan\"]"
+      ]
+    },
+    {
+      "name": "Michael Schulte",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Mysterium\",\"Michael Schulte\"]"
+      ]
+    },
+    {
+      "name": "Mieze Katz",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[9,\"Troll\",\"Mieze Katz\"]"
+      ]
+    },
+    {
+      "name": "Mike Singer",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[2,\"Wuschel\",\"Mike Singer\"]"
+      ]
+    },
+    {
+      "name": "Mimi Fiedler",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[11,\"Lokomotive\",\"Mimi Fiedler\"]"
+      ]
+    },
+    {
+      "name": "Mirja Boes",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Floh\",\"Mirja Boes\"]"
+      ]
+    },
+    {
+      "name": "Nadja Benaissa",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Elgonia\",\"Nadja Benaissa\"]"
+      ]
+    },
+    {
+      "name": "Natalia Wörner",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[12,\"Quietsch\",\"Natalia Wörner\"]"
+      ]
+    },
+    {
+      "name": "Nazan Eckes",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Robodog\",\"Nazan Eckes\"]"
+      ]
+    },
+    {
+      "name": "Nelson Müller",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[3,\"Nilpferd\",\"Nelson Müller\"]"
+      ]
+    },
+    {
+      "name": "Nora Tschirner",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[6,\"Ork\",\"Nora Tschirner\"]"
+      ]
+    },
+    {
+      "name": "Pascal Hens",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[11,\"Nashorn\",\"Pascal Hens\"]"
+      ]
+    },
+    {
+      "name": "Pasquale Aleardi",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[9,\"Lulatsch\",\"Pasquale Aleardi\"]"
+      ]
+    },
+    {
+      "name": "Patricia Kelly",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[8,\"Diamantula / Mystica\",\"Patricia Kelly\"]"
+      ]
+    },
+    {
+      "name": "Paul Potts",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[6,\"Koala\",\"Paul Potts\"]"
+      ]
+    },
+    {
+      "name": "Peter Kraus",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[5,\"Stinktier\",\"Peter Kraus\"]"
+      ]
+    },
+    {
+      "name": "Pierre Littbarski",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[5,\"Hammerhai\",\"Pierre Littbarski\"]"
+      ]
+    },
+    {
+      "name": "Pietro Lombardi",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[12,\"Rave-Ioli\",\"Pietro Lombardi\"]"
+      ]
+    },
+    {
+      "name": "Rebecca Immanuel",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[2,\"Göttin\",\"Rebecca Immanuel\"]"
+      ]
+    },
+    {
+      "name": "Rick Kavanian",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[7,\"No Name / Rosty\",\"Rick Kavanian\"]"
+      ]
+    },
+    {
+      "name": "Rolando Villazón",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Mysterium\",\"Rolando Villazón\"]"
+      ]
+    },
+    {
+      "name": "Roman Lochmann",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Flip-Flop\",\"Roman Lochmann\"]"
+      ]
+    },
+    {
+      "name": "Ross Antony",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[4,\"Flamingo\",\"Ross Antony\"]"
+      ]
+    },
+    {
+      "name": "Rúrik Gíslason",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[6,\"Gorilla\",\"Rúrik Gíslason\"]"
+      ]
+    },
+    {
+      "name": "Samuel Koch",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[5,\"Phönix\",\"Samuel Koch\"]"
+      ]
+    },
+    {
+      "name": "Sandy Mölling",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[5,\"Raupe\",\"Sandy Mölling\"]"
+      ]
+    },
+    {
+      "name": "Sarah Engels",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[3,\"Skelett\",\"Sarah Engels\"]"
+      ]
+    },
+    {
+      "name": "Sasha",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[4,\"Dinosaurier\",\"Sasha\"]"
+      ]
+    },
+    {
+      "name": "Sebastian Krumbiegel",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Krokodil\",\"Sebastian Krumbiegel\"]"
+      ]
+    },
+    {
+      "name": "Sonja Zietlow",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[2,\"Hase\",\"Sonja Zietlow\"]"
+      ]
+    },
+    {
+      "name": "Stefanie Heinzmann",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[2,\"Dalmatiner\",\"Stefanie Heinzmann\"]",
+        "[10,\"Mysterium\",\"Stefanie Heinzmann\"]"
+      ]
+    },
+    {
+      "name": "Stefanie Hertel",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[1,\"Panther\",\"Stefanie Hertel\"]"
+      ]
+    },
+    {
+      "name": "Susan Sideropoulos",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[1,\"Schmetterling\",\"Susan Sideropoulos\"]"
+      ]
+    },
+    {
+      "name": "Susianna Kentikian",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[1,\"Monster\",\"Susianna Kentikian\"]"
+      ]
+    },
+    {
+      "name": "Sylvie Meis",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[3,\"Alpaka\",\"Sylvie Meis\"]"
+      ]
+    },
+    {
+      "name": "Thomas Anders",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[4,\"Schildkröte\",\"Thomas Anders\"]"
+      ]
+    },
+    {
+      "name": "Thomas Hayo",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[7,\"Pfeife\",\"Thomas Hayo\"]"
+      ]
+    },
+    {
+      "name": "Thore Schölermann",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[4,\"Monstronaut\",\"Thore Schölermann\"]"
+      ]
+    },
+    {
+      "name": "Tim Bendzko",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[9,\"Klaus Claus\",\"Tim Bendzko\"]"
+      ]
+    },
+    {
+      "name": "Tom Beck",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[2,\"Faultier\",\"Tom Beck\"]"
+      ]
+    },
+    {
+      "name": "Uschi Glas",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Tapsi, der Babylöwe\",\"Uschi Glas\"]"
+      ]
+    },
+    {
+      "name": "Uwe Ochsenknecht",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[9,\"Kiwi\",\"Uwe Ochsenknecht\"]"
+      ]
+    },
+    {
+      "name": "Vanessa Mai",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[10,\"Mysterium\",\"Vanessa Mai\"]"
+      ]
+    },
+    {
+      "name": "Veronica Ferres",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[3,\"Biene\",\"Veronica Ferres\"]"
+      ]
+    },
+    {
+      "name": "Vicky Leandros",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[3,\"Katze\",\"Vicky Leandros\"]"
+      ]
+    },
+    {
+      "name": "Wayne Carpendale",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[12,\"King\",\"Wayne Carpendale\"]"
+      ]
+    },
+    {
+      "name": "Wigald Boning",
+      "status": "NOT_YET_BATCHED",
+      "participationKeys": [
+        "[3,\"Frosch\",\"Wigald Boning\"]"
+      ]
+    }
+  ],
+  "missingMasks": [
+    {
+      "key": "[1,\"Astronaut\"]",
+      "season": 1,
+      "name": "Astronaut",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[1,\"Grashüpfer\"]",
+      "season": 1,
+      "name": "Grashüpfer",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[1,\"Engel\"]",
+      "season": 1,
+      "name": "Engel",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[1,\"Monster\"]",
+      "season": 1,
+      "name": "Monster",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[1,\"Kudu\"]",
+      "season": 1,
+      "name": "Kudu",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[1,\"Panther\"]",
+      "season": 1,
+      "name": "Panther",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[1,\"Eichhörnchen\"]",
+      "season": 1,
+      "name": "Eichhörnchen",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[1,\"Kakadu\"]",
+      "season": 1,
+      "name": "Kakadu",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[1,\"Schmetterling\"]",
+      "season": 1,
+      "name": "Schmetterling",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[1,\"Oktopus\"]",
+      "season": 1,
+      "name": "Oktopus",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[2,\"Faultier\"]",
+      "season": 2,
+      "name": "Faultier",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[2,\"Wuschel\"]",
+      "season": 2,
+      "name": "Wuschel",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[2,\"Drache\"]",
+      "season": 2,
+      "name": "Drache",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[2,\"Hase\"]",
+      "season": 2,
+      "name": "Hase",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[2,\"Chamäleon\"]",
+      "season": 2,
+      "name": "Chamäleon",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[2,\"Roboter\"]",
+      "season": 2,
+      "name": "Roboter",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[2,\"Göttin\"]",
+      "season": 2,
+      "name": "Göttin",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[2,\"Kakerlake\"]",
+      "season": 2,
+      "name": "Kakerlake",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[2,\"Fledermaus\"]",
+      "season": 2,
+      "name": "Fledermaus",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[2,\"Dalmatiner\"]",
+      "season": 2,
+      "name": "Dalmatiner",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[3,\"Skelett\"]",
+      "season": 3,
+      "name": "Skelett",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[3,\"Alien\"]",
+      "season": 3,
+      "name": "Alien",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[3,\"Nilpferd\"]",
+      "season": 3,
+      "name": "Nilpferd",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[3,\"Anubis\"]",
+      "season": 3,
+      "name": "Anubis",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[3,\"Erdmännchen\"]",
+      "season": 3,
+      "name": "Erdmännchen",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[3,\"Katze\"]",
+      "season": 3,
+      "name": "Katze",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[3,\"Frosch\"]",
+      "season": 3,
+      "name": "Frosch",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[3,\"Alpaka\"]",
+      "season": 3,
+      "name": "Alpaka",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[3,\"Hummer\"]",
+      "season": 3,
+      "name": "Hummer",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[3,\"Biene\"]",
+      "season": 3,
+      "name": "Biene",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[4,\"Dinosaurier\"]",
+      "season": 4,
+      "name": "Dinosaurier",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[4,\"Leopard\"]",
+      "season": 4,
+      "name": "Leopard",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[4,\"Flamingo\"]",
+      "season": 4,
+      "name": "Flamingo",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[4,\"Schildkröte\"]",
+      "season": 4,
+      "name": "Schildkröte",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[4,\"Monstronaut\"]",
+      "season": 4,
+      "name": "Monstronaut",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[4,\"Stier\"]",
+      "season": 4,
+      "name": "Stier",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[4,\"Küken\"]",
+      "season": 4,
+      "name": "Küken",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[4,\"Quokka\"]",
+      "season": 4,
+      "name": "Quokka",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[4,\"Einhorn\"]",
+      "season": 4,
+      "name": "Einhorn",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[4,\"Schwein\"]",
+      "season": 4,
+      "name": "Schwein",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[5,\"Mülli Müller\"]",
+      "season": 5,
+      "name": "Mülli Müller",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[5,\"Raupe\"]",
+      "season": 5,
+      "name": "Raupe",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[5,\"Heldin\"]",
+      "season": 5,
+      "name": "Heldin",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[5,\"Mops\"]",
+      "season": 5,
+      "name": "Mops",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[5,\"Axolotl\"]",
+      "season": 5,
+      "name": "Axolotl",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[5,\"Teddy\"]",
+      "season": 5,
+      "name": "Teddy",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[5,\"Phönix\"]",
+      "season": 5,
+      "name": "Phönix",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[5,\"Stinktier\"]",
+      "season": 5,
+      "name": "Stinktier",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[5,\"Hammerhai\"]",
+      "season": 5,
+      "name": "Hammerhai",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[5,\"Chili\"]",
+      "season": 5,
+      "name": "Chili",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[6,\"Zebra\"]",
+      "season": 6,
+      "name": "Zebra",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[6,\"Dornteufel\"]",
+      "season": 6,
+      "name": "Dornteufel",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[6,\"Discokugel\"]",
+      "season": 6,
+      "name": "Discokugel",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[6,\"Ork\"]",
+      "season": 6,
+      "name": "Ork",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[6,\"Seestern\"]",
+      "season": 6,
+      "name": "Seestern",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[6,\"Gorilla\"]",
+      "season": 6,
+      "name": "Gorilla",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[6,\"Galax'Sis\"]",
+      "season": 6,
+      "name": "Galax'Sis",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[6,\"Koala\"]",
+      "season": 6,
+      "name": "Koala",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[6,\"Möwe\"]",
+      "season": 6,
+      "name": "Möwe",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[6,\"Brilli\"]",
+      "season": 6,
+      "name": "Brilli",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[7,\"Maulwurf\"]",
+      "season": 7,
+      "name": "Maulwurf",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[7,\"Werwolf\"]",
+      "season": 7,
+      "name": "Werwolf",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[7,\"No Name / Rosty\"]",
+      "season": 7,
+      "name": "No Name / Rosty",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[7,\"Zahnfee\"]",
+      "season": 7,
+      "name": "Zahnfee",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[7,\"Goldi\"]",
+      "season": 7,
+      "name": "Goldi",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[7,\"Black Mamba\"]",
+      "season": 7,
+      "name": "Black Mamba",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[7,\"Pfeife\"]",
+      "season": 7,
+      "name": "Pfeife",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[7,\"Walross\"]",
+      "season": 7,
+      "name": "Walross",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[7,\"Brokkoli\"]",
+      "season": 7,
+      "name": "Brokkoli",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[8,\"Schuhschnabel\"]",
+      "season": 8,
+      "name": "Schuhschnabel",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[8,\"Igel\"]",
+      "season": 8,
+      "name": "Igel",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[8,\"Diamantula / Mystica\"]",
+      "season": 8,
+      "name": "Diamantula / Mystica",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[8,\"Frotteefant\"]",
+      "season": 8,
+      "name": "Frotteefant",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[8,\"Toast\"]",
+      "season": 8,
+      "name": "Toast",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[8,\"Seepferdchen\"]",
+      "season": 8,
+      "name": "Seepferdchen",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[8,\"Pilz\"]",
+      "season": 8,
+      "name": "Pilz",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[8,\"Waschbär\"]",
+      "season": 8,
+      "name": "Waschbär",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[8,\"Känguru\"]",
+      "season": 8,
+      "name": "Känguru",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[9,\"Eisprinzessin\"]",
+      "season": 9,
+      "name": "Eisprinzessin",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[9,\"Lulatsch\"]",
+      "season": 9,
+      "name": "Lulatsch",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[9,\"Mustang\"]",
+      "season": 9,
+      "name": "Mustang",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[9,\"Troll\"]",
+      "season": 9,
+      "name": "Troll",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[9,\"Klaus Claus\"]",
+      "season": 9,
+      "name": "Klaus Claus",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[9,\"Kiwi\"]",
+      "season": 9,
+      "name": "Kiwi",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[9,\"Marsmaus\"]",
+      "season": 9,
+      "name": "Marsmaus",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[9,\"Feuerlöscher\"]",
+      "season": 9,
+      "name": "Feuerlöscher",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[9,\"Okapi\"]",
+      "season": 9,
+      "name": "Okapi",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[10,\"Floh\"]",
+      "season": 10,
+      "name": "Floh",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[10,\"Flip-Flop\"]",
+      "season": 10,
+      "name": "Flip-Flop",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[10,\"Krokodil\"]",
+      "season": 10,
+      "name": "Krokodil",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[10,\"Elgonia\"]",
+      "season": 10,
+      "name": "Elgonia",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[10,\"Robodog\"]",
+      "season": 10,
+      "name": "Robodog",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[10,\"Zuckerwatte\"]",
+      "season": 10,
+      "name": "Zuckerwatte",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[10,\"Tapsi, der Babylöwe\"]",
+      "season": 10,
+      "name": "Tapsi, der Babylöwe",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[10,\"Couchpotato\"]",
+      "season": 10,
+      "name": "Couchpotato",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[10,\"Mysterium\"]",
+      "season": 10,
+      "name": "Mysterium",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[11,\"Panda\"]",
+      "season": 11,
+      "name": "Panda",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[11,\"Pirat\"]",
+      "season": 11,
+      "name": "Pirat",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[11,\"Qualle\"]",
+      "season": 11,
+      "name": "Qualle",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[11,\"Willi Weihnacht\"]",
+      "season": 11,
+      "name": "Willi Weihnacht",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[11,\"Lokomotive\"]",
+      "season": 11,
+      "name": "Lokomotive",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[11,\"Feuersalamander\"]",
+      "season": 11,
+      "name": "Feuersalamander",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[11,\"Schneemann\"]",
+      "season": 11,
+      "name": "Schneemann",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[11,\"Lady Ananas\"]",
+      "season": 11,
+      "name": "Lady Ananas",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[11,\"Lauch\"]",
+      "season": 11,
+      "name": "Lauch",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[11,\"Nashorn\"]",
+      "season": 11,
+      "name": "Nashorn",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[12,\"Muuhnika\"]",
+      "season": 12,
+      "name": "Muuhnika",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[12,\"Rave-Ioli\"]",
+      "season": 12,
+      "name": "Rave-Ioli",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[12,\"King\"]",
+      "season": 12,
+      "name": "King",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[12,\"Eggi\"]",
+      "season": 12,
+      "name": "Eggi",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[12,\"Harry Otter\"]",
+      "season": 12,
+      "name": "Harry Otter",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[12,\"Dude\"]",
+      "season": 12,
+      "name": "Dude",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[12,\"Quietsch\"]",
+      "season": 12,
+      "name": "Quietsch",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[12,\"Kiss\"]",
+      "season": 12,
+      "name": "Kiss",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[12,\"Smiley\"]",
+      "season": 12,
+      "name": "Smiley",
+      "status": "NOT_YET_RESEARCHED",
+      "candidatePage": null
+    },
+    {
+      "key": "[13,\"Emily Wau\"]",
+      "season": 13,
+      "name": "Emily Wau",
+      "status": "RIGHTS_UNRESOLVED",
+      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+    },
+    {
+      "key": "[13,\"Bubble\"]",
+      "season": 13,
+      "name": "Bubble",
+      "status": "RIGHTS_UNRESOLVED",
+      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+    },
+    {
+      "key": "[13,\"Hippo Jones\"]",
+      "season": 13,
+      "name": "Hippo Jones",
+      "status": "RIGHTS_UNRESOLVED",
+      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+    },
+    {
+      "key": "[13,\"Perla\"]",
+      "season": 13,
+      "name": "Perla",
+      "status": "RIGHTS_UNRESOLVED",
+      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+    },
+    {
+      "key": "[13,\"Professor Dr. Dr. Schweinstein\"]",
+      "season": 13,
+      "name": "Professor Dr. Dr. Schweinstein",
+      "status": "RIGHTS_UNRESOLVED",
+      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+    },
+    {
+      "key": "[13,\"Momo\"]",
+      "season": 13,
+      "name": "Momo",
+      "status": "RIGHTS_UNRESOLVED",
+      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+    },
+    {
+      "key": "[13,\"Mr. Mic\"]",
+      "season": 13,
+      "name": "Mr. Mic",
+      "status": "RIGHTS_UNRESOLVED",
+      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+    },
+    {
+      "key": "[13,\"Erdbär\"]",
+      "season": 13,
+      "name": "Erdbär",
+      "status": "RIGHTS_UNRESOLVED",
+      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+    },
+    {
+      "key": "[13,\"Cosma\"]",
+      "season": 13,
+      "name": "Cosma",
+      "status": "RIGHTS_UNRESOLVED",
+      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+    },
+    {
+      "key": "[13,\"P.S.\"]",
+      "season": 13,
+      "name": "P.S.",
+      "status": "RIGHTS_UNRESOLVED",
+      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+    },
+    {
+      "key": "[13,\"Yeti Cat\"]",
+      "season": 13,
+      "name": "Yeti Cat",
+      "status": "RIGHTS_UNRESOLVED",
+      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+    },
+    {
+      "key": "[13,\"Luigi Eishörnchen\"]",
+      "season": 13,
+      "name": "Luigi Eishörnchen",
+      "status": "RIGHTS_UNRESOLVED",
+      "candidatePage": "https://www.joyn.de/bts/serien/the-masked-singer/2026-alle-masken-im-ueberblick-inklusive-folge4-166735"
+    }
+  ]
+}

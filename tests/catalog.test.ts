@@ -2,7 +2,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import document from '../data/promi-catalog-2026-09-30.json';
 import manifest from '../data/promi-image-manifest.json';
-import { extractCatalog, getCatalog, filterCatalog, participationKey, maskKey, catalogImages } from '../catalog';
+import { extractCatalog, getCatalog, filterCatalog, participationKey, maskKey, catalogImages, resolveImageAsset } from '../catalog';
+import fs from 'node:fs';
+import crypto from 'node:crypto';
 
 test('all 134 original rows, all fields and unknown identities survive the adapter', () => {
   const catalog = getCatalog();
@@ -36,7 +38,41 @@ test('filter and sorting never mutate the source order or content', () => {
 test('manifest covers every mask and participation with explicit optional fallbacks', () => {
   assert.equal(Object.keys(manifest.masks).length, 127);
   assert.equal(Object.keys(manifest.celebrities).length, 134);
-  for (const row of getCatalog().rows) assert.deepEqual(catalogImages(row), { mask: null, celebrity: null });
+  for (const row of getCatalog().rows) {
+    assert.ok(Object.hasOwn(manifest.masks, maskKey(row)));
+    assert.ok(Object.hasOwn(manifest.celebrities, participationKey(row)));
+    if (row.celebrity_name === null) assert.equal(catalogImages(row).celebrity, null);
+  }
+});
+
+test('reviewed first batch covers all four known season-13 people; unknown people stay unknown', () => {
+  const rows = getCatalog().rows.filter(row => row.season === 13);
+  assert.equal(rows.filter(row => row.celebrity_name !== null).length, 4);
+  for (const row of rows) {
+    assert.equal(Boolean(catalogImages(row).celebrity), row.celebrity_name !== null);
+    assert.equal(catalogImages(row).mask, null);
+  }
+});
+
+test('all installed image files match their hashes and have complete credit/license information', () => {
+  const assets = Object.values(manifest.celebrities).filter(Boolean);
+  assert.equal(assets.length, 4);
+  for (const asset of assets) {
+    assert.ok(resolveImageAsset(asset));
+    const bytes = fs.readFileSync(new URL('../public' + asset!.src, import.meta.url));
+    assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'), asset!.sha256);
+    assert.equal(bytes.length, asset!.bytes);
+    assert.ok(bytes.length < 180_000 && asset!.width <= 512 && asset!.height <= 512);
+    assert.equal(bytes.toString('ascii', 0, 4), 'RIFF');
+    assert.equal(bytes.toString('ascii', 8, 12), 'WEBP');
+  }
+});
+
+test('missing, unreviewed or unsafe image entries resolve to a fallback', () => {
+  const asset = Object.values(manifest.celebrities).find(Boolean)!;
+  for (const invalid of [null, 'broken', {}, { ...asset, author: '' }, { ...asset, licenseStatus: 'UNVERIFIED' },
+    { ...asset, src: 'https://example.com/image.webp' }, { ...asset, src: '/catalog-images/../secret.webp' },
+    { ...asset, licenseUrl: 'javascript:alert(1)' }]) assert.equal(resolveImageAsset(invalid), null);
 });
 test('truncated data or inconsistent record-count metadata fails visibly', () => {
   assert.throws(() => extractCatalog({ ...document, records: document.records.slice(1) }));
