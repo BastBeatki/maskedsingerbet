@@ -1,7 +1,7 @@
 {
   "asOf": "2026-10-06",
   "catalogAsOf": "2026-09-30",
-  "batch": "mask-first-season1-2-completion-and-season4-014-v3",
+  "batch": "mask-first-season5-7-015",
   "coverage": {
     "people": {
       "covered": 4,
@@ -12,12 +12,12 @@
       "total": 126
     },
     "masks": {
-      "covered": 40,
+      "covered": 69,
       "total": 127,
-      "temporaryRemote": 40,
+      "temporaryRemote": 69,
       "localVerified": 0,
       "conditionalUserGameState": 12,
-      "withMatchingUserGameState": 52
+      "withMatchingUserGameState": 81
     },
     "season13": {
       "peopleCovered": 4,
@@ -49,6 +49,24 @@
       "masksCovered": 10,
       "masksTotal": 10,
       "temporaryRemote": 10,
+      "status": "COMPLETE_TEMPORARY_REMOTE"
+    },
+    "season5": {
+      "masksCovered": 10,
+      "masksTotal": 10,
+      "temporaryRemote": 10,
+      "status": "COMPLETE_TEMPORARY_REMOTE"
+    },
+    "season6": {
+      "masksCovered": 10,
+      "masksTotal": 10,
+      "temporaryRemote": 10,
+      "status": "COMPLETE_TEMPORARY_REMOTE"
+    },
+    "season7": {
+      "masksCovered": 9,
+      "masksTotal": 9,
+      "temporaryRemote": 9,
       "status": "COMPLETE_TEMPORARY_REMOTE"
     }
   },
@@ -904,209 +922,6 @@
   ],
   "missingMasks": [
     {
-      "key": "[5,\"Mülli Müller\"]",
-      "season": 5,
-      "name": "Mülli Müller",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[5,\"Raupe\"]",
-      "season": 5,
-      "name": "Raupe",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[5,\"Heldin\"]",
-      "season": 5,
-      "name": "Heldin",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[5,\"Mops\"]",
-      "season": 5,
-      "name": "Mops",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[5,\"Axolotl\"]",
-      "season": 5,
-      "name": "Axolotl",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[5,\"Teddy\"]",
-      "season": 5,
-      "name": "Teddy",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[5,\"Phönix\"]",
-      "season": 5,
-      "name": "Phönix",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[5,\"Stinktier\"]",
-      "season": 5,
-      "name": "Stinktier",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[5,\"Hammerhai\"]",
-      "season": 5,
-      "name": "Hammerhai",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[5,\"Chili\"]",
-      "season": 5,
-      "name": "Chili",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[6,\"Zebra\"]",
-      "season": 6,
-      "name": "Zebra",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[6,\"Dornteufel\"]",
-      "season": 6,
-      "name": "Dornteufel",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[6,\"Discokugel\"]",
-      "season": 6,
-      "name": "Discokugel",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[6,\"Ork\"]",
-      "season": 6,
-      "name": "Ork",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[6,\"Seestern\"]",
-      "season": 6,
-      "name": "Seestern",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[6,\"Gorilla\"]",
-      "season": 6,
-      "name": "Gorilla",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[6,\"Galax'Sis\"]",
-      "season": 6,
-      "name": "Galax'Sis",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[6,\"Koala\"]",
-      "season": 6,
-      "name": "Koala",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[6,\"Möwe\"]",
-      "season": 6,
-      "name": "Möwe",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[6,\"Brilli\"]",
-      "season": 6,
-      "name": "Brilli",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[7,\"Maulwurf\"]",
-      "season": 7,
-      "name": "Maulwurf",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[7,\"Werwolf\"]",
-      "season": 7,
-      "name": "Werwolf",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[7,\"No Name / Rosty\"]",
-      "season": 7,
-      "name": "No Name / Rosty",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[7,\"Zahnfee\"]",
-      "season": 7,
-      "name": "Zahnfee",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[7,\"Goldi\"]",
-      "season": 7,
-      "name": "Goldi",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[7,\"Black Mamba\"]",
-      "season": 7,
-      "name": "Black Mamba",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[7,\"Pfeife\"]",
-      "season": 7,
-      "name": "Pfeife",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[7,\"Walross\"]",
-      "season": 7,
-      "name": "Walross",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[7,\"Brokkoli\"]",
-      "season": 7,
-      "name": "Brokkoli",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
       "key": "[8,\"Schuhschnabel\"]",
       "season": 8,
       "name": "Schuhschnabel",
@@ -1513,5 +1328,5 @@
       "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     }
   ],
-  "rightsNote": "40 TEMPORARY_REMOTE und zwölf bedingte USER_GAMESTATE: RIGHTS_UNRESOLVED. Keine lokal lizenzgeprüften Masken. 87 öffentliche Manifest-Lücken; davon zwölf aus eindeutigem Spielstand wiederverwendbar, dann 75 verbleibende Bildlücken. Urheber-Credits stammen von den jeweiligen Quellseiten; sie sind keine Lizenz."
+  "rightsNote": "69 TEMPORARY_REMOTE und zwölf bedingte USER_GAMESTATE: RIGHTS_UNRESOLVED. Keine lokal lizenzgeprüften Masken. 58 öffentliche Manifest-Lücken; davon zwölf aus eindeutigem Spielstand wiederverwendbar, dann 46 verbleibende Bildlücken. Urheber-Credits stammen von den jeweiligen Quellseiten; sie sind keine Lizenz."
 }
