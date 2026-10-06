@@ -248,6 +248,35 @@ try {
     assert.equal(await state(page), undefined);
     assert.equal(await page.evaluate(() => window.catalogWrites), 0);
   });
+  await check('season-11 ten costumes decode on mobile and desktop; complete remote failure remains read-only', async page => {
+    await catalog(page);
+    await page.getByLabel('Staffel', { exact: true }).selectOption('11');
+    assert.equal(await page.locator('[data-testid=participation]').count(), 10);
+    for (const width of [390, 1440]) {
+      await page.setViewportSize({ width, height: 1000 });
+      const images = page.locator('[data-testid=participation] img');
+      assert.equal(await images.count(), 10);
+      for (const img of await images.all()) {
+        await img.scrollIntoViewIfNeeded();
+        await page.waitForFunction(el => el.complete && el.naturalWidth > 0, await img.elementHandle());
+      }
+      assert.equal(await page.getByText('Temporäres externes Bild · Rechte ungeklärt').count(), 10);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      await page.getByRole('heading', { name: 'Promi-Check', exact: true }).scrollIntoViewIfNeeded();
+      await page.screenshot({ path: path.join(artifacts, width + '-season11-costumes.png'), fullPage: true });
+    }
+    await page.route(remoteHosts, route => route.abort());
+    await page.reload({ waitUntil: 'networkidle' }); await catalog(page);
+    await page.getByLabel('Staffel', { exact: true }).selectOption('11');
+    for (const row of await page.locator('[data-testid=participation]').all()) {
+      await row.scrollIntoViewIfNeeded();
+      await row.getByRole('img', { name: /: kein Bild verfügbar$/ }).last().waitFor();
+    }
+    assert.equal(await page.getByRole('img', { name: /: kein Bild verfügbar$/ }).count(), 20);
+    assert.equal(await page.locator('[data-testid=participation] img').count(), 0);
+    assert.equal(await state(page), undefined);
+    assert.equal(await page.evaluate(() => window.catalogWrites), 0);
+  });
   await check('synthetic twelve existing costumes render read-only, export and reload preserve every field', async page => {
     const costumes = structuredClone(fixture);
     costumes.seasons[0].seasonName = 'Staffel 2026';
