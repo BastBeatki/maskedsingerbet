@@ -1,7 +1,7 @@
 {
   "asOf": "2026-10-06",
   "catalogAsOf": "2026-09-30",
-  "batch": "mask-first-season5-7-015",
+  "batch": "mask-first-season8-9-016",
   "coverage": {
     "people": {
       "covered": 4,
@@ -12,12 +12,12 @@
       "total": 126
     },
     "masks": {
-      "covered": 69,
+      "covered": 87,
       "total": 127,
-      "temporaryRemote": 69,
+      "temporaryRemote": 87,
       "localVerified": 0,
       "conditionalUserGameState": 12,
-      "withMatchingUserGameState": 81
+      "withMatchingUserGameState": 99
     },
     "season13": {
       "peopleCovered": 4,
@@ -68,6 +68,24 @@
       "masksTotal": 9,
       "temporaryRemote": 9,
       "status": "COMPLETE_TEMPORARY_REMOTE"
+    },
+    "season8": {
+      "masksCovered": 9,
+      "masksTotal": 9,
+      "temporaryRemote": 9,
+      "status": "COMPLETE_TEMPORARY_REMOTE"
+    },
+    "season9": {
+      "masksCovered": 9,
+      "masksTotal": 9,
+      "temporaryRemote": 9,
+      "status": "COMPLETE_TEMPORARY_REMOTE"
+    },
+    "season10": {
+      "masksCovered": 0,
+      "masksTotal": 9,
+      "temporaryRemote": 0,
+      "status": "NOT_YET_BATCHED"
     }
   },
   "missingPeople": [
@@ -922,132 +940,6 @@
   ],
   "missingMasks": [
     {
-      "key": "[8,\"Schuhschnabel\"]",
-      "season": 8,
-      "name": "Schuhschnabel",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[8,\"Igel\"]",
-      "season": 8,
-      "name": "Igel",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[8,\"Diamantula / Mystica\"]",
-      "season": 8,
-      "name": "Diamantula / Mystica",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[8,\"Frotteefant\"]",
-      "season": 8,
-      "name": "Frotteefant",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[8,\"Toast\"]",
-      "season": 8,
-      "name": "Toast",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[8,\"Seepferdchen\"]",
-      "season": 8,
-      "name": "Seepferdchen",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[8,\"Pilz\"]",
-      "season": 8,
-      "name": "Pilz",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[8,\"Waschbär\"]",
-      "season": 8,
-      "name": "Waschbär",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[8,\"Känguru\"]",
-      "season": 8,
-      "name": "Känguru",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[9,\"Eisprinzessin\"]",
-      "season": 9,
-      "name": "Eisprinzessin",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[9,\"Lulatsch\"]",
-      "season": 9,
-      "name": "Lulatsch",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[9,\"Mustang\"]",
-      "season": 9,
-      "name": "Mustang",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[9,\"Troll\"]",
-      "season": 9,
-      "name": "Troll",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[9,\"Klaus Claus\"]",
-      "season": 9,
-      "name": "Klaus Claus",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[9,\"Kiwi\"]",
-      "season": 9,
-      "name": "Kiwi",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[9,\"Marsmaus\"]",
-      "season": 9,
-      "name": "Marsmaus",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[9,\"Feuerlöscher\"]",
-      "season": 9,
-      "name": "Feuerlöscher",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
-      "key": "[9,\"Okapi\"]",
-      "season": 9,
-      "name": "Okapi",
-      "status": "NOT_YET_RESEARCHED",
-      "candidatePage": null
-    },
-    {
       "key": "[10,\"Floh\"]",
       "season": 10,
       "name": "Floh",
@@ -1328,5 +1220,5 @@
       "reason": "Bereits eingebettetes Kostümbild im Nutzerexport; Laufzeit-Wiederverwendung bei eindeutig passender lokaler Staffel, keine Kopie ins Repository."
     }
   ],
-  "rightsNote": "69 TEMPORARY_REMOTE und zwölf bedingte USER_GAMESTATE: RIGHTS_UNRESOLVED. Keine lokal lizenzgeprüften Masken. 58 öffentliche Manifest-Lücken; davon zwölf aus eindeutigem Spielstand wiederverwendbar, dann 46 verbleibende Bildlücken. Urheber-Credits stammen von den jeweiligen Quellseiten; sie sind keine Lizenz."
+  "rightsNote": "87 TEMPORARY_REMOTE und zwölf bedingte USER_GAMESTATE: RIGHTS_UNRESOLVED. Keine lokal lizenzgeprüften Masken. 40 öffentliche Manifest-Lücken; davon zwölf aus eindeutigem Spielstand wiederverwendbar, dann 28 verbleibende Bildlücken. Credits sind keine Lizenz."
 }

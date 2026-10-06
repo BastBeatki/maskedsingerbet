@@ -185,6 +185,40 @@ try {
     assert.equal(await state(page), undefined);
     assert.equal(await page.evaluate(() => window.catalogWrites), 0);
   });
+  await check('season-8 and season-9 costumes decode on mobile and desktop; remote failure preserves state and alias key', async page => {
+    await catalog(page);
+    for (const season of ['8', '9']) {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.getByLabel('Staffel', { exact: true }).selectOption(season);
+      assert.equal(await page.locator('[data-testid=participation]').count(), 9);
+      const images = page.locator('[data-testid=participation] img');
+      assert.equal(await images.count(), 9);
+      for (const img of await images.all()) {
+        await img.scrollIntoViewIfNeeded();
+        await page.waitForFunction(el => el.complete && el.naturalWidth > 0, await img.elementHandle());
+      }
+      assert.equal(await page.getByText('Temporäres externes Bild · Rechte ungeklärt').count(), 9);
+      if (season === '8') assert.equal(await page.getByRole('img', { name: 'Diamantula / Mystica', exact: true }).count(), 1);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      await page.getByRole('heading', { name: 'Promi-Check', exact: true }).scrollIntoViewIfNeeded();
+      await page.screenshot({ path: path.join(artifacts, 'mobile-season' + season + '-costumes.png'), fullPage: true });
+      await page.setViewportSize({ width: 1440, height: 1000 });
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      await page.screenshot({ path: path.join(artifacts, 'desktop-season' + season + '-costumes.png'), fullPage: true });
+    }
+    await page.route(remoteHosts, route => route.abort());
+    await page.reload({ waitUntil: 'networkidle' }); await catalog(page);
+    for (const season of ['8', '9']) {
+      await page.getByLabel('Staffel', { exact: true }).selectOption(season);
+      for (const card of await page.locator('[data-testid=participation]').all()) {
+        await card.scrollIntoViewIfNeeded();
+        await card.locator('img').waitFor({ state: 'detached' });
+      }
+      assert.equal(await page.getByRole('img', { name: /: kein Bild verfügbar$/ }).count(), 18);
+    }
+    assert.equal(await state(page), undefined);
+    assert.equal(await page.evaluate(() => window.catalogWrites), 0);
+  });
   await check('synthetic twelve existing costumes render read-only, export and reload preserve every field', async page => {
     const costumes = structuredClone(fixture);
     costumes.seasons[0].seasonName = 'Staffel 2026';
