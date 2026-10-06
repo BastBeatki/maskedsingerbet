@@ -14,7 +14,7 @@ fs.mkdirSync(artifacts, { recursive: true });
 const browser = await chromium.connectOverCDP(endpoint);
 const results = [];
 const costumeNames = JSON.parse(fs.readFileSync(new URL('../data/promi-catalog-2026-09-30.json', import.meta.url))).records.filter(r => r.season === 13).map(r => r.mask_name);
-const remoteHosts = /^https:\/\/(?:mim\.p7s1\.io|c\.nau\.ch|www\.24rhein\.de|www\.connect-living\.de)\//;
+const remoteHosts = /^https:\/\/(?:mim\.p7s1\.io|img\.joyn\.de|c\.nau\.ch|www\.24rhein\.de|www\.connect-living\.de)\//;
 const tinyImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aJ1kAAAAASUVORK5CYII=';
 const fixture = {
   players: [{ id: 'p', name: 'Testspieler', color: '#123456' }],
@@ -219,21 +219,21 @@ try {
     assert.equal(await state(page), undefined);
     assert.equal(await page.evaluate(() => window.catalogWrites), 0);
   });
-  await check('season-10 shared duo and recurring costume decode; Elgonia gap and remote failure stay read-only', async page => {
+  await check('season-10 including Elgonia, shared duo and recurring costume decode; remote failure stays read-only', async page => {
     await catalog(page);
     await page.getByLabel('Staffel', { exact: true }).selectOption('10');
     assert.equal(await page.locator('[data-testid=participation]').count(), 15);
-    assert.equal(await page.locator('[data-testid=participation] img').count(), 14);
+    assert.equal(await page.locator('[data-testid=participation] img').count(), 15);
     assert.equal(await page.getByRole('img', { name: 'Flip-Flop', exact: true }).count(), 2);
     assert.equal(await page.getByRole('img', { name: 'Mysterium', exact: true }).count(), 6);
-    assert.equal(await page.getByRole('img', { name: 'Elgonia: kein Bild verfügbar', exact: true }).count(), 1);
+    assert.equal(await page.getByRole('img', { name: 'Elgonia', exact: true }).count(), 1);
     for (const width of [390, 1440]) {
       await page.setViewportSize({ width, height: 1000 });
       for (const img of await page.locator('[data-testid=participation] img').all()) {
         await img.scrollIntoViewIfNeeded();
         await page.waitForFunction(el => el.complete && el.naturalWidth > 0, await img.elementHandle());
       }
-      assert.equal(await page.getByText('Temporäres externes Bild · Rechte ungeklärt').count(), 14);
+      assert.equal(await page.getByText('Temporäres externes Bild · Rechte ungeklärt').count(), 15);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       await page.getByRole('heading', { name: 'Promi-Check', exact: true }).scrollIntoViewIfNeeded();
       await page.screenshot({ path: path.join(artifacts, (width === 390 ? 'mobile' : 'desktop') + '-season10-costumes.png'), fullPage: true });

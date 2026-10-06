@@ -1,5 +1,5 @@
 {
-  "version": 9,
+  "version": 10,
   "catalogAsOf": "2026-09-30",
   "description": "Optional local portraits with reviewed file licenses and explicitly temporary remote costumes with unresolved rights. Null means fallback; no user game-state data.",
   "masks": {
@@ -1576,7 +1576,22 @@
       "termsUrl": "https://static.joyn.de/Joyn_AGB_2026.pdf",
       "creditStatus": "AS_SHOWN_BY_SOURCE"
     },
-    "[10,\"Elgonia\"]": null,
+    "[10,\"Elgonia\"]": {
+      "src": "https://img.joyn.de/ingest/t_001/i_klzafgphm6ga.jpg/profile:nextgen-web-herolandscape-1920x",
+      "source": "https://www.joyn.de/play/clip/elgonia-verzaubert-mit-kiss-from-a-rose-von-seal",
+      "rights": "Rechte ungeklärt",
+      "licenseUrl": "",
+      "author": "Joyn / Seven.One; Fotograf nicht angegeben",
+      "authorUrl": "https://www.joyn.de/play/clip/elgonia-verzaubert-mit-kiss-from-a-rose-von-seal",
+      "title": "Elgonia – Staffel 10",
+      "changes": "Unveränderte externe Bildreferenz; Darstellung mit object-contain",
+      "sourceType": "TEMPORARY_REMOTE",
+      "licenseStatus": "RIGHTS_UNRESOLVED",
+      "checkedAt": "2026-10-06",
+      "verification": "Von Basti verlinktes öffentliches Vorschaubild visuell geprüft: vollständig maskierte Elgonia; normale URL erreichbar. Kein individueller Fotocredit angegeben; keine Lizenz behauptet.",
+      "termsNote": "Öffentlich ausgeliefertes Clip-Vorschaubild, keine Videoextraktion oder Streamingkopie. Joyn-AGB Ziffer 2.7 beschränkt die Dienstnutzung auf private Zwecke und untersagt Kopien nur per Streaming bereitgestellter Inhalte. Keine Wiederverwendungslizenz oder Hotlink-Freigabe für das Vorschaubild festgestellt; Anwendbarkeit auf externe Bildreferenz ungeklärt.",
+      "termsUrl": "https://www.joyn.de/agb"
+    },
     "[10,\"Robodog\"]": {
       "src": "https://mim.p7s1.io/pis/ld/aa8fzChLCVyZ-c1vEwXRnAkyC0iLrbdROGPlWBa7lfnzV-tWZn2C-k2kY_VX2NPv0_BZHkKSgwsTVK0b02llK47s9YVcczF9jKhb92bnm8fRiBlFKX_Bjg4PTI3fIXzEQDFZUAy_s1VFpLE1Qcslpzs/profile:original",
       "source": "https://www.joyn.de/bts/serien/the-masked-singer/news/diese-zwei-masken-treten-neu-an-die-zuckerwatte-und-der-robodog-9629",

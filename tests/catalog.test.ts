@@ -82,7 +82,7 @@ test('truncated data or inconsistent record-count metadata fails visibly', () =>
 
 test('temporary sender and publisher masks stay explicitly unresolved and reject arbitrary URLs/statuses', () => {
   const assets = Object.values(manifest.masks).filter(Boolean);
-  assert.equal(assets.length, 105);
+  assert.equal(assets.length, 106);
   for (const asset of assets) {
     assert.ok(resolveImageAsset(asset));
     assert.equal(asset!.sourceType, 'TEMPORARY_REMOTE');
@@ -94,7 +94,7 @@ test('temporary sender and publisher masks stay explicitly unresolved and reject
 
 test('publisher image paths require exact reviewed URLs and reject credentials, queries and unreviewed files', () => {
   const assets = Object.values(manifest.masks).filter(asset => asset && !asset.src.startsWith('https://mim.p7s1.io/'));
-  assert.equal(assets.length, 68);
+  assert.equal(assets.length, 69);
   for (const asset of assets) {
     assert.ok(resolveImageAsset(asset));
     for (const src of [asset!.src + '?track=1', asset!.src.replace('https://', 'http://'),

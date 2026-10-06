@@ -67,7 +67,7 @@ export function resolveImageAsset(value: unknown): ImageAsset | null {
     typeof asset.src === 'string' && /^\/catalog-images\/[a-z0-9-]+\.webp$/.test(asset.src);
   // Explicit temporary sender/publisher images; no arbitrary URLs, credentials, scripts or data URLs.
   const publisher = typeof asset.src === 'string' && reviewedPublisherImages.has(asset.src) &&
-    /^https:\/\/(?:c\.nau\.ch\/i\/[A-Za-z0-9]+\/900\/[a-z0-9-]+\.jpg|www\.24rhein\.de\/asset\/[a-z0-9-]+\.webp|www\.connect-living\.de\/bilder\/[0-9]+\/landscapex1200-c2\/masked-singer-2020-[a-z-]+-kostuem\.jpg)$/.test(asset.src);
+    /^https:\/\/(?:c\.nau\.ch\/i\/[A-Za-z0-9]+\/900\/[a-z0-9-]+\.jpg|www\.24rhein\.de\/asset\/[a-z0-9-]+\.webp|www\.connect-living\.de\/bilder\/[0-9]+\/landscapex1200-c2\/masked-singer-2020-[a-z-]+-kostuem\.jpg|img\.joyn\.de\/ingest\/t_001\/i_[a-z0-9]+\.jpg\/profile:nextgen-web-herolandscape-1920x)$/.test(asset.src);
   const remote = asset.sourceType === 'TEMPORARY_REMOTE' && asset.licenseStatus === 'RIGHTS_UNRESOLVED' &&
     typeof asset.src === 'string' && (publisher || /^https:\/\/mim\.p7s1\.io\/pis\/ld\/[A-Za-z0-9_-]+\/profile:original$/.test(asset.src));
   if ((!local && !remote) ||
