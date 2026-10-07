@@ -5,6 +5,8 @@ import { activeScores, isAppearanceSeason } from '../appearanceRules';
 import { automaticWarnings } from '../appearanceAuto';
 import { debutGroups, maskStatus } from '../seasonPresentation';
 import { ScoringDetails } from './ScoringDetails';
+import { InGamePromiCheck, PromiCheckRequest } from './InGamePromiCheck';
+import { resolveCelebrityName, tipMatchesCelebrity } from '../celebrityNames';
 import { Button, Card, Input, Modal } from './common/UI';
 
 // --- Leaderboard ---
@@ -130,22 +132,26 @@ const TipModal: React.FC<{
     onDeleteLastTip: () => void;
     onToggleTipFinal: (index: number) => void;
     tipPointsLookup: Record<string, number>;
-}> = ({ mask, player, shows, activeShowId, isOpen, onClose, onSaveTip, onDeleteLastTip, onToggleTipFinal, tipPointsLookup }) => {
+    onPromiCheck: (request: PromiCheckRequest) => void;
+    knownNames: string[];
+}> = ({ mask, player, shows, activeShowId, isOpen, onClose, onSaveTip, onDeleteLastTip, onToggleTipFinal, tipPointsLookup, onPromiCheck, knownNames }) => {
     const [newTipName, setNewTipName] = useState('');
     const [isFinal, setIsFinal] = useState(false);
+    const [catalogWarning, setCatalogWarning] = useState('');
     const playerTips = mask.tips[player.id] || [];
 
     useEffect(() => {
         if(isOpen) {
             setNewTipName('');
             setIsFinal(false);
+            setCatalogWarning('');
         }
     }, [isOpen]);
 
     const handleSave = (e: React.FormEvent) => {
         e.preventDefault();
         if (newTipName.trim()) {
-            onSaveTip(newTipName.trim(), isFinal);
+            onSaveTip(newTipName, isFinal);
             setNewTipName('');
             setIsFinal(false);
         }
@@ -166,13 +172,17 @@ const TipModal: React.FC<{
             <div className="space-y-4">
                 {playerTips.map((tip, index) => {
                     const points = mask.isRevealed ? (tipPointsLookup[`${mask.id}-${player.id}-${index}`] || 0) : null;
-                    const isCorrect = mask.isRevealed && mask.revealedCelebrity?.toLowerCase() === tip.celebrityName.toLowerCase();
+                    const isCorrect = mask.isRevealed && tipMatchesCelebrity(tip, mask.revealedCelebrity || '', knownNames);
+                    const recognition = tip.nameResolution && mask.revealedCelebrity ? resolveCelebrityName(tip.celebrityName, [...knownNames, mask.revealedCelebrity, ...(tip.nameResolution.canonicalName ? [tip.nameResolution.canonicalName] : [])]) : tip.nameResolution;
                     const isEditable = !mask.isRevealed && activeShowId === tip.showId && index === playerTips.length - 1;
 
                     return (
                         <div key={index} className="bg-background p-3 rounded-lg flex justify-between items-center">
                             <div>
                                 <p className={`font-bold text-lg ${isCorrect ? 'text-green-400' : ''}`}>"{tip.celebrityName}"</p>
+                                {recognition?.status === 'resolved' && <p className="text-xs text-text-secondary">Als {recognition.canonicalName} erkannt.</p>}
+                                {recognition?.status === 'ambiguous' && <p className="text-xs text-amber-300">Name nicht eindeutig zuordenbar. Vollständigen Namen prüfen.</p>}
+                                <button type="button" className="text-xs text-accent underline" onClick={() => onPromiCheck({ query: tip.celebrityName })}>Promi prüfen</button>
                                 <div className="flex items-center gap-2">
                                     <p className="text-sm text-text-secondary">Getippt in: {getShowName(tip.showId)}</p>
                                     {isEditable && (
@@ -212,9 +222,11 @@ const TipModal: React.FC<{
                                 type="text"
                                 placeholder={`Tipp #${playerTips.length + 1} eingeben`}
                                 value={newTipName}
-                                onChange={(e) => setNewTipName(e.target.value)}
+                                onChange={(e) => { setNewTipName(e.target.value); setCatalogWarning(''); }}
                                 required
                             />
+                            <Button type="button" variant="secondary" className="text-sm py-2" onClick={() => onPromiCheck({ query: newTipName, onPick: (name, warning) => { setNewTipName(name); setCatalogWarning(warning); } })}>Promi prüfen</Button>
+                            {catalogWarning && <p role="status" className="text-sm text-amber-300">{catalogWarning}</p>}
                             {playerTips.length < 2 && (
                                 <div className="flex items-center gap-3 bg-background p-3 rounded-lg">
                                     <input
@@ -247,6 +259,7 @@ const TipModal: React.FC<{
 
 // --- CounterBets Modal ---
 const CounterBetsModal: React.FC<{
+    knownNames: string[];
     mask: Mask;
     players: Player[];
     shows: Show[];
@@ -256,7 +269,7 @@ const CounterBetsModal: React.FC<{
     onAddCounterBet: (bettorPlayerId: string, targetPlayerId: string) => void;
     onDeleteCounterBet: (id: string) => void;
     counterBetPointsLookup: Record<string, { bettor: number; target: number }>;
-}> = ({ mask, players, shows, counterBets, isOpen, onClose, onAddCounterBet, onDeleteCounterBet, counterBetPointsLookup }) => {
+}> = ({ mask, players, shows, counterBets, isOpen, onClose, onAddCounterBet, onDeleteCounterBet, counterBetPointsLookup, knownNames }) => {
     const [bettorId, setBettorId] = useState('');
     const [targetId, setTargetId] = useState('');
     
@@ -291,7 +304,7 @@ const CounterBetsModal: React.FC<{
                             const targetPoints = pointsObj?.target;
                             
                             if (isRevealed && revealedCelebrity && targetTip) {
-                                const isTargetTipCorrect = targetTip.celebrityName.trim().toLowerCase() === revealedCelebrity.trim().toLowerCase();
+                                const isTargetTipCorrect = tipMatchesCelebrity(targetTip, revealedCelebrity, knownNames);
                                 result = isTargetTipCorrect ? 'loss' : 'win';
                             }
                             
@@ -397,6 +410,8 @@ const CounterBetsModal: React.FC<{
 const MaskCard: React.FC<{
     mask: Mask;
     status?: string;
+    onPromiCheck: (request: PromiCheckRequest) => void;
+    knownNames: string[];
     players: Player[];
     shows: Show[];
     counterBets: CounterBet[];
@@ -411,7 +426,7 @@ const MaskCard: React.FC<{
     tipPointsLookup: Record<string, number>;
     counterBetPointsLookup: Record<string, { bettor: number; target: number }>;
     playerMaskPointsLookup: Record<string, number>;
-}> = ({ mask, status, players, shows, counterBets, isTippingActive, activeShowId, onReveal, onSaveTip, onDeleteLastTip, onToggleTipFinal, onAddCounterBet, onDeleteCounterBet, tipPointsLookup, counterBetPointsLookup, playerMaskPointsLookup }) => {
+}> = ({ mask, status, onPromiCheck, knownNames, players, shows, counterBets, isTippingActive, activeShowId, onReveal, onSaveTip, onDeleteLastTip, onToggleTipFinal, onAddCounterBet, onDeleteCounterBet, tipPointsLookup, counterBetPointsLookup, playerMaskPointsLookup }) => {
     const [isRevealModalOpen, setRevealModalOpen] = useState(false);
     const [activeTipPlayer, setActiveTipPlayer] = useState<Player | null>(null);
     const [isCounterBetModalOpen, setCounterBetModalOpen] = useState(false);
@@ -468,7 +483,7 @@ const MaskCard: React.FC<{
                         const latestTip = playerTips.length > 0 ? playerTips[playerTips.length - 1] : null;
                         
                         const hasCorrectGuess = mask.isRevealed && mask.revealedCelebrity && 
-                            playerTips.some(tip => tip.celebrityName.trim().toLowerCase() === mask.revealedCelebrity!.trim().toLowerCase());
+                            playerTips.some(tip => tipMatchesCelebrity(tip, mask.revealedCelebrity!, knownNames));
 
                         const playerMaskPoints = mask.isRevealed ? playerMaskPointsLookup[`${mask.id}-${player.id}`] : null;
 
@@ -556,10 +571,13 @@ const MaskCard: React.FC<{
                     onDeleteLastTip={() => onDeleteLastTip(activeTipPlayer.id)}
                     onToggleTipFinal={(index) => onToggleTipFinal(activeTipPlayer.id, index)}
                     tipPointsLookup={tipPointsLookup}
+                    onPromiCheck={onPromiCheck}
+                    knownNames={knownNames}
                 />
             )}
 
             <CounterBetsModal
+                knownNames={knownNames}
                 mask={mask}
                 players={players}
                 shows={shows}
@@ -585,6 +603,7 @@ const MaskCard: React.FC<{
 interface GameViewProps {
   season: Season;
   allPlayers: Player[];
+  allSeasons: Season[];
   onBack: () => void;
   onRevealMask: (maskId: string, celebrity: string, imageUrl?: string) => void;
   onAddOrUpdateTip: (maskId: string, playerId: string, celebrity: string, isFinal: boolean) => void;
@@ -603,7 +622,9 @@ export const GameView: React.FC<GameViewProps> = (props) => {
   // Calculate scores on render. In a larger app, useMemo here.
   const { scores, tipPoints, counterBetPoints, playerMaskPoints } = activeScores(season, allPlayers);
   const activeShow = season.shows.find(s => s.id === season.activeShowId);
+  const [promiCheck, setPromiCheck] = useState<PromiCheckRequest | null>(null);
   const groups = debutGroups(season);
+  const knownNames = season.masks.flatMap(m => m.revealedCelebrity ? [m.revealedCelebrity] : []);
 
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8">
@@ -616,6 +637,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                     </h1>
                     <p className="text-text-secondary mt-2">{isAppearanceSeason(season) ? 'S13: Punkte nach Maskenauftritt · 3 Tipp-Slots' : 'CLASSIC: Punkte nach Show · 3 Tipp-Slots'}</p>
                     {season.appearanceRules?.automatic && <p className="text-accent text-sm mt-2">S13-Automatik aktiv</p>}
+                    <Button variant="secondary" className="mt-3 text-sm py-2" onClick={() => setPromiCheck({ query: '' })}>Promi-Check</Button>
                     {automaticWarnings(season).length > 0 && <p role="alert" className="text-amber-300 mt-2">{automaticWarnings(season).join(' ')} {season.appearanceRules?.automatic?.deviationConfirmed ? 'Abweichende Besetzung bestätigt.' : 'Bitte unter Einstellungen → Erweitert prüfen, bevor weiter gewertet wird.'}</p>}
                 </div>
                 
@@ -657,6 +679,8 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                                 <div key={mask.id} data-mask-id={mask.id} className="space-y-2 min-w-0"><MaskCard
                                     mask={mask}
                                     status={maskStatus(season, mask)}
+                                    onPromiCheck={setPromiCheck}
+                                    knownNames={knownNames}
                                     players={allPlayers.filter(p => season.playerIds.includes(p.id))}
                                     shows={season.shows}
                                     counterBets={season.counterBets}
@@ -686,6 +710,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                 </div>
             </div>
         </div>
+        {promiCheck && <InGamePromiCheck request={promiCheck} seasons={props.allSeasons} historicalBefore={season.appearanceRules?.automatic ? 13 : undefined} onClose={() => setPromiCheck(null)} />}
     </div>
   );
 };

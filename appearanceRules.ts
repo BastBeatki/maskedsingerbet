@@ -2,6 +2,7 @@ import { Mask, MaskSettlement, Player, Season, Show, S13Automatic } from './type
 import { calculateClassicScores, getPointsForShow, isValidSeason, ScoreCalculationResult } from './utils';
 import { matchesAppearanceShow, validAppearanceList } from './appearanceSchedule';
 import { appearanceEpisodes, assertAutomaticReady, createAutomatic } from './appearanceAuto';
+import { tipMatchesCelebrity } from './celebrityNames';
 
 export const isAppearanceSeason = (season: Season) => season.ruleset === 's13-appearances-v1';
 export function appearanceNumber(season: Season, mask: Mask, show: Show): number {
@@ -22,7 +23,7 @@ export function explainMask(season: Season, mask: Mask, players: Player[], appea
   for (const score of result.scores) {
     const tips = mask.tips[score.playerId] || [];
     const correct = tips.map((tip, index) => ({ tip, index, show: season.shows.find(s => s.id === tip.showId) }))
-      .filter(t => t.show && t.tip.celebrityName.trim().toLowerCase() === mask.revealedCelebrity?.trim().toLowerCase())
+      .filter(t => t.show && tipMatchesCelebrity(t.tip, mask.revealedCelebrity || '', season.masks.flatMap(m => m.revealedCelebrity ? [m.revealedCelebrity] : [])))
       .sort((a, b) => a.show!.episodeNumber - b.show!.episodeNumber || a.tip.createdAt - b.tip.createdAt);
     const first = correct[0];
     if (!first) { descriptions[score.playerId] = 'Kein richtiger Tipp: 0 Tipppunkte.'; continue; }
@@ -32,7 +33,7 @@ export function explainMask(season: Season, mask: Mask, players: Player[], appea
     const multiplier = final ? slot === 0 ? 1.8 : slot === 1 ? 1.5 : 1 : 1;
     const n = appearances ? appearanceNumber(season, mask, first.show!) : first.show!.episodeNumber;
     const allCorrect = players.filter(p => season.playerIds.includes(p.id)).flatMap(p => (mask.tips[p.id] || []).map(tip => ({ playerId: p.id, tip, show: season.shows.find(s => s.id === tip.showId) })))
-      .filter(t => t.show && t.tip.celebrityName.trim().toLowerCase() === mask.revealedCelebrity?.trim().toLowerCase())
+      .filter(t => t.show && tipMatchesCelebrity(t.tip, mask.revealedCelebrity || '', season.masks.flatMap(m => m.revealedCelebrity ? [m.revealedCelebrity] : [])))
       .sort((a, b) => a.show!.episodeNumber - b.show!.episodeNumber || a.tip.createdAt - b.tip.createdAt);
     const pioneer = allCorrect[0]?.playerId === score.playerId && allCorrect[0]?.tip.createdAt === first.tip.createdAt;
     descriptions[score.playerId] = `${appearances ? 'Auftritt' : 'Show'} ${n}: Basis ${getPointsForShow(n)} · Tipp-Slot ${slot + 1} · ${final ? 'Final' : 'offen'} ×${multiplier.toString().replace('.', ',')} · ${pioneer ? 'erster Treffer: 100 %' : 'späterer Treffer: 40 %'} → gerundet ${score.score} Tipppunkte.`;

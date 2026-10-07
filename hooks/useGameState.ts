@@ -4,6 +4,7 @@ import { generateId, isValidAppState, isValidSeason } from '../utils';
 import { PLAYER_COLORS } from '../constants';
 import { assertOpenAppearance, assertOpenMask, configureAppearanceMode, isAppearanceSeason, settleMask } from '../appearanceRules';
 import { appearanceEpisodes, confirmedDebut } from '../appearanceAuto';
+import { resolveCelebrityName } from '../celebrityNames';
 
 import { initializeStorage, saveStateDB, clearStateDB, createDefaultState, APP_STORAGE_KEY, LEGACY_STORAGE_KEY } from '../storage';
 
@@ -260,8 +261,9 @@ export const useAppManager = () => {
                     return mask;
                 }
                 
-                const newTip: Tip = { 
-                    celebrityName, 
+                const newTip: Tip = {
+                    celebrityName,
+                    nameResolution: resolveCelebrityName(celebrityName, appState.seasons.flatMap(s => s.masks.flatMap(m => m.revealedCelebrity ? [m.revealedCelebrity] : []))),
                     showId: season.activeShowId!, 
                     createdAt: Date.now(),
                     isFinal: playerTips.length < 2 ? isFinal : false // isFinal can only be true for tip 1 and 2

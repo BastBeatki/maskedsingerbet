@@ -86,6 +86,7 @@ const App: React.FC = () => {
               <GameView
                 season={activeSeason}
                 allPlayers={appState.players}
+                allSeasons={appState.seasons}
                 onBack={handleBackToHome}
                 onRevealMask={(maskId, celebrity, imageUrl) => revealMask(activeSeasonId!, maskId, celebrity, imageUrl)}
                 onAddOrUpdateTip={(maskId, playerId, celebrity, isFinal) => addOrUpdateTip(activeSeasonId!, maskId, playerId, celebrity, isFinal)}

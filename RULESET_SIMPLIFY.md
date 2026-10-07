@@ -24,9 +24,14 @@ Show-Nummer. Der bisherige `calculateScores`-Export bleibt kompatibel.
 Alle weiteren Berechnungen sind unverändert:
 
 - Basis globale Show <=1:20, 2:18, 3:16, 4:14, 5:12, >=6:10.
-- Richtige Tipps mit vorhandener Show: Trim/Kleinbuchstaben, sortiert nach
+- Historische Tipps ohne Namensmetadaten mit vorhandener Show: Trim/Kleinbuchstaben, sortiert nach
   Show-Nummer und `createdAt`. Bei exakten Zeitgleichständen bleibt die
   vorhandene Spieler-/Tipp-Reihenfolge maßgeblich.
+- Auftrag024 ergänzt nur für neue Tipps `catalog-names-v1`: gemeinsame konservative
+  Namensauflösung für Treffer, Gegenwetten und Erklärung. Exakte/normalisierte volle
+  Namen und eindeutig sehr nahe Schreibvarianten zählen; mehrdeutige fuzzy Treffer nicht.
+  Rohtext bleibt erhalten, alte Tipps/Ledger bleiben unverändert. Details und Grenzen:
+  `LOCAL_PREVIEW.md`, Abschnitt Promi-Check. Alle folgenden Punkteformeln bleiben gleich.
 - Jeder Spieler erhält seinen ersten historischen Treffer. Ein späterer falscher
   Tipp löscht diesen Treffer nicht. Erster Treffer insgesamt: 100 %, andere: 40 %.
 - Finalfaktor Slot 1:1,8, Slot 2:1,5, Slot 3:1. Gleiche-Show-Final-Upgrade:

@@ -16,6 +16,7 @@ export interface Tip {
   showId: string;
   createdAt: number; // Timestamp
   isFinal?: boolean; // Kennzeichnet einen "Volles Risiko"-Tipp
+  nameResolution?: import('./celebrityNames').NameResolution; // New tips only; raw text remains authoritative history.
 }
 
 export interface Mask {

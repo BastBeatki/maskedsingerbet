@@ -1,4 +1,4 @@
-# Lokale S13-Automatik (Auftrag 022)
+# Lokale S13-Vorschau (Aufträge 022–024)
 
 LAN-Adresse beim Abschluss: **http://192.168.178.20:4317/**.
 Die öffentliche Version https://maskedsingerbet.vercel.app/ bleibt unverändert.
@@ -98,3 +98,33 @@ Reload geschlossen. Je Spieler zuerst eine kurze deterministische Alltagserklär
 bereits berechneten Komponenten/Engine-Erklärung, dann unveränderte Detailmathematik.
 Spieler-Maskenpunkte bleiben außen sichtbar. Auf-/Zuklappen verändert weder Save noch Ledger;
 keine KI/API und keine neue Persistenz. Originaldaten,41/21/0 und öffentliche Version bleiben.
+
+## Promi-Check direkt im Spiel (Auftrag 024)
+
+Der globale **Promi-Check** öffnet den vorhandenen Katalog innerhalb der Staffel:
+auf dem Handy als Bottom-Sheet, auf größeren Bildschirmen als Dialog. **Promi prüfen**
+am Tipp übernimmt den eingegebenen Namen; ein leeres Feld öffnet die fokussierte Suche.
+Im Spiel wird erst mit **Suchen** oder Enter gesucht, nicht bei jedem Buchstaben.
+Schließen/Escape erhält Tippentwurf, Final-Markierung, Spielstand und Scrollposition.
+Der Katalog auf der Startseite bleibt erreichbar und nutzt dieselbe Suchfunktion.
+
+Treffer zeigen zuerst Prominame/Bild und „Bereits dabei“ mit Staffel und Maske.
+**Als Tipp übernehmen** zeigt einen Hinweis auf frühere Teilnahme, blockiert aber nicht.
+Kein Treffer ist nur ein fehlender Katalogtreffer, kein Beweis einer Nichtteilnahme.
+Vorhandene Bilder und Quellen-/Lizenzlinks werden unverändert verwendet; keine erfundenen
+Personen-Links oder neue Datenbank. Teilnamen, vertauschte Namen, Interpunktion,
+Diakritika, Masken und Staffeln sind suchbar; die Suche ist toleranter als die Wertung.
+
+Nur neu gespeicherte Tipps erhalten additive Metadaten `catalog-names-v1`.
+Der Originaltext bleibt erhalten. Sichere Normalisierung und eindeutige sehr nahe
+Schreibvarianten können zählen; volle Namen, höchstens eine Änderung in einem langen
+Namensbestandteil und kein weiterer plausibler Kandidat sind für fuzzy Wertung nötig.
+Namensbasis: vorhandener Katalog plus bekannte Enthüllungen. Keine erfundene Aliasliste.
+Mehrdeutige Fälle bekommen einen Prüfhinweis und keine automatische fuzzy Zuordnung.
+Bei späterer Enthüllung wird die Eindeutigkeit erneut geprüft; neu bekannt gewordene
+Konkurrenten dürfen keine falschen Punkte erzeugen. Die Anzeige macht Zuordnungen sichtbar.
+
+Historische Tipps ohne diese Metadaten behalten ihre bisherige Trim/Kleinschreibung-
+Wertung. Bestehende Punkte/Ledger werden nicht migriert oder still neu interpretiert.
+Import/Export/Reload erhält Text und Metadaten; der reparierte S13-Test bleibt41/21/0.
+Kein Push/Deployment, keine Cloud-Synchronisierung. Diese gehört erst in Auftrag025.

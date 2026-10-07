@@ -1,5 +1,6 @@
 import { AppState, Season, Player, Mask, PlayerScore, Tip, Show, CounterBet } from './types';
 import { validAppearanceRules } from './appearanceValidation';
+import { tipMatchesCelebrity, validNameResolution } from './celebrityNames';
 
 export const generateId = (): string => {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
@@ -58,7 +59,6 @@ export const calculateClassicScores = (season: Season, allPlayers: Player[], bas
   };
 
   for (const mask of revealedMasks) {
-    const actualCelebrity = mask.revealedCelebrity!.trim().toLowerCase();
     
     // --- Tip Scoring Logic ---
     
@@ -67,7 +67,7 @@ export const calculateClassicScores = (season: Season, allPlayers: Player[], bas
     for (const player of seasonPlayers) {
         const playerTips = mask.tips[player.id] || [];
         for (const tip of playerTips) {
-            if (tip.celebrityName.trim().toLowerCase() === actualCelebrity) {
+            if (tipMatchesCelebrity(tip, mask.revealedCelebrity!, season.masks.flatMap(m => m.revealedCelebrity ? [m.revealedCelebrity] : []))) {
                 const show = season.shows.find(s => s.id === tip.showId);
                 if (show) {
                     allCorrectTips.push({ tip, playerId: player.id, show });
@@ -171,7 +171,7 @@ export const calculateClassicScores = (season: Season, allPlayers: Player[], bas
       const showDifference = Math.max(0, counterBetShow.episodeNumber - tipShow.episodeNumber);
       const decayFactor = Math.max(0, 1.0 - (showDifference * 0.15));
 
-      const isTargetTipCorrect = targetTip.celebrityName.trim().toLowerCase() === actualCelebrity;
+      const isTargetTipCorrect = tipMatchesCelebrity(targetTip, mask.revealedCelebrity!, season.masks.flatMap(m => m.revealedCelebrity ? [m.revealedCelebrity] : []));
       const isFinalTargetTip = targetTip.isFinal === true;
 
       // Define base points based on whether the bet is against a final tip
@@ -299,7 +299,7 @@ export const isValidSeason = (season: any): season is Season => {
                  if (typeof tip !== 'object' || tip === null ||
                     typeof tip.celebrityName !== 'string' ||
                     typeof tip.showId !== 'string' ||
-                    typeof tip.createdAt !== 'number') {
+                    typeof tip.createdAt !== 'number' || !validNameResolution(tip)) {
                     return false;
                 }
             }
