@@ -3,6 +3,7 @@ import { Button, Card, Input } from './common/UI';
 import { catalogImages, filterCatalog, getCatalog, gameStateMaskImages, maskKey, participationKey, type ImageAsset } from '../catalog';
 import type { Season } from '../types';
 import { resolveCelebrityName } from '../celebrityNames';
+import { gameStateS12Images } from '../gameStateS12Images';
 
 const ImageCredit: React.FC<{ asset: ImageAsset | null }> = ({ asset }) => asset?.sourceType === 'USER_GAMESTATE' ?
   <p className="text-xs text-text-secondary mt-1">Bild aus deinem Spielstand · Rechte ungeklärt</p> : asset?.sourceType === 'TEMPORARY_REMOTE' ?
@@ -29,6 +30,7 @@ export const CatalogBrowser: React.FC<{ seasons?: readonly Season[]; initialQuer
   const [query, setQuery] = useState(initialQuery);
   const [season, setSeason] = useState('all');
   const userMasks = useMemo(() => gameStateMaskImages(gameSeasons), [gameSeasons]);
+  const s12Images = useMemo(() => gameStateS12Images(gameSeasons), [gameSeasons]);
   const loaded = useMemo(() => {
     try { return { catalog: getCatalog(), error: null }; }
     catch (error) { return { catalog: null, error: String(error) }; }
@@ -61,9 +63,10 @@ export const CatalogBrowser: React.FC<{ seasons?: readonly Season[]; initialQuer
     <section aria-label="Teilnahmen" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
       {[...rows].sort((a, b) => explicitSearch ? Number(isEarlier(b.season)) - Number(isEarlier(a.season)) : 0).map(row => {
         const images = catalogImages(row);
-        const costume = userMasks.get(maskKey(row)) ?? images.mask;
-        const person = <div className="flex gap-3 items-center mb-3"><CatalogImage key={images.celebrity?.src ?? 'person-fallback'} src={images.celebrity?.src} label={row.celebrity_name ?? 'Promi noch unbekannt'} />
-          <div className="break-words min-w-0"><p className="font-semibold">{row.celebrity_name ?? 'Noch nicht enthüllt'}</p>{explicitSearch && row.celebrity_name && <p className="text-sm text-accent">{isEarlier(row.season) ? 'Bereits dabei' : 'Aktuelle Katalogstaffel'} · Staffel {row.season} · {row.mask_name}</p>}<ImageCredit asset={images.celebrity} /></div></div>;
+        const costume = s12Images.masks.get(maskKey(row)) ?? userMasks.get(maskKey(row)) ?? images.mask;
+        const celebrity = s12Images.celebrities.get(participationKey(row)) ?? images.celebrity;
+        const person = <div className="flex gap-3 items-center mb-3"><CatalogImage key={celebrity?.src ?? 'person-fallback'} src={celebrity?.src} label={row.celebrity_name ?? 'Promi noch unbekannt'} />
+          <div className="break-words min-w-0"><p className="font-semibold">{row.celebrity_name ?? 'Noch nicht enthüllt'}</p>{explicitSearch && row.celebrity_name && <p className="text-sm text-accent">{isEarlier(row.season) ? 'Bereits dabei' : 'Aktuelle Katalogstaffel'} · Staffel {row.season} · {row.mask_name}</p>}<ImageCredit asset={celebrity} /></div></div>;
         return <article key={participationKey(row)} data-testid="participation"><Card className="min-w-0 h-full">
           {explicitSearch && person}
           <div className="flex gap-3 mb-3"><CatalogImage costume key={costume?.src ?? 'mask-fallback'} src={costume?.src} label={row.mask_name} />

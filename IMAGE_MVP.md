@@ -1,6 +1,10 @@
-# Maskenbilder: Zwischenstand 06.10.2026
+# Maskenbilder: Stand 07.10.2026 (S12-Fix026)
 
 Direkter Basti-Folgeauftrag nach `JH-MASKED-IMAGES-MVP-20261006-017`: Elgonia anhand der vom Nutzer bereitgestellten Quellen ergänzt, ausgehend von `34d678197d06adeaf4da21e63535b74ff2e6e068` auf `feature/promi-images-mvp`. S1–S11 jetzt vollständig. Alle bisherigen 105 Kostüme und vier Porträts unverändert erhalten; S12/S13 nicht bearbeitet.
+
+Auftrag026 ergänzt ausschließlich die rein lesende Anzeige der vorhandenen neun
+S12-Kostüme und neun S12-Porträts aus dem eigenen `Staffel 2025`-Spielstand. Diagnose
+und sichere Zuordnungsgrenzen: `S12_IMAGE_FIX.md`. Keine neuen Bilddateien/Quellen.
 
 ## Coverage
 
@@ -17,13 +21,14 @@ Direkter Basti-Folgeauftrag nach `JH-MASKED-IMAGES-MVP-20261006-017`: Elgonia an
 | Staffel 9 | 9/9 | TEMPORARY_REMOTE / RIGHTS_UNRESOLVED |
 | Staffel 10 | 9/9 | TEMPORARY_REMOTE / RIGHTS_UNRESOLVED |
 | Staffel 11 | 10/10 | TEMPORARY_REMOTE / RIGHTS_UNRESOLVED |
+| Staffel 12 | 9/9 bedingt | USER_GAMESTATE / RIGHTS_UNRESOLVED, nur aus eindeutig passendem lokalem Spielstand |
 | Staffel 13 | 12/12 bedingt | USER_GAMESTATE / RIGHTS_UNRESOLVED, nur aus eindeutig passendem lokalem Spielstand |
 | Öffentliches Manifest | 106/127 | 106 externe, null LOCAL_VERIFIED Masken; 21 ohne öffentliches Asset |
-| Mit passendem vorhandenem Spielstand | 118/127 | 106 externe + zwölf Nutzerbilder; neun verbleibende Bildlücken |
+| Mit passenden vorhandenen Spielständen | 127/127 | 106 externe + neun S12- und zwölf S13-Nutzerbilder |
 
 Porträts separat: vier LOCAL_VERIFIED Commons-WebPs mit FILE_LICENSE_REVIEWED, insgesamt 76.732 Byte, unverändert. Isabel Edvardsson, Ben Zucker, Stefan Mross und Prince Damien: 4/125 bekannte Personen und 4/126 bekannte Teilnahmezeilen. Quellen, Autoren, Lizenzen und Datei-Hashes im Manifest. Geprüfte CC-BY-SA-Dateilizenzen garantieren keine beliebige Nutzung oder Persönlichkeitsrechte. Acht unbekannte Identitäten bleiben ohne Porträt. Katalogstand 30.09.2026 unverändert.
 
-Die zwölf Nutzerbilder zählen nicht zur öffentlichen Coverage. Eine frische Preview zeigt ohne passenden eigenen Spielstand 106 Kostümbilder. Production-Spielstände sind auf anderen Preview-Domains nicht automatisch verfügbar. Kein privater Export oder privates Bild wurde in Git oder eine gehostete Preview kopiert.
+Nutzerbilder zählen nicht zur öffentlichen Coverage. Eine frische Preview zeigt ohne passenden eigenen Spielstand 106 Kostümbilder. Zusätzlich zu vier öffentlichen Porträts werden neun vorhandene S12-Porträts nur aus dem eigenen Spielstand angezeigt. Production-Spielstände sind auf anderen Preview-Domains nicht automatisch verfügbar. Kein privater Export oder privates Bild wurde in Git oder eine gehostete Preview kopiert.
 
 ## Quellen und offene Rechte
 
@@ -51,7 +56,7 @@ Ausgeschlossen: demaskierte Bilder, ausdrücklich abgelaufene zeitliche Bildfrei
 
 USER_GAMESTATE-Reuse bleibt rein lesend erhalten: genau eine passende Staffel `Staffel 2026` oder `Staffel 13` mit mindestens acht unterschiedlichen passenden Maskennamen, PNG/JPEG/WebP eingebettet. Mehrdeutige Staffeln oder Masken werden nicht geraten. Normalisierung von Punkten, Leerzeichen und Großschreibung dient nur der Zuordnung; gespeicherte Namen und Katalogschlüssel bleiben unverändert. Keine neue Persistenz, kein Upload. Basti bestätigte laut aktuellem Handoff bereits real 12/12 Staffel-13-Bilder; dieser Run wiederholt keinen privaten Import.
 
-Verbleibende Lücken: neun S12-Masken, zusätzlich zwölf ausschließlich bedingte S13-Nutzerbilder. S12 gehört nicht zu diesem Auftrag. Ein späterer Auftrag soll zuerst den vorhandenen `Staffel 2025`-Export rein lesend auf eindeutige eingebettete Maskenbilder prüfen; keine privaten Bilder veröffentlichen. Keine S13-Arbeit in diesem Run. Vollständige Lückenliste in `data/promi-image-gaps.json`. Basti pflegt aktuelle Masken, Enthüllungen und Spielstand selbst; keine externen Identitäten oder Enthüllungen übernommen.
+Ohne passenden eigenen Spielstand bleiben neun S12- und zwölf S13-Masken ohne öffentliches Asset. Diese öffentliche Lückenliste in `data/promi-image-gaps.json` bleibt korrekt und unverändert;026 schließt die Anzeige-Lücke für vorhandene private Saves. Basti pflegt aktuelle Masken, Enthüllungen und Spielstand selbst; keine externen Identitäten oder Enthüllungen übernommen.
 
 ## Verifikation und Grenzen
 
