@@ -3,6 +3,7 @@ import { Player, Mask, Season, Show } from '../types';
 import { Button, Card, Input, Modal } from './common/UI';
 import { fileToBase64 } from '../utils';
 import { PLAYER_COLORS } from '../constants';
+import { AppearanceSettings } from './AppearanceSettings';
 
 interface SettingsViewProps {
   season: Season | null;
@@ -18,6 +19,7 @@ interface SettingsViewProps {
   onDeleteMask: (id: string) => void;
   onDeleteShow: (id: string) => void;
   onBack: () => void;
+  onConfigureAppearances: (plan: Record<string, number[]>) => void;
 }
 
 const SettingsHeader: React.FC<{onBack: () => void; title: string}> = ({ onBack, title }) => (
@@ -259,6 +261,7 @@ export const SettingsView: React.FC<SettingsViewProps> = (props) => {
         <div className="max-w-5xl mx-auto">
             <SettingsHeader onBack={props.onBack} title={`Einstellungen: ${props.season.seasonName}`}/>
             <div className="space-y-8">
+                <AppearanceSettings season={props.season} onConfigure={props.onConfigureAppearances} />
                 <Card>
                     <form onSubmit={handleSaveSeasonDetails} className="space-y-4">
                         <h2 className="text-2xl font-bold mb-2">Season Details</h2>

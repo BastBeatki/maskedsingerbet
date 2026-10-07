@@ -1,4 +1,5 @@
 import { AppState, Season, Player, Mask, PlayerScore, Tip, Show, CounterBet } from './types';
+import { validAppearanceRules } from './appearanceValidation';
 
 export const generateId = (): string => {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
@@ -11,7 +12,7 @@ const FINAL_TIP_MULTIPLIER_FIRST = 1.8; // 80% bonus
 const FINAL_TIP_MULTIPLIER_SECOND = 1.5; // 50% bonus
 
 
-const getPointsForShow = (episodeNumber: number): number => {
+export const getPointsForShow = (episodeNumber: number): number => {
     if (episodeNumber <= 1) return Math.round(BASE_POINTS_PER_MASK * 1.0); // Show 1 = 20
     if (episodeNumber === 2) return Math.round(BASE_POINTS_PER_MASK * 0.90); // Show 2 = 18 (was 17)
     if (episodeNumber === 3) return Math.round(BASE_POINTS_PER_MASK * 0.80); // Show 3 = 16 (was 14)
@@ -27,7 +28,7 @@ export interface ScoreCalculationResult {
     playerMaskPoints: Record<string, number>; // Key: `${maskId}-${playerId}` -> Total points for this player on this mask
 }
 
-export const calculateScores = (season: Season, allPlayers: Player[]): ScoreCalculationResult => {
+export const calculateClassicScores = (season: Season, allPlayers: Player[], basisEpisode: (mask: Mask, show: Show) => number = (_mask, show) => show.episodeNumber): ScoreCalculationResult => {
   const tipPointsLookup: Record<string, number> = {};
   const counterBetPointsLookup: Record<string, { bettor: number; target: number }> = {};
   const playerMaskPointsLookup: Record<string, number> = {};
@@ -123,7 +124,7 @@ export const calculateScores = (season: Season, allPlayers: Player[]): ScoreCalc
                     }
                 }
 
-                const basePointsForShow = getPointsForShow(playerFirstCorrectTip.show.episodeNumber);
+                const basePointsForShow = getPointsForShow(basisEpisode(mask, playerFirstCorrectTip.show));
                 const boostedPoints = basePointsForShow * pointMultiplier;
                 
                 let awardedPoints = 0;
@@ -305,8 +306,10 @@ export const isValidSeason = (season: any): season is Season => {
         }
     }
 
-    return true;
+    return validAppearanceRules(season);
 };
+
+export const calculateScores = calculateClassicScores;
 
 export const isValidAppState = (state: any): state is AppState => {
     if (typeof state !== 'object' || state === null) return false;

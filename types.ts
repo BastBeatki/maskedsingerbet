@@ -29,6 +29,7 @@ export interface Mask {
   isRevealed: boolean;
   revealedInShowId?: string;
   celebrityImageUrl?: string;
+  settlement?: MaskSettlement;
 }
 
 export interface CounterBet {
@@ -49,6 +50,22 @@ export interface Season {
   shows: Show[];
   activeShowId: string | null;
   counterBets: CounterBet[];
+  ruleset?: 'classic-v1' | 's13-appearances-v1';
+  appearanceRules?: { activatedAt: number; appearances: Record<string, number[]> };
+}
+
+export interface MaskSettlement {
+  schema: 1;
+  ruleset: 'classic-v1' | 's13-appearances-v1';
+  settledAt: number; // 0: historical reveal time was not recorded
+  actualCelebrity: string;
+  result: {
+    scores: PlayerScore[];
+    tipPoints: Record<string, number>;
+    counterBetPoints: Record<string, { bettor: number; target: number }>;
+    playerMaskPoints: Record<string, number>;
+  };
+  explanations: Record<string, string>;
 }
 
 export interface AppState {

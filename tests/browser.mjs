@@ -181,7 +181,7 @@ try {
     await writeState(page, fixture);
     await page.reload({ waitUntil: 'networkidle' });
     await page.getByRole('heading', { name: 'Browser Test', exact: true }).click();
-    await page.locator('div.cursor-pointer').filter({ has: page.locator('[title="Testname"]') }).last().click();
+    await page.getByRole('button', { name: 'Testspieler: Tipps für Testmaske', exact: true }).click();
     await page.getByRole('button', { name: '(Zu Final ändern)', exact: true }).click();
     await page.getByText('Dein finaler Tipp ist gesperrt!', { exact: true }).waitFor();
     await page.waitForFunction(async () => {

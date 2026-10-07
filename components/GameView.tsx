@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Season, Mask, Player, PlayerScore, Tip, Show, CounterBet } from '../types';
-import { calculateScores, fileToBase64 } from '../utils';
+import { fileToBase64 } from '../utils';
+import { activeScores, isAppearanceSeason } from '../appearanceRules';
+import { ScoringDetails } from './ScoringDetails';
 import { Button, Card, Input, Modal } from './common/UI';
 
 // --- Leaderboard ---
@@ -473,7 +475,7 @@ const MaskCard: React.FC<{
                         ].filter(Boolean).join(' ');
 
                         return (
-                            <div key={player.id} onClick={() => handlePlayerClick(player)} className={playerRowClasses}>
+                            <button type="button" aria-label={`${player.name}: Tipps für ${mask.name}`} key={player.id} onClick={() => handlePlayerClick(player)} className={`${playerRowClasses} w-full text-left`}>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center min-w-0 truncate">
                                         {player.imageUrl ? (
@@ -516,7 +518,7 @@ const MaskCard: React.FC<{
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                            </button>
                         );
                     })}
                 </div>
@@ -594,7 +596,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
   const { season, allPlayers, onBack, onRevealMask, onAddOrUpdateTip, onDeleteLastTip, onToggleTipFinal, onAddCounterBet, onDeleteCounterBet, onAddShow, onSetActiveShowId } = props;
   
   // Calculate scores on render. In a larger app, useMemo here.
-  const { scores, tipPoints, counterBetPoints, playerMaskPoints } = calculateScores(season, allPlayers);
+  const { scores, tipPoints, counterBetPoints, playerMaskPoints } = activeScores(season, allPlayers);
   const activeShow = season.shows.find(s => s.id === season.activeShowId);
 
   return (
@@ -606,14 +608,16 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                     <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
                         {season.seasonName}
                     </h1>
+                    <p className="text-text-secondary mt-2">{isAppearanceSeason(season) ? 'S13: Punkte nach Maskenauftritt · 3 Tipp-Slots' : 'CLASSIC: Punkte nach Show · 3 Tipp-Slots'}</p>
                 </div>
                 
-                <Card className="flex flex-col gap-2 min-w-[300px]">
+                <Card className="flex flex-col gap-2 w-full md:w-auto md:min-w-[300px]">
                      <div className="flex justify-between items-center mb-2">
                         <span className="text-text-secondary font-bold">Aktuelle Show:</span>
                         {activeShow ? <span className="text-accent font-bold">{activeShow.name}</span> : <span className="text-red-400">Keine Show aktiv</span>}
                      </div>
                      <select 
+                        aria-label="Aktuelle Show"
                         value={season.activeShowId || ''} 
                         onChange={(e) => onSetActiveShowId(e.target.value)}
                         className="bg-background border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
@@ -639,8 +643,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                     {season.masks.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {season.masks.map(mask => (
-                                <MaskCard
-                                    key={mask.id}
+                                <div key={mask.id} className="space-y-3 min-w-0"><MaskCard
                                     mask={mask}
                                     players={allPlayers.filter(p => season.playerIds.includes(p.id))}
                                     shows={season.shows}
@@ -656,7 +659,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                                     tipPointsLookup={tipPoints}
                                     counterBetPointsLookup={counterBetPoints}
                                     playerMaskPointsLookup={playerMaskPoints}
-                                />
+                                /><ScoringDetails season={season} mask={mask} players={allPlayers} /></div>
                             ))}
                         </div>
                     ) : (

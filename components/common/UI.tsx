@@ -69,10 +69,10 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-surface rounded-xl shadow-2xl w-full max-w-md mx-auto border border-border" onClick={e => e.stopPropagation()}>
+      <div role="dialog" aria-modal="true" aria-label={title} className="bg-surface rounded-xl shadow-2xl w-full max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto mx-auto border border-border" onClick={e => e.stopPropagation()}>
         <div className="p-6 border-b border-border flex justify-between items-center">
           <h2 className="text-2xl font-bold text-text-primary">{title}</h2>
-          <button onClick={onClose} className="text-text-secondary hover:text-white transition-colors">
+          <button aria-label="Schließen" onClick={onClose} className="text-text-secondary hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>

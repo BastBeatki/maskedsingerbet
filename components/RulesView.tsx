@@ -11,8 +11,12 @@ export const RulesView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </div>
         <Card className="space-y-8">
           <div>
+            <h2 className="text-2xl font-bold text-accent mb-3">Staffel 13: gleiche Tipps, faire Auftrittsbasis</h2>
+            <p className="text-lg text-text-secondary">Optional in den Staffeleinstellungen aktivieren. Basis je Maskenauftritt: 20, 18, 16, 14, 12, danach 10. Debüt in Show 4 zählt als erster Auftritt. Drei Tipp-Slots, Finalfaktoren (1,8 / 1,5 / 1), erster Treffer 100 % und spätere Treffer 40 % sowie Gegenwetten bleiben wie bisher. Bereits enthüllte Masken behalten bei Aktivierung exakt ihre alten Punkte; offene Tipps bleiben bestehen.</p>
+          </div>
+          <div>
             <h2 className="text-2xl font-bold text-accent mb-3">Ziel</h2>
-            <p className="text-lg text-text-secondary">Sammle über die Staffel die meisten wichtigen Erfolge: korrekt erratene Masken, gewonnene Gegenwetten, dann Punkte.</p>
+            <p className="text-lg text-text-secondary">Sammle über die Staffel die meisten Gesamtpunkte aus erratenen Masken und Gegenwetten.</p>
           </div>
           
           <div>
@@ -27,7 +31,7 @@ export const RulesView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           <div>
             <h2 className="text-2xl font-bold text-accent mb-3">Finaler Tipp (Volles Risiko)</h2>
             <ul className="list-disc list-inside space-y-2 text-lg text-text-secondary">
-              <li>Markiere Tipp 1 oder 2 als <strong className="text-text-primary">final</strong> → Tipp wird unwiderruflich. Keine weiteren Tipps für diese Maske.</li>
+              <li>Markiere Tipp 1 oder 2 als <strong className="text-text-primary">final</strong> → keine weiteren Tipps für diese Maske, solange Final gesetzt ist. Die bestehende Funktion zum Entfernen des Finalstatus bleibt verfügbar.</li>
               <li><strong className="text-text-primary">Belohnung:</strong> hoher Punkte-Bonus (größer bei finalem Tipp als erster Tipp vs. finalem zweiten Tipp).</li>
               <li><strong className="text-text-primary">Risiko:</strong> liegst du falsch, sind alle weiteren Chancen für diese Maske weg.</li>
               <li>Ein finaler Tipp macht dich zu einem attraktiven Ziel für Gegenwetten (größere Einsätze).</li>
@@ -49,7 +53,7 @@ export const RulesView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <ul className="list-disc list-inside space-y-2 text-lg text-text-secondary">
               <li>Frühe, richtige Tipps = hohe Grundpunkte.</li>
               <li>Pionier-Bonus &gt; Nachahmer-Punkte.</li>
-              <li>Finaler Tipp = großer Bonus, aber endgültiges Sperren.</li>
+              <li>Finaler Tipp = großer Bonus und Sperre weiterer Tipps, solange Final gesetzt ist.</li>
               <li>Gegenwette = Hebel auf Fehler anderer; früh wetten zahlt sich am meisten aus.</li>
             </ul>
           </div>
