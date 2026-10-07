@@ -43,6 +43,8 @@ try {
     await importState(page, fixture); await page.getByRole('button', { name: 'Einstellungen', exact: true }).click();
     await page.getByRole('button', { name: 'Wertungsvorschau berechnen' }).click();
     await page.getByRole('alert').waitFor(); assert.deepEqual(await state(page), fixture);
+    await page.getByText('Erweitert / Auftritte korrigieren', { exact: true }).click();
+    await page.getByLabel('Manuelle Auftrittsfolgen verwenden').check();
     await page.getByLabel('Auftritts-Shows: Testmaske', { exact: true }).fill('4, 5, 6');
     await page.getByLabel('Auftritts-Shows: Altmaske', { exact: true }).fill('1');
     await page.getByRole('button', { name: 'Wertungsvorschau berechnen' }).click();
@@ -85,7 +87,10 @@ try {
     await importState(page, settled); await game(page); await page.getByRole('heading', { name: 'Abrechnung: Testmaske', exact: true }).waitFor();
     await page.getByText('Regelvergleich (nur lesen)', { exact: true }).first().click(); assert.deepEqual(await state(page), settled);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false); await page.screenshot({ path: path.join(artifacts, 'ipad-audit.png'), fullPage: true });
-    await home(page); await page.getByRole('button', { name: 'Einstellungen', exact: true }).click(); assert.equal(await page.getByLabel('Auftritts-Shows: Testmaske', { exact: true }).count(), 0);
+    await home(page); await page.getByRole('button', { name: 'Einstellungen', exact: true }).click();
+    await page.getByText('Erweitert / Auftritte korrigieren', { exact: true }).click();
+    await page.getByLabel('Manuelle Auftrittsfolgen verwenden').check();
+    assert.equal(await page.getByLabel('Auftritts-Shows: Testmaske', { exact: true }).count(), 0);
     await page.getByRole('button', { name: 'Auftrittsfolge speichern' }).click();
     await committed(page, s => !!s?.seasons[0].masks[0].settlement); assert.deepEqual((await state(page)).seasons[0].masks[0].settlement, settled.seasons[0].masks[0].settlement);
   }, { width: 1024, height: 1366 });

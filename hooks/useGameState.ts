@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { AppState, Season, Player, Mask, Tip, Show, CounterBet } from '../types';
+import { AppState, Season, Player, Mask, Tip, Show, CounterBet, S13Automatic } from '../types';
 import { generateId, isValidAppState, isValidSeason } from '../utils';
 import { PLAYER_COLORS } from '../constants';
-import { activateAppearances, assertOpenAppearance, assertOpenMask, isAppearanceSeason, settleMask, updateAppearancePlan } from '../appearanceRules';
+import { assertOpenAppearance, assertOpenMask, configureAppearanceMode, isAppearanceSeason, settleMask } from '../appearanceRules';
+import { appearanceEpisodes, confirmedDebut } from '../appearanceAuto';
 
 import { initializeStorage, saveStateDB, clearStateDB, createDefaultState, APP_STORAGE_KEY, LEGACY_STORAGE_KEY } from '../storage';
 
@@ -61,8 +62,8 @@ export const useAppManager = () => {
   };
 
   // --- Season Management ---
-  const configureAppearances = (seasonId: string, plan: Record<string, number[]>) => {
-    withSeason(seasonId, season => isAppearanceSeason(season) ? updateAppearancePlan(season, plan) : activateAppearances(season, appState.players, plan, Date.now(), 'revalue-s13'));
+  const configureAppearances = (seasonId: string, plan: Record<string, number[]>, automatic?: S13Automatic) => {
+    withSeason(seasonId, season => configureAppearanceMode(season, appState.players, plan, automatic));
   };
   const addSeason = (name: string) => {
     if (!name.trim()) return;
@@ -180,7 +181,10 @@ export const useAppManager = () => {
         tips: {},
         isRevealed: false,
       };
-      return { ...season, masks: [...season.masks, newMask] };
+      const auto = season.appearanceRules?.automatic;
+      const debut = confirmedDebut(newMask.name);
+      if (auto && debut && season.masks.some(m => m.name.trim().toLowerCase() === newMask.name.toLowerCase())) throw new Error('Diese Maske ist bereits angelegt.');
+      return { ...season, masks: [...season.masks, newMask], ...(auto && debut ? { appearanceRules: { ...season.appearanceRules!, automatic: { ...auto, debuts: { ...auto.debuts, [newMask.id]: debut } } } } : {}) };
     });
   };
 
@@ -205,13 +209,21 @@ export const useAppManager = () => {
     withSeason(seasonId, season => {
       if (isAppearanceSeason(season)) {
         assertOpenMask(season, id);
+        if (season.appearanceRules?.automatic) {
+          assertOpenAppearance(season, id);
+          const mask = season.masks.find(m => m.id === id)!;
+          const show = season.shows.find(s => s.id === season.activeShowId)!;
+          if (!appearanceEpisodes(season, mask)?.includes(show.episodeNumber)) throw new Error('Eine Enthüllung vor dem bestätigten Debüt ist nicht möglich. Auftritte erweitert prüfen.');
+        }
         if (!celebrityName.trim()) throw new Error('Bitte den Prominamen eingeben.');
-        return { ...season, masks: season.masks.map(m => {
+        const masks = season.masks.map(m => {
           if (m.id !== id) return m;
           const revealed = { ...m, isRevealed: true, revealedCelebrity: celebrityName,
             ...(celebrityImageUrl === undefined ? {} : { celebrityImageUrl }), revealedInShowId: season.activeShowId! };
           return { ...revealed, settlement: settleMask(season, revealed, appState.players, true, Date.now()) };
-        }) };
+        });
+        const revealed = masks.find(m => m.id === id)!;
+        return { ...season, masks, ...(season.appearanceRules?.automatic ? { appearanceRules: { ...season.appearanceRules, appearances: { ...season.appearanceRules.appearances, [id]: appearanceEpisodes(season, { ...revealed, settlement: undefined })! } } } : {}) };
       }
       return ({
         ...season,

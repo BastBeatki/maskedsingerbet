@@ -1,4 +1,5 @@
 import { matchesAppearanceShow, validAppearanceList } from './appearanceSchedule';
+import { appearanceEpisodes, validAutomatic } from './appearanceAuto';
 
 // Additive validation: unversioned CLASSIC saves retain their existing contract.
 export function validAppearanceRules(season: any): boolean {
@@ -6,12 +7,13 @@ export function validAppearanceRules(season: any): boolean {
   if (season.ruleset !== 's13-appearances-v1') return season.appearanceRules === undefined && season.masks.every((m: any) => m.settlement === undefined);
   const rules = season.appearanceRules;
   if (!rules || !Number.isFinite(rules.activatedAt) || rules.activatedAt <= 0 || !rules.appearances || typeof rules.appearances !== 'object' || Array.isArray(rules.appearances)) return false;
+  if (!validAutomatic(rules.automatic, season)) return false;
   if (new Set(season.masks.map((m: any) => m.id)).size !== season.masks.length || new Set(season.shows.map((s: any) => s.id)).size !== season.shows.length || new Set(season.shows.map((s: any) => s.episodeNumber)).size !== season.shows.length) return false;
   for (const mask of season.masks) {
     if (Object.values(mask.tips).some((tips: any) => tips.length > 3)) return false;
     if (!mask.isRevealed) {
       if (mask.settlement !== undefined) return false;
-      const eps = rules.appearances[mask.id];
+      const eps = appearanceEpisodes(season, mask);
       // A newly created mask can be configured in settings before playing.
       if (eps === undefined && Object.values(mask.tips).every((tips: any) => tips.length === 0) && !season.counterBets.some((cb: any) => cb.maskId === mask.id)) continue;
       if (!validAppearanceList(eps)) return false;

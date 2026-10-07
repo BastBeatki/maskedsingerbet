@@ -19,7 +19,7 @@ interface SettingsViewProps {
   onDeleteMask: (id: string) => void;
   onDeleteShow: (id: string) => void;
   onBack: () => void;
-  onConfigureAppearances: (plan: Record<string, number[]>) => void;
+  onConfigureAppearances: (plan: Record<string, number[]>, automatic?: import('../types').S13Automatic) => void;
 }
 
 const SettingsHeader: React.FC<{onBack: () => void; title: string}> = ({ onBack, title }) => (

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Season, Mask, Player, PlayerScore, Tip, Show, CounterBet } from '../types';
 import { fileToBase64 } from '../utils';
 import { activeScores, isAppearanceSeason } from '../appearanceRules';
+import { automaticWarnings } from '../appearanceAuto';
 import { ScoringDetails } from './ScoringDetails';
 import { Button, Card, Input, Modal } from './common/UI';
 
@@ -609,6 +610,8 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                         {season.seasonName}
                     </h1>
                     <p className="text-text-secondary mt-2">{isAppearanceSeason(season) ? 'S13: Punkte nach Maskenauftritt · 3 Tipp-Slots' : 'CLASSIC: Punkte nach Show · 3 Tipp-Slots'}</p>
+                    {season.appearanceRules?.automatic && <p className="text-accent text-sm mt-2">S13-Automatik aktiv</p>}
+                    {automaticWarnings(season).length > 0 && <p role="alert" className="text-amber-300 mt-2">{automaticWarnings(season).join(' ')} {season.appearanceRules?.automatic?.deviationConfirmed ? 'Abweichende Besetzung bestätigt.' : 'Bitte unter Einstellungen → Erweitert prüfen, bevor weiter gewertet wird.'}</p>}
                 </div>
                 
                 <Card className="flex flex-col gap-2 w-full md:w-auto md:min-w-[300px]">

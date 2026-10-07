@@ -51,7 +51,14 @@ export interface Season {
   activeShowId: string | null;
   counterBets: CounterBet[];
   ruleset?: 'classic-v1' | 's13-appearances-v1';
-  appearanceRules?: { activatedAt: number; appearances: Record<string, number[]> };
+  appearanceRules?: { activatedAt: number; appearances: Record<string, number[]>; automatic?: S13Automatic };
+}
+
+export interface S13Automatic {
+  version: 's13-2026-v1';
+  debuts: Record<string, number>;
+  overrides: Record<string, number[]>;
+  deviationConfirmed?: boolean;
 }
 
 export interface MaskSettlement {

@@ -12,7 +12,7 @@ export const RulesView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <Card className="space-y-8">
           <div>
             <h2 className="text-2xl font-bold text-accent mb-3">Staffel 13: gleiche Tipps, faire Auftrittsbasis</h2>
-            <p className="text-lg text-text-secondary">Optional in den Staffeleinstellungen nach Punkte-Vorschau aktivieren. Basis je Maskenauftritt: 20, 18, 16, 14, 12, danach 10. Debüt in Show 4 und Tipps vor dem Debüt zählen als erster Auftritt. Drei Tipp-Slots, Finalfaktoren (1,8 / 1,5 / 1), erster Treffer 100 % und spätere Treffer 40 % sowie Gegenwetten bleiben wie bisher. Bei Bestätigung werden auch bereits enthüllte Masken nach ihren bestätigten Auftritten neu berechnet. Bestehende Tipps und Gegenwetten bleiben erhalten; bitte vorher exportieren.</p>
+            <p className="text-lg text-text-secondary">In den Staffeleinstellungen nach Punkte-Vorschau aktivieren. Die App führt die Auftritte der bestätigten Staffel 2026 automatisch: Debüt 20, Halbfinale 18, Finale 16 Punkte Basis. Tipps vor dem Debüt behalten Basis 20. Drei Tipp-Slots, Finalfaktoren (1,8 / 1,5 / 1), erster Treffer 100 % und spätere Treffer 40 % sowie Gegenwetten bleiben wie bisher. Bei Bestätigung werden auch bereits enthüllte Masken neu berechnet; Tipps und Gegenwetten bleiben erhalten. Bitte vorher exportieren. Abweichungen vom TV-Format lassen sich unter „Erweitert / Auftritte korrigieren“ prüfen.</p>
           </div>
           <div>
             <h2 className="text-2xl font-bold text-accent mb-3">Ziel</h2>

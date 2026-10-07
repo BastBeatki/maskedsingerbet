@@ -3,6 +3,7 @@
 Handoff `JH-MASKED-S13-RULESET-SIMPLIFY-20261007-019`, Version 1.
 Aktualisiert durch `JH-MASKED-S13-LOCAL-PREVIEW-20261007-021`, Version 1:
 Vor-Debüt-Basis und bestätigte rückwirkende S13-Umwertung für die lokale LAN-Vorschau.
+Aktueller Normalbetrieb durch Handoff022: versionierte S13-Automatik statt manueller Listen.
 Neuer Branch `feature/s13-simple` direkt von Production/main
 `b0ca9953d04776afc8d11369502f441c5b95fa27`.
 018 (`feature/s13-ruleset`, `5f31d6ba4cc102a06aa46645ecf2dd51015bf9a8`)
@@ -95,24 +96,30 @@ Masken, zwei Enthüllungen und zwei Halbfinal-Qualifikationen je Show. Das erkl�
 die Benachteiligung später Debüts. Der genaue spätere Auftritt jeder konkreten
 Maske ist keine automatisch bekannte App-Information.
 
-Darum einmal in den Staffeleinstellungen für jede Maske die bestätigten
-Auftritts-Shows eintragen. Vor Aktivierung auch historische enthüllte Masken bestätigen.
-Für offene Masken zunächst nur bekannte Auftritte (z.B. `2`) verwenden; unbekannte
-spätere Shows weglassen und vor weiteren Tipps/Abrechnung ergänzen. Es gibt keine
-aus alten Tippzeiten geratenen Defaults und keine eingebauten Promi-Enthüllungen.
-Bei fehlender/lückenhafter Zuordnung STOP für diese Aktivierung/Eingabe, klare
-Fehlermeldung, unveränderter Spielstand. Alte Tipp-Show-Referenzen müssen
-vor dem bestätigten Debüt oder in der bestätigten Liste liegen. Gegenwetten in fremden Shows bleiben möglich;
-sie zählen nicht als Maskenauftritt. Auch eine Direktenthüllung ohne neuen Auftritt
-erfordert keinen erfundenen Auftritt. Weitere tatsächliche Abweichungen können für
-noch offene Masken in den Einstellungen korrigiert werden. Keine Ratechance-
-Buttons oder manuellen Infoereignisse als Voraussetzung im normalen Tippablauf.
+022 führt die bekannten Debüts ausdrücklich pro aktivierter Staffel mit `s13-2026-v1`.
+Die vier bestätigten Gruppen stehen in `appearanceAuto.ts`; Masken werden an ihre ID
+gebunden, nicht dauerhaft aus einem editierbaren Namen erkannt. Andere Staffeln/Saves
+bleiben CLASSIC. Die Namen/Shows stammen aus dem bestätigten Handoff022, nicht aus
+Tippzeiten. Halbfinale5/Finale6 werden aus Showfortschritt und Enthüllungsstatus geführt;
+keine feste Finalistenanzahl. Mehrere Performances zählen einmal. Bereits abgerechnete
+Masken behalten ihre eingefrorene tatsächliche Auftrittsliste und ihren Ledger.
+
+Normal: exportieren, Alt-vs-Neu-Vorschau berechnen, ausdrücklich aktivieren. Kein
+Auftrittsformular. Bestehende021-Saves können die Automatik ausdrücklich zuschalten,
+ohne Ledgers neu zu berechnen. Historische Aktivierung aus CLASSIC bleibt021-kompatibel.
+Nur der eingeklappte Bereich **Erweitert / Auftritte korrigieren** enthält Ausnahmen:
+pro offener Maske eine tatsächliche Folge, oder eine bestätigte abweichende Besetzung.
+Erkannte Vorrunden-/Referenzabweichungen blockieren Eingaben/Abrechnung mit Hinweis.
+Die App beobachtet die TV-Sendung nicht und kann einen nicht gemeldeten Aussetzer
+nicht erkennen. Deshalb eine solche Abweichung vor Wertung erweitert melden.
+Gegenwetten nutzen weiter CLASSIC; kein neues Timing-/Performance-Modell.
+Manuelle019/021-Pläne bleiben in diesem Ausnahmeweg kompatibel; keine Startup-Migration.
 
 ## Bestätigter einheitlicher Übergang derselben Staffel (021)
 
 Alte Saves ohne Version bleiben CLASSIC, unabhängig von Name/Jahr. Keine automatische
 Startup-Migration, keine neue Season-ID, keine Kopie, keine Neuanlage von Tipps.
-Nach Export, Bestätigung der Auftrittslisten, Alt-vs-Neu-Vorschau und ausdrücklicher
+Nach Export, automatischer bestätigter Zuordnung, Alt-vs-Neu-Vorschau und ausdrücklicher
 Bestätigung in den Staffeleinstellungen:
 
 1. Jede bereits enthüllte Maske wird mit der gemeinsamen CLASSIC-Engine und der
@@ -184,3 +191,13 @@ Rundlauf über die PC-LAN-Adresse: 35/17/0 → Vorschau → Abbruch ohne Write �
 Die Testkopie liegt ausschließlich lokal unter `_workshop/masked-singer-021`, außerhalb
 des ausgelieferten Builds. Keine echte iPhone/iPad/Safari-Abnahme behauptet.
 LAN-Anleitung und bestätigte aktuelle Auftritts-Shows: [LOCAL_PREVIEW.md](LOCAL_PREVIEW.md).
+
+022: 88 automatische Tests plus die vier bisherigen synthetischen Browserflows bestehen.
+Realer reparierter Export ohne Auftrittseingaben: Vorschau/Abbruch ohne Write →41/21/0
+→Export/Import/Reload; alle Rohdatensätze und Staffel2025 unverändert. Auch021-Manuell-
+Regression inklusive ungültiger Liste/staler Vorschau und021→Automatik unveränderte
+Ledgers bestanden. Zusätzlicher Browserflow Show4→5→6: vier Debüts/zwei Enthüllungen,
+acht Halbfinalisten, beliebige drei Enthüllungen/fünf Finalisten,20/18/16Basis, echter
+Vor-Debüt-Tipp, Export/Import/Reload und erweiterter Show-Aussetzer mit18Finalbasis.
+Private reale Tests unter `_workshop/masked-singer-022`, synthetische/Serving-/Bildschirm-
+Artefakte unter ignoriertem `artifacts/local-022`. LAN-Anleitung: LOCAL_PREVIEW.md.
