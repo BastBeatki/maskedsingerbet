@@ -261,7 +261,7 @@ export const SettingsView: React.FC<SettingsViewProps> = (props) => {
         <div className="max-w-5xl mx-auto">
             <SettingsHeader onBack={props.onBack} title={`Einstellungen: ${props.season.seasonName}`}/>
             <div className="space-y-8">
-                <AppearanceSettings season={props.season} onConfigure={props.onConfigureAppearances} />
+                <AppearanceSettings season={props.season} players={props.allPlayers} onConfigure={props.onConfigureAppearances} />
                 <Card>
                     <form onSubmit={handleSaveSeasonDetails} className="space-y-4">
                         <h2 className="text-2xl font-bold mb-2">Season Details</h2>

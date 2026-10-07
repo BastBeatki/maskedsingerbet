@@ -5,9 +5,9 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.JARVIS_PLAYWRIGHT_PACKAGE || 'playwright');
 const [endpoint, artifacts, base = 'http://127.0.0.1:4317'] = process.argv.slice(2);
-assert.match(endpoint ?? '', /^ws:\/\/127\.0\.0\.1:/); assert.match(base, /^http:\/\/127\.0\.0\.1:\d+$/);
+if (endpoint !== 'launch') assert.match(endpoint ?? '', /^ws:\/\/127\.0\.0\.1:/); assert.match(base, /^http:\/\/127\.0\.0\.1:\d+$/);
 fs.mkdirSync(artifacts, { recursive: true });
-const browser = await chromium.connectOverCDP(endpoint), results = [];
+const browser = endpoint === 'launch' ? await chromium.launch({ executablePath: process.env.JARVIS_BROWSER_EXECUTABLE, headless: true }) : await chromium.connectOverCDP(endpoint), results = [];
 const fixture = { players: [{ id: 'a', name: 'Früh', color: '#123456' }, { id: 'b', name: 'Spät', color: '#654321' }],
   seasons: [{ id: 's', seasonName: 'S13 Browsertest', playerIds: ['a', 'b'], activeShowId: 's4',
     shows: [1, 2, 3, 4, 5, 6].map(n => ({ id: `s${n}`, name: `Show ${n}`, episodeNumber: n })),
@@ -41,9 +41,12 @@ let settled;
 try {
   await check('phone: explicit same-season activation preserves historical results/open tips; 3 slots/third final/counterbet/reveal/audit/comparison/export/reload', async page => {
     await importState(page, fixture); await page.getByRole('button', { name: 'Einstellungen', exact: true }).click();
-    await page.getByRole('button', { name: 'S13-Wertung in dieser Staffel aktivieren' }).click();
+    await page.getByRole('button', { name: 'Wertungsvorschau berechnen' }).click();
     await page.getByRole('alert').waitFor(); assert.deepEqual(await state(page), fixture);
     await page.getByLabel('Auftritts-Shows: Testmaske', { exact: true }).fill('4, 5, 6');
+    await page.getByLabel('Auftritts-Shows: Altmaske', { exact: true }).fill('1');
+    await page.getByRole('button', { name: 'Wertungsvorschau berechnen' }).click();
+    await page.getByRole('region', { name: 'Wertungsvorschau' }).waitFor(); assert.deepEqual(await state(page), fixture);
     await page.getByRole('button', { name: 'S13-Wertung in dieser Staffel aktivieren' }).click();
     const enabled = await committed(page, s => s?.seasons[0].ruleset === 's13-appearances-v1');
     assert.equal(enabled.seasons.length, 1); assert.equal(enabled.seasons[0].id, 's'); assert.deepEqual(enabled.seasons[0].masks[0].tips, fixture.seasons[0].masks[0].tips);

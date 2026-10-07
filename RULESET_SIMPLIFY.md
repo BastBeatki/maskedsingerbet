@@ -1,6 +1,8 @@
 # Staffel 13: bestehendes Spiel, Punkte nach Maskenauftritt
 
 Handoff `JH-MASKED-S13-RULESET-SIMPLIFY-20261007-019`, Version 1.
+Aktualisiert durch `JH-MASKED-S13-LOCAL-PREVIEW-20261007-021`, Version 1:
+Vor-Debüt-Basis und bestätigte rückwirkende S13-Umwertung für die lokale LAN-Vorschau.
 Neuer Branch `feature/s13-simple` direkt von Production/main
 `b0ca9953d04776afc8d11369502f441c5b95fa27`.
 018 (`feature/s13-ruleset`, `5f31d6ba4cc102a06aa46645ecf2dd51015bf9a8`)
@@ -48,12 +50,16 @@ Alle weiteren Berechnungen sind unverändert:
 ## Vereinfachte Regel und konkrete Beispiele
 
 `s13-appearances-v1` ersetzt nur die Basis-Show-Nummer durch die Position der
-Tipp-Show in der bestätigten Auftrittsliste dieser Maske. Beispiele:
+Tipp-Show in der bestätigten Auftrittsliste dieser Maske. Eine bekannte Tipp-Show
+vor dem Debüt liefert ebenfalls Auftritt 1, ohne ihre Referenz/Zeit zu ändern oder
+einen zusätzlichen Auftritt einzufügen. Ungelistete Shows nach dem Debüt bleiben Fehler.
+Diese Regel gilt konsistent für Aktivierung, Eingabe, Berechnung und Import. Beispiele:
 
 | Maskenfolge | richtiger Tipp | Basis CLASSIC | Basis S13 |
 | --- | --- | ---: | ---: |
 | 1,5,6 | Show 1 / Debüt | 20 | 20 |
 | 4,5,6 | Show 4 / Debüt | 14 | 20 |
+| 4,5,6 | Show 2 / vor Debüt | 18 | 20 |
 | 4,5,6 | Show 5 / zweiter Auftritt | 12 | 18 |
 | 4,5,6 | Show 6 / dritter Auftritt | 10 | 16 |
 | 4,6 | Show 6 / tatsächlich zweiter Auftritt | 10 | 18 |
@@ -89,32 +95,39 @@ Masken, zwei Enthüllungen und zwei Halbfinal-Qualifikationen je Show. Das erkl�
 die Benachteiligung später Debüts. Der genaue spätere Auftritt jeder konkreten
 Maske ist keine automatisch bekannte App-Information.
 
-Darum einmal in den Staffeleinstellungen für jede offene Maske die bekannten
-und vorgesehenen Shows bestätigen (z.B. `2, 5, 6`). Es gibt absichtlich keine
+Darum einmal in den Staffeleinstellungen für jede Maske die bestätigten
+Auftritts-Shows eintragen. Vor Aktivierung auch historische enthüllte Masken bestätigen.
+Für offene Masken zunächst nur bekannte Auftritte (z.B. `2`) verwenden; unbekannte
+spätere Shows weglassen und vor weiteren Tipps/Abrechnung ergänzen. Es gibt keine
 aus alten Tippzeiten geratenen Defaults und keine eingebauten Promi-Enthüllungen.
 Bei fehlender/lückenhafter Zuordnung STOP für diese Aktivierung/Eingabe, klare
 Fehlermeldung, unveränderter Spielstand. Alte Tipp-Show-Referenzen müssen
-in die bestätigte Liste passen. Gegenwetten in fremden Shows bleiben möglich;
+vor dem bestätigten Debüt oder in der bestätigten Liste liegen. Gegenwetten in fremden Shows bleiben möglich;
 sie zählen nicht als Maskenauftritt. Auch eine Direktenthüllung ohne neuen Auftritt
 erfordert keinen erfundenen Auftritt. Weitere tatsächliche Abweichungen können für
 noch offene Masken in den Einstellungen korrigiert werden. Keine Ratechance-
 Buttons oder manuellen Infoereignisse als Voraussetzung im normalen Tippablauf.
 
-## Übergang derselben Staffel ab Aktivierung / Show 4
+## Bestätigter einheitlicher Übergang derselben Staffel (021)
 
 Alte Saves ohne Version bleiben CLASSIC, unabhängig von Name/Jahr. Keine automatische
 Startup-Migration, keine neue Season-ID, keine Kopie, keine Neuanlage von Tipps.
-Nach Export und ausdrücklicher Bestätigung in den Staffeleinstellungen:
+Nach Export, Bestätigung der Auftrittslisten, Alt-vs-Neu-Vorschau und ausdrücklicher
+Bestätigung in den Staffeleinstellungen:
 
-1. Jede bereits enthüllte Maske wird mit der aktuellen unveränderten CLASSIC-Engine
-   einzeln berechnet. Punkte, Gegenwetten, Treffer-/Wettgewinne und Lookup-Maps
-   werden exakt als `classic-v1`-Snapshot übernommen. Alte fehlende Enthüllungszeit:0,
-   sichtbar als nicht aufgezeichnet. Keine Rückrechnung erfundener Auftritte.
+1. Jede bereits enthüllte Maske wird mit der gemeinsamen CLASSIC-Engine und der
+   bestätigten Maskenbasis neu berechnet und als `s13-appearances-v1`-Abrechnung gespeichert.
+   Alte fehlende Enthüllungszeit:0, sichtbar als nicht aufgezeichnet; der Zeitpunkt
+   der Aktivierung bleibt davon getrennt. Historische Listen benötigen bekannte
+   Shows bis zur gespeicherten Enthüllung. Keine erfundenen Auftritte/Zeitstempel.
+   Der interne Modus `preserve-classic` bewahrt die API/019-Historie; der neue UI-Umstieg
+   verwendet ausdrücklich `revalue-s13`. Schon aktivierte Saves werden beim Laden
+   nicht erneut umgewertet; für einen neuen Umstieg den Originalexport verwenden.
 2. Offene Masken behalten sämtliche Tipps, Slots, Finalmarkierungen und Gegenwetten.
    Ihr späteres Ergebnis verwendet die neue Auftrittsbasis – auch ein bereits
    vorhandener, noch nicht abgerechneter richtiger Tipp nutzt sein bestätigtes Debüt.
-   Das ist ausdrücklich eine Umwertung noch offener Masken, keine Änderung bereits
-   vergebener Punkte. Es werden keine neuen Tipp-/Finalzeiten erfunden.
+   Auch künftig werden ausschließlich die gespeicherten echten Tipps verwendet.
+   Es werden keine neuen Tipp-/Finalzeiten erfunden.
 3. Jede neue manuelle Enthüllung speichert einmal einen `s13-appearances-v1`-Snapshot
    mit tatsächlicher Abrechnungszeit, Prominame, Punkten und verständlicher Erklärung.
    Die aktive Rangliste liest diese Snapshots. Render, Vergleich und Reload buchen nichts.
@@ -129,7 +142,10 @@ Additive JSON-Felder bleiben im vollständigen Export/Import erhalten. Unbekannt
 Versionen (auch 018s `tournament-v1`) und strukturell/arithmetisch beschädigte
 Abrechnungen werden zurückgewiesen, ohne den vorhandenen Save zu ersetzen.
 Keine Übernahme experimenteller 018-Kopien in dieses andere Modell.
-Kein echter Spielstand wurde in diesem Auftrag aktiviert, importiert oder geändert.
+In 021 wurde der reparierte Export ausschließlich in einem isolierten lokalen
+Testbrowser importiert/aktiviert und exportiert. Originaldatei, bestehende
+Vercel-Browserdaten und Production bleiben unverändert. Nach Aktivierung sind
+Tipps/Finalmarker/Gegenwetten/Shows/Spieler und die gesamte Staffel2025 identisch.
 
 ## Abrechnung und read-only Vergleich
 
@@ -139,13 +155,13 @@ Show-Abschlag und Endsumme für jeden Spieler.
 `?rulesetDebug=1` öffnet zusätzlich den ausblendbaren Vergleich auf identischen
 Tipps/Finalmarkierungen/Gegenwetten: Staffel-12/CLASSIC vs. S13 nach Auftritt.
 Dies ist ein Feature-Switch, keine Authentifizierung. Nur das aktive Regelwerk
-bestimmt echte Ranglistenpunkte. Übernommene historische CLASSIC-Abrechnungen
-bleiben in beiden Spalten erhalten, statt Shows1–3 rückwirkend neu zu simulieren.
+bestimmt echte Ranglistenpunkte. Ältere übernommene CLASSIC-Abrechnungen bleiben
+kompatibel. Neue bestätigte historische S13-Abrechnungen zeigen den CLASSIC-vs-S13-Vergleich.
 Ohne bestätigte Auftrittsfolge lautet der Vergleich ehrlich „noch nicht möglich“.
 
 ## Verifikation
 
-79 Unit-/Storage-/Scoring-/Katalogtests:24 Debüt×Slot×Final-Kombinationen,
+83 Unit-/Storage-/Scoring-/Katalogtests:24 Debüt×Slot×Final-Kombinationen,
 früh/offen vs. spät/Slot3/final, Same-Show-Final-Upgrade, Follower-Rundung,
 Halbfinale/Finale und weitere Basistiers, ausgelassene Shows, alle Gegenwette-
 Varianten, historische komplette Lookup-/Score-Parität, offene Alt-Tipps,
@@ -159,3 +175,12 @@ Bestehende Bild-/CLASSIC-Browserregressionen werden separat im Rückbericht ausg
 Artefakte unter `artifacts/appearances-019*` sind ignoriert und bleiben lokal.
 Katalog-/Bildmanifest-/Portraitdateien sowie Storage-Vertrag bleiben unverändert.
 Keine neuen Abhängigkeiten, Services, Environmentvariablen oder laufenden Kosten.
+
+021 ergänzt Vor-Debüt mit/ohne Final, unveränderte Pionierreihenfolge und Gegenwetten,
+Ablehnung späterer ungelisteter Shows und bestätigte historische Umwertung/Roundtrip.
+Vier synthetische Browserflows bleiben bestanden. Zusätzlich der komplette reale
+Rundlauf über die PC-LAN-Adresse: 35/17/0 → Vorschau → Abbruch ohne Write → bestätigter
+41/21/0-Umstieg → Export/Import/Reload, ohne Veränderung der Rohdatensätze oder Staffel2025.
+Die Testkopie liegt ausschließlich lokal unter `_workshop/masked-singer-021`, außerhalb
+des ausgelieferten Builds. Keine echte iPhone/iPad/Safari-Abnahme behauptet.
+LAN-Anleitung und bestätigte aktuelle Auftritts-Shows: [LOCAL_PREVIEW.md](LOCAL_PREVIEW.md).

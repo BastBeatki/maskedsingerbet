@@ -62,7 +62,7 @@ export const useAppManager = () => {
 
   // --- Season Management ---
   const configureAppearances = (seasonId: string, plan: Record<string, number[]>) => {
-    withSeason(seasonId, season => isAppearanceSeason(season) ? updateAppearancePlan(season, plan) : activateAppearances(season, appState.players, plan));
+    withSeason(seasonId, season => isAppearanceSeason(season) ? updateAppearancePlan(season, plan) : activateAppearances(season, appState.players, plan, Date.now(), 'revalue-s13'));
   };
   const addSeason = (name: string) => {
     if (!name.trim()) return;

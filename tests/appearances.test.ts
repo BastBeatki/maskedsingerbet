@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { IDBFactory } from 'fake-indexeddb';
-import { activateAppearances, activeScores, appearanceNumber, assertOpenAppearance, explainMask, settleMask, simulatedMask, updateAppearancePlan } from '../appearanceRules';
+import { activateAppearances, activeScores, appearanceNumber, assertOpenAppearance, explainMask, previewAppearanceActivation, settleMask, simulatedMask, updateAppearancePlan } from '../appearanceRules';
 import { calculateScores, getPointsForShow, isValidAppState } from '../utils';
 import { initializeStorage, loadStateDB, saveStateDB } from '../storage';
 import { Mask, Season } from '../types';
@@ -101,7 +101,7 @@ test('unversioned and explicitly CLASSIC old saves load without rewrite; unknown
 });
 test('unknown debuts, missing/mismatching histories and duplicate shows fail without reinterpretation', () => {
   const s = fixture(), before = JSON.stringify(s);
-  for (const config of [{}, { m: [5, 6] }, { m: [4, 4] }, { m: [0, 4] }]) assert.throws(() => activateAppearances(s, players, config));
+  for (const config of [{}, { m: [1, 5] }, { m: [4, 4] }, { m: [0, 4] }]) assert.throws(() => activateAppearances(s, players, config));
   s.shows.push({ id: 'duplicate', name: 'Show 4 duplicate', episodeNumber: 4 }); assert.throws(() => activateAppearances(s, players, plan), /nicht sicher/);
   s.shows.pop(); assert.equal(JSON.stringify(s), before);
   const enabled = activateAppearances(s, players, plan); assert.throws(() => appearanceNumber(enabled, enabled.masks[0], { id: 'x', name: 'Andere Show', episodeNumber: 2 }));
@@ -117,4 +117,53 @@ test('CLASSIC baseline includes stable timestamp ties and all six base tiers', (
   assert.deepEqual([1, 2, 3, 4, 5, 6, 9].map(getPointsForShow), [20, 18, 16, 14, 12, 10, 10]);
   const s = fixture(); s.masks[0].tips.b = [tip()]; s.masks = [revealed(s)];
   assert.deepEqual(calculateScores(s, players).scores.map(s => s.score), [14, 6]);
+});
+
+for (const final of [false, true]) test(`pre-debut tips retain real show/timestamp, first basis and pioneer/final; final=${final}`, async () => {
+  const s = fixture(); s.masks[0].tips.a = [tip('Richtig', 1, 200, final)];
+  // Global show still precedes timestamp in CLASSIC pioneer ordering.
+  s.masks[0].tips.b = [tip('Richtig', 4, 100, final)];
+  s.counterBets = [{ id: 'pre', maskId: 'm', showId: 's4', bettorPlayerId: 'b', targetPlayerId: 'a', targetTipIndex: 0 }];
+  const before = structuredClone(s), enabled = activateAppearances(s, players, { m: [4, 6] });
+  assert.deepEqual(s, before); assert.deepEqual(enabled.masks[0].tips, before.masks[0].tips);
+  assert.equal(appearanceNumber(enabled, enabled.masks[0], s.shows[0]), 1);
+  enabled.activeShowId = 's1'; assert.doesNotThrow(() => assertOpenAppearance(enabled, 'm'));
+  enabled.activeShowId = 's4';
+  const m = revealed(enabled), scored = simulatedMask(enabled, m, players, true);
+  assert.equal(scored.scores.find(r => r.playerId === 'a')!.score, final ? 36 : 20);
+  assert.equal(scored.scores.find(r => r.playerId === 'b')!.score, final ? 14 : 8);
+  assert.deepEqual(scored.counterBetPoints, calculateScores({ ...s, masks: [m] }, players).counterBetPoints);
+  globalThis.indexedDB = new IDBFactory(); const state = { players, seasons: [enabled] };
+  assert.ok(isValidAppState(JSON.parse(JSON.stringify(state)))); await saveStateDB(state); assert.deepEqual(await loadStateDB(), state);
+});
+
+test('nonlisted post-debut show fails activation, tip entry and import; no artificial appearance is added', () => {
+  const s = fixture(); s.masks[0].tips.a = [tip('Richtig', 5)];
+  assert.throws(() => activateAppearances(s, players, { m: [4, 6] }), /außerhalb/);
+  s.masks[0].tips.a = [tip('Richtig', 1)]; const enabled = activateAppearances(s, players, { m: [4, 6] });
+  assert.deepEqual(enabled.appearanceRules?.appearances.m, [4, 6]);
+  enabled.activeShowId = 's5'; assert.throws(() => assertOpenAppearance(enabled, 'm'));
+  enabled.masks[0].tips.a[0].showId = 's5'; assert.equal(isValidAppState({ players, seasons: [enabled] }), false);
+});
+
+test('retrospective preview and activation revalue confirmed history but never rewrite raw game records', async () => {
+  const s = fixture(); s.masks = [{ ...revealed(s), revealedInShowId: 's4' }];
+  s.counterBets = [{ id: 'history', maskId: 'm', showId: 's4', bettorPlayerId: 'b', targetPlayerId: 'a', targetTipIndex: 0 }];
+  const before = structuredClone(s), preview = previewAppearanceActivation(s, players, { m: [4] });
+  assert.equal(preview.old.scores.find(r => r.playerId === 'a')!.score, 14);
+  assert.equal(preview.next.scores.find(r => r.playerId === 'a')!.score, 20);
+  assert.deepEqual(s, before);
+  assert.throws(() => previewAppearanceActivation(s, players, {}));
+  assert.throws(() => previewAppearanceActivation(s, players, { m: [4, 5] }), /Historische/);
+  const enabled = activateAppearances(s, players, { m: [4] }, 999, 'revalue-s13');
+  assert.equal(enabled.id, s.id); assert.equal(enabled.appearanceRules?.activatedAt, 999);
+  assert.equal(enabled.masks[0].settlement?.settledAt, 0);
+  assert.equal(enabled.masks[0].settlement?.ruleset, 's13-appearances-v1');
+  const strip = (season: Season) => { const copy = structuredClone(season); delete copy.ruleset; delete copy.appearanceRules; copy.masks.forEach(m => delete m.settlement); return copy; };
+  assert.deepEqual(strip(enabled), before); assert.deepEqual(activeScores(enabled, players), preview.next);
+  const state = { players, seasons: [enabled, { ...fixture(), id: 'other' }] };
+  globalThis.indexedDB = new IDBFactory(); assert.ok(isValidAppState(state)); await saveStateDB(state);
+  const reloaded = await loadStateDB(); assert.deepEqual(reloaded, state);
+  assert.deepEqual(activeScores(updateAppearancePlan(enabled, {}), players), preview.next);
+  assert.deepEqual(calculateScores(state.seasons[1], players), calculateScores(fixture(), players));
 });

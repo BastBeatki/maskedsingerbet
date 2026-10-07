@@ -1,11 +1,13 @@
 import { Mask, MaskSettlement, Player, Season, Show } from './types';
 import { calculateClassicScores, getPointsForShow, isValidSeason, ScoreCalculationResult } from './utils';
+import { matchesAppearanceShow, validAppearanceList } from './appearanceSchedule';
 
 export const isAppearanceSeason = (season: Season) => season.ruleset === 's13-appearances-v1';
 export function appearanceNumber(season: Season, mask: Mask, show: Show): number {
-  const index = season.appearanceRules?.appearances[mask.id]?.indexOf(show.episodeNumber) ?? -1;
-  if (index < 0) throw new Error(`Auftrittsfolge für ${mask.name} in ${show.name} fehlt. Bitte in den Einstellungen bestätigen.`);
-  return index + 1;
+  const episodes = season.appearanceRules?.appearances[mask.id];
+  const known = season.shows.find(s => s.id === show.id && s.episodeNumber === show.episodeNumber);
+  if (!matchesAppearanceShow(episodes, known)) throw new Error(`Auftrittsfolge für ${mask.name} in ${show.name} fehlt. Bitte in den Einstellungen bestätigen.`);
+  return show.episodeNumber < episodes![0] ? 1 : episodes!.indexOf(show.episodeNumber) + 1;
 }
 export function simulatedMask(season: Season, mask: Mask, players: Player[], appearances: boolean): ScoreCalculationResult {
   return calculateClassicScores({ ...season, masks: [mask] }, players,
@@ -37,27 +39,40 @@ export function explainMask(season: Season, mask: Mask, players: Player[], appea
   return descriptions;
 }
 export function settleMask(season: Season, mask: Mask, players: Player[], appearances: boolean, at: number): MaskSettlement {
+  if (appearances && !validAppearanceList(season.appearanceRules?.appearances[mask.id]))
+    throw new Error(`Auftrittsfolge für ${mask.name} fehlt. Bitte vor der Abrechnung bestätigen.`);
   const result = simulatedMask(season, mask, players, appearances);
   return JSON.parse(JSON.stringify({ schema: 1, ruleset: appearances ? 's13-appearances-v1' : 'classic-v1', settledAt: at,
     actualCelebrity: mask.revealedCelebrity || '', result, explanations: explainMask(season, mask, players, appearances, result) }));
 }
-export function validateAppearancePlan(season: Season, plan: Record<string, number[]>): void {
-  for (const mask of season.masks.filter(m => !m.isRevealed)) {
+export function validateAppearancePlan(season: Season, plan: Record<string, number[]>, includeHistory = false): void {
+  for (const mask of season.masks.filter(m => includeHistory || !m.isRevealed)) {
     const episodes = plan[mask.id];
-    if (!Array.isArray(episodes) || !episodes.length || episodes.some((n, i) => !Number.isSafeInteger(n) || n < 1 || (i > 0 && n <= episodes[i - 1])))
+    if (!validAppearanceList(episodes))
       throw new Error(`Für ${mask.name} die Auftritts-Shows aufsteigend angeben (z. B. 4, 5, 6).`);
+    if (mask.isRevealed) {
+      const reveal = season.shows.find(s => s.id === mask.revealedInShowId);
+      if (!reveal || episodes.some(n => n > reveal.episodeNumber || !season.shows.some(s => s.episodeNumber === n)))
+        throw new Error(`Historische Auftritte von ${mask.name} müssen bekannte Shows bis zur Enthüllung sein.`);
+    }
     const referenced = Object.values(mask.tips).flat().map(t => t.showId);
-    if (referenced.some(id => !season.shows.some(s => s.id === id && episodes.includes(s.episodeNumber))))
+    if (referenced.some(id => !matchesAppearanceShow(episodes, season.shows.find(s => s.id === id))))
       throw new Error(`Alte Tipps von ${mask.name} liegen außerhalb der bestätigten Auftrittsfolge. Keine automatische Umdeutung.`);
   }
 }
-export function activateAppearances(season: Season, players: Player[], plan: Record<string, number[]>, now = Date.now()): Season {
+export function activateAppearances(season: Season, players: Player[], plan: Record<string, number[]>, now = Date.now(), history: 'preserve-classic' | 'revalue-s13' = 'preserve-classic'): Season {
   if (isAppearanceSeason(season)) throw new Error('Das Regelwerk ist bereits aktiviert.');
-  validateAppearancePlan(season, plan);
+  validateAppearancePlan(season, plan, history === 'revalue-s13');
   const activated: Season = { ...season, ruleset: 's13-appearances-v1', appearanceRules: { activatedAt: now, appearances: structuredClone(plan) },
-    masks: season.masks.map(m => m.isRevealed ? { ...m, settlement: settleMask(season, m, players, false, 0) } : m) };
+    masks: season.masks };
+  // Historical reveal time remains unknown (0). The new activation time is separate.
+  activated.masks = season.masks.map(m => m.isRevealed ? { ...m, settlement: settleMask(activated, m, players, history === 'revalue-s13', 0) } : m);
   if (!isValidSeason(activated)) throw new Error('Dieser Spielstand lässt sich nicht sicher aktivieren. Original bleibt unverändert.');
   return activated;
+}
+export function previewAppearanceActivation(season: Season, players: Player[], plan: Record<string, number[]>): { old: ScoreCalculationResult; next: ScoreCalculationResult } {
+  const activated = activateAppearances(season, players, plan, Date.now(), 'revalue-s13');
+  return { old: calculateClassicScores(season, players), next: activeScores(activated, players) };
 }
 export function updateAppearancePlan(season: Season, plan: Record<string, number[]>): Season {
   validateAppearancePlan(season, plan);
