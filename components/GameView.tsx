@@ -3,6 +3,7 @@ import { Season, Mask, Player, PlayerScore, Tip, Show, CounterBet } from '../typ
 import { fileToBase64 } from '../utils';
 import { activeScores, isAppearanceSeason } from '../appearanceRules';
 import { automaticWarnings } from '../appearanceAuto';
+import { debutGroups, maskStatus } from '../seasonPresentation';
 import { ScoringDetails } from './ScoringDetails';
 import { Button, Card, Input, Modal } from './common/UI';
 
@@ -395,6 +396,7 @@ const CounterBetsModal: React.FC<{
 // --- Mask Card ---
 const MaskCard: React.FC<{
     mask: Mask;
+    status?: string;
     players: Player[];
     shows: Show[];
     counterBets: CounterBet[];
@@ -409,7 +411,7 @@ const MaskCard: React.FC<{
     tipPointsLookup: Record<string, number>;
     counterBetPointsLookup: Record<string, { bettor: number; target: number }>;
     playerMaskPointsLookup: Record<string, number>;
-}> = ({ mask, players, shows, counterBets, isTippingActive, activeShowId, onReveal, onSaveTip, onDeleteLastTip, onToggleTipFinal, onAddCounterBet, onDeleteCounterBet, tipPointsLookup, counterBetPointsLookup, playerMaskPointsLookup }) => {
+}> = ({ mask, status, players, shows, counterBets, isTippingActive, activeShowId, onReveal, onSaveTip, onDeleteLastTip, onToggleTipFinal, onAddCounterBet, onDeleteCounterBet, tipPointsLookup, counterBetPointsLookup, playerMaskPointsLookup }) => {
     const [isRevealModalOpen, setRevealModalOpen] = useState(false);
     const [activeTipPlayer, setActiveTipPlayer] = useState<Player | null>(null);
     const [isCounterBetModalOpen, setCounterBetModalOpen] = useState(false);
@@ -429,7 +431,8 @@ const MaskCard: React.FC<{
             <Card className="flex flex-col">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex-grow pr-4 min-w-0">
-                        <h3 className="text-2xl font-bold truncate">{mask.name}</h3>
+                        <h3 className="text-2xl font-bold break-words">{mask.name}</h3>
+                        {status && <span className="inline-block mt-1 rounded border border-border px-2 py-0.5 text-xs text-text-secondary">{status}</span>}
                     </div>
                     {mask.imageUrl && (
                         <img src={mask.imageUrl} alt={mask.name} className="w-20 h-20 rounded-full object-cover border-2 border-border flex-shrink-0" />
@@ -591,6 +594,7 @@ interface GameViewProps {
   onDeleteCounterBet: (id: string) => void;
   onAddShow: () => void;
   onSetActiveShowId: (id: string) => void;
+  onAddMask: (name: string) => void;
 }
 
 export const GameView: React.FC<GameViewProps> = (props) => {
@@ -599,6 +603,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
   // Calculate scores on render. In a larger app, useMemo here.
   const { scores, tipPoints, counterBetPoints, playerMaskPoints } = activeScores(season, allPlayers);
   const activeShow = season.shows.find(s => s.id === season.activeShowId);
+  const groups = debutGroups(season);
 
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8">
@@ -643,11 +648,15 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-3xl font-bold">Masken</h2>
                     </div>
-                    {season.masks.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {season.masks.map(mask => (
-                                <div key={mask.id} className="space-y-3 min-w-0"><MaskCard
+                    {season.masks.length > 0 || season.appearanceRules?.automatic ? (
+                        <div className="space-y-8">
+                            {groups.map(group => <section key={group.episode ?? 'other'} aria-label={group.episode ? `Debütshow ${group.episode}` : 'Weitere Masken'}>
+                            {season.appearanceRules?.automatic && <h2 className="text-xl font-bold mb-3 flex items-center gap-2">{group.episode ? `Show ${group.episode}` : 'Noch nicht zugeordnet'}{group.episode === activeShow?.episodeNumber && <span className="text-xs font-normal text-accent border border-accent/30 rounded px-2 py-0.5">Aktiv</span>}</h2>}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {group.masks.map(mask => (
+                                <div key={mask.id} data-mask-id={mask.id} className="space-y-2 min-w-0"><MaskCard
                                     mask={mask}
+                                    status={maskStatus(season, mask)}
                                     players={allPlayers.filter(p => season.playerIds.includes(p.id))}
                                     shows={season.shows}
                                     counterBets={season.counterBets}
@@ -664,6 +673,12 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                                     playerMaskPointsLookup={playerMaskPoints}
                                 /><ScoringDetails season={season} mask={mask} players={allPlayers} /></div>
                             ))}
+                            {group.missing.map(name => <Card key={name} className="min-w-0 space-y-3 border border-dashed border-border">
+                              <h3 className="text-2xl font-bold break-words">{name}</h3>
+                              <p className="text-sm text-text-secondary">Noch nicht im Spielstand angelegt.</p>
+                              <Button variant="secondary" className="text-sm py-2" aria-label={`Maske anlegen: ${name}`} onClick={() => props.onAddMask(name)}>Maske anlegen</Button>
+                            </Card>)}
+                            </div></section>)}
                         </div>
                     ) : (
                         <p className="text-text-secondary">Noch keine Masken angelegt. Gehe zu den Einstellungen.</p>

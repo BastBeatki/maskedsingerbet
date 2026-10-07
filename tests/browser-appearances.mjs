@@ -70,6 +70,7 @@ try {
     assert.equal(settled.seasons[0].masks[0].tips.b.length, 3);
     const audit = settled.seasons[0].masks[0].settlement;
     assert.deepEqual(audit.result.scores.map(p => [p.playerId, p.totalScore]), [['a', 23], ['b', 6]]);
+    await page.getByText('Punkte erklären: Testmaske', { exact: true }).click();
     await page.getByRole('heading', { name: 'Abrechnung: Testmaske', exact: true }).waitFor();
     await page.getByText('Regelvergleich (nur lesen)', { exact: true }).first().click();
     assert.equal(await page.getByRole('cell', { name: '17', exact: true }).count(), 1); // CLASSIC A 14+3
@@ -84,7 +85,9 @@ try {
     await page.reload({ waitUntil: 'networkidle' }); await game(page); assert.equal(await page.evaluate(() => window.testWrites), 0); assert.deepEqual(await state(page), settled);
   });
   await check('iPad: settled export imports exactly; audit, protected schedule/history, readonly comparison and reload', async page => {
-    await importState(page, settled); await game(page); await page.getByRole('heading', { name: 'Abrechnung: Testmaske', exact: true }).waitFor();
+    await importState(page, settled); await game(page);
+    await page.getByText('Punkte erklären: Testmaske', { exact: true }).click();
+    await page.getByRole('heading', { name: 'Abrechnung: Testmaske', exact: true }).waitFor();
     await page.getByText('Regelvergleich (nur lesen)', { exact: true }).first().click(); assert.deepEqual(await state(page), settled);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false); await page.screenshot({ path: path.join(artifacts, 'ipad-audit.png'), fullPage: true });
     await home(page); await page.getByRole('button', { name: 'Einstellungen', exact: true }).click();

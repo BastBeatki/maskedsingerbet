@@ -95,6 +95,7 @@ const App: React.FC = () => {
                 onDeleteCounterBet={(id) => deleteCounterBet(activeSeasonId!, id)}
                 onAddShow={() => addShow(activeSeasonId!)}
                 onSetActiveShowId={(id) => setActiveShowId(activeSeasonId!, id)}
+                onAddMask={(name) => addMask(activeSeasonId!, name)}
               />
             );
         }

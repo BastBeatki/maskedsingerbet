@@ -78,3 +78,23 @@ umgewertet; für einheitliche historische41/21/0 mit dem unaktivierten repariert
 Tailwind/Fonts/externe Bilder benötigen Internet. Chromium-Handy/iPad-Abmessungen und
 LAN-Abruf am PC wurden geprüft; keine reale iPad/Safari-/WLAN-Hardwareabnahme behauptet.
 Private Testkopien: `_workshop/masked-singer-022`, außerhalb Git und Hosting.
+
+## Ruhigere Staffelansicht (Auftrag 023)
+
+In der S13-Automatik bleiben alle Masken sichtbar, dauerhaft nach Debütshow1–4 gruppiert.
+Die aktive Show ist nur dezent mit „Aktiv“ markiert und bestimmt weiterhin die Eingabe.
+Geschlossene Vorrundengruppen mit vier Masken/zwei Enthüllungen liefern für verbleibende
+Masken den Badge „Halbfinale“, auch wenn eine ältere Show ausgewählt ist. Momo ist im
+aktuellen Stand Halbfinalist. Abgerechnete Masken zeigen „Enthüllt“; „Finale“ erscheint
+frühestens bei tatsächlichem Fortschritt bisShow6. Kein neuer TV-/Punkte-Zustand wird gespeichert.
+
+Der reparierte Export enthält zwölf Masken. Show4 zeigt zusätzlich vier klar bezeichnete,
+noch nicht angelegte Plätze. Anzeigen schreibt keine Rohmasken. „Maske anlegen“ nutzt
+ausschließlich die vorhandene explizite Anlagefunktion; vorhandene16-Masken-Saves zeigen
+sofort vier echte Karten pro Gruppe. Keine Duplikate oder automatische Showfilterung.
+
+„Punkte erklären“ öffnet die Abrechnung unabhängig pro enthüllter Maske. Initial und nach
+Reload geschlossen. Je Spieler zuerst eine kurze deterministische Alltagserklärung aus
+bereits berechneten Komponenten/Engine-Erklärung, dann unveränderte Detailmathematik.
+Spieler-Maskenpunkte bleiben außen sichtbar. Auf-/Zuklappen verändert weder Save noch Ledger;
+keine KI/API und keine neue Persistenz. Originaldaten,41/21/0 und öffentliche Version bleiben.

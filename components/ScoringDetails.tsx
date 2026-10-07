@@ -2,6 +2,7 @@ import React from 'react';
 import { Mask, Player, Season } from '../types';
 import { explainMask, isAppearanceSeason, simulatedMask } from '../appearanceRules';
 import { Card } from './common/UI';
+import { simpleScoreSummary } from '../seasonPresentation';
 
 export const ScoringDetails: React.FC<{ season: Season; mask: Mask; players: Player[] }> = ({ season, mask, players }) => {
   if (!mask.isRevealed) return null;
@@ -21,10 +22,14 @@ export const ScoringDetails: React.FC<{ season: Season; mask: Mask; players: Pla
     }
   }
   return <Card className="space-y-3 text-sm">
+    <details aria-label={`Abrechnung: ${mask.name}`}>
+    <summary className="cursor-pointer font-semibold text-accent">Punkte erklären<span className="sr-only">: {mask.name}</span></summary>
+    <div className="space-y-3 mt-3">
     <h3 className="text-xl font-bold">Abrechnung: {mask.name}</h3>
     <p className="text-text-secondary">{snapshot ? `${snapshot.ruleset === 'classic-v1' ? 'Übernommene CLASSIC-Punkte' : 'S13 nach Auftritt'} · ${snapshot.settledAt ? new Date(snapshot.settledAt).toLocaleString('de-DE') : 'alte Enthüllungszeit nicht aufgezeichnet'}` : 'CLASSIC · nach bestehenden Regeln berechnet'}</p>
     {result.scores.map(row => <div key={row.playerId} className="border-t border-border pt-2">
       <strong>{players.find(p => p.id === row.playerId)?.name || row.name}: {row.totalScore} Punkte</strong>
+      <p className="my-2 text-text-secondary" data-score-summary={row.playerId}>{simpleScoreSummary(row, explanations[row.playerId] || '')}</p>
       <p>{explanations[row.playerId]}</p>
       {season.counterBets.filter(cb => cb.maskId === mask.id && (cb.bettorPlayerId === row.playerId || cb.targetPlayerId === row.playerId)).map(cb => {
         const points = result.counterBetPoints[cb.id];
@@ -38,5 +43,6 @@ export const ScoringDetails: React.FC<{ season: Season; mask: Mask; players: Pla
       <p>Tipps {row.score} + Gegenwetten {row.counterBetPoints} = {row.totalScore}</p>
     </div>)}
     {debug && <details><summary className="cursor-pointer text-accent">Regelvergleich (nur lesen)</summary>{comparison}</details>}
+    </div></details>
   </Card>;
 };
