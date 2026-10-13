@@ -30,6 +30,7 @@ const App: React.FC = () => {
     updateMask,
     deleteMask,
     revealMask,
+    configureAppearances,
     addOrUpdateTip,
     deleteLastTip,
     toggleTipFinal,
@@ -85,6 +86,7 @@ const App: React.FC = () => {
               <GameView
                 season={activeSeason}
                 allPlayers={appState.players}
+                allSeasons={appState.seasons}
                 onBack={handleBackToHome}
                 onRevealMask={(maskId, celebrity, imageUrl) => revealMask(activeSeasonId!, maskId, celebrity, imageUrl)}
                 onAddOrUpdateTip={(maskId, playerId, celebrity, isFinal) => addOrUpdateTip(activeSeasonId!, maskId, playerId, celebrity, isFinal)}
@@ -94,6 +96,7 @@ const App: React.FC = () => {
                 onDeleteCounterBet={(id) => deleteCounterBet(activeSeasonId!, id)}
                 onAddShow={() => addShow(activeSeasonId!)}
                 onSetActiveShowId={(id) => setActiveShowId(activeSeasonId!, id)}
+                onAddMask={(name) => addMask(activeSeasonId!, name)}
               />
             );
         }
@@ -116,6 +119,7 @@ const App: React.FC = () => {
             onUpdateMask={(id, name, img) => activeSeasonId && updateMask(activeSeasonId, id, name, img)}
             onDeleteMask={(id) => activeSeasonId && deleteMask(activeSeasonId, id)}
             onDeleteShow={(id) => activeSeasonId && deleteShow(activeSeasonId, id)}
+            onConfigureAppearances={(plan, automatic) => activeSeasonId && configureAppearances(activeSeasonId, plan, automatic)}
           />
         );
        case 'rules':

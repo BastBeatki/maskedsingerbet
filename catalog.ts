@@ -1,6 +1,7 @@
 import document from './data/promi-catalog-2026-09-30.json';
 import manifest from './data/promi-image-manifest.json';
 import type { Season } from './types';
+import { catalogSearchRank, normalizeName } from './celebrityNames';
 
 export interface Participation {
   readonly season: number;
@@ -17,8 +18,7 @@ export interface Participation {
 }
 export const participationKey = (row: Participation) => JSON.stringify([row.season, row.mask_name, row.celebrity_name]);
 export const maskKey = (row: Participation) => JSON.stringify([row.season, row.mask_name]);
-export const normalizeSearchText = (text: unknown) => String(text ?? '').normalize('NFD')
-  .replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('de-DE').trim();
+export const normalizeSearchText = normalizeName;
 
 export function extractCatalog(value: unknown) {
   const data = value as typeof document;
@@ -40,12 +40,10 @@ export function extractCatalog(value: unknown) {
 export const getCatalog = () => extractCatalog(document);
 
 export function filterCatalog(rows: readonly Participation[], query = '', season = 'all') {
-  const terms = normalizeSearchText(query).split(/\s+/).filter(Boolean);
-  return rows.filter(row => season === 'all' || String(row.season) === season).filter(row => {
-    const haystack = normalizeSearchText(`${row.celebrity_name ?? ''} ${row.mask_name}`);
-    return terms.every(term => haystack.includes(term));
-  }).sort((a, b) => b.season - a.season || (a.placement ?? Infinity) - (b.placement ?? Infinity) ||
-    a.mask_name.localeCompare(b.mask_name, 'de-DE'));
+  return rows.filter(row => season === 'all' || String(row.season) === season)
+  .map(row => ({ row, rank: catalogSearchRank(query, row.celebrity_name, row.mask_name, row.season) }))
+  .filter(({ rank }) => Number.isFinite(rank)).sort((a, b) => a.rank - b.rank || b.row.season - a.row.season || (a.row.placement ?? Infinity) - (b.row.placement ?? Infinity) ||
+    a.row.mask_name.localeCompare(b.row.mask_name, 'de-DE')).map(({ row }) => row);
 }
 
 export interface ImageAsset {

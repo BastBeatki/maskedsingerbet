@@ -366,7 +366,7 @@ try {
     assert.deepEqual(JSON.parse(Buffer.concat(chunks).toString('utf8')), fixture);
     await page.getByRole('heading', { name: 'Bildtest', exact: true }).click();
     await page.getByRole('heading', { name: 'Testmaske', exact: true }).waitFor();
-    await page.locator('div.cursor-pointer').filter({ has: page.locator('[title="Testname"]') }).last().click();
+    await page.getByRole('button', { name: 'Testspieler: Tipps für Testmaske', exact: true }).click();
     await page.getByRole('button', { name: '(Zu Final ändern)', exact: true }).click();
     await page.getByText('Dein finaler Tipp ist gesperrt!', { exact: true }).waitFor();
     await page.waitForFunction(previous => window.catalogWrites > previous, writes);

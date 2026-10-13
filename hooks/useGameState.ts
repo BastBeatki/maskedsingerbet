@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { AppState, Season, Player, Mask, Tip, Show, CounterBet } from '../types';
+import { AppState, Season, Player, Mask, Tip, Show, CounterBet, S13Automatic } from '../types';
 import { generateId, isValidAppState, isValidSeason } from '../utils';
 import { PLAYER_COLORS } from '../constants';
+import { assertOpenAppearance, assertOpenMask, configureAppearanceMode, isAppearanceSeason, settleMask } from '../appearanceRules';
+import { appearanceEpisodes, confirmedDebut } from '../appearanceAuto';
+import { resolveCelebrityName } from '../celebrityNames';
 
 import { initializeStorage, saveStateDB, clearStateDB, createDefaultState, APP_STORAGE_KEY, LEGACY_STORAGE_KEY } from '../storage';
 
@@ -52,11 +55,17 @@ export const useAppManager = () => {
   const withSeason = (seasonId: string, updater: (season: Season) => Season) => {
     updateAppState(prev => ({
       ...prev,
-      seasons: prev.seasons.map(s => s.id === seasonId ? updater(s) : s),
+      seasons: prev.seasons.map(s => {
+        if (s.id !== seasonId) return s;
+        try { return updater(s); } catch (error) { alert(String(error)); return s; }
+      }),
     }));
   };
 
   // --- Season Management ---
+  const configureAppearances = (seasonId: string, plan: Record<string, number[]>, automatic?: S13Automatic) => {
+    withSeason(seasonId, season => configureAppearanceMode(season, appState.players, plan, automatic));
+  };
   const addSeason = (name: string) => {
     if (!name.trim()) return;
     const newSeason: Season = {
@@ -108,6 +117,7 @@ export const useAppManager = () => {
   };
 
   const deletePlayer = (id: string) => {
+    if (appState.seasons.some(s => isAppearanceSeason(s) && s.playerIds.includes(id))) { alert('Der Spieler gehört zu einer Staffel mit geschützter Abrechnung. Bitte erhalten.'); return; }
     if (!window.confirm("Are you sure you want to delete this player globally? They will be removed from ALL seasons.")) return;
     updateAppState(prev => {
         const newSeasons = prev.seasons.map(season => {
@@ -142,6 +152,7 @@ export const useAppManager = () => {
   };
   
   const removePlayerFromSeason = (seasonId: string, playerId: string) => {
+      if (appState.seasons.some(s => s.id === seasonId && isAppearanceSeason(s))) { alert('Spieler dieser Staffel bleiben für die gespeicherten Abrechnungen erhalten.'); return; }
       if (!window.confirm("Are you sure you want to remove this player from this season? All their tips and bets for this season will be removed.")) return;
       withSeason(seasonId, season => {
           const newMasks = season.masks.map(mask => {
@@ -171,7 +182,10 @@ export const useAppManager = () => {
         tips: {},
         isRevealed: false,
       };
-      return { ...season, masks: [...season.masks, newMask] };
+      const auto = season.appearanceRules?.automatic;
+      const debut = confirmedDebut(newMask.name);
+      if (auto && debut && season.masks.some(m => m.name.trim().toLowerCase() === newMask.name.toLowerCase())) throw new Error('Diese Maske ist bereits angelegt.');
+      return { ...season, masks: [...season.masks, newMask], ...(auto && debut ? { appearanceRules: { ...season.appearanceRules!, automatic: { ...auto, debuts: { ...auto.debuts, [newMask.id]: debut } } } } : {}) };
     });
   };
 
@@ -183,6 +197,7 @@ export const useAppManager = () => {
   };
 
   const deleteMask = (seasonId: string, id: string) => {
+    if (appState.seasons.some(s => s.id === seasonId && isAppearanceSeason(s) && s.masks.some(m => m.id === id && m.isRevealed))) { alert('Bereits abgerechnete Masken bleiben erhalten.'); return; }
     if (!window.confirm("Are you sure you want to delete this mask?")) return;
     withSeason(seasonId, season => ({
         ...season,
@@ -192,7 +207,26 @@ export const useAppManager = () => {
   };
 
   const revealMask = (seasonId: string, id: string, celebrityName: string, celebrityImageUrl?: string) => {
-    withSeason(seasonId, season => ({
+    withSeason(seasonId, season => {
+      if (isAppearanceSeason(season)) {
+        assertOpenMask(season, id);
+        if (season.appearanceRules?.automatic) {
+          assertOpenAppearance(season, id);
+          const mask = season.masks.find(m => m.id === id)!;
+          const show = season.shows.find(s => s.id === season.activeShowId)!;
+          if (!appearanceEpisodes(season, mask)?.includes(show.episodeNumber)) throw new Error('Eine Enthüllung vor dem bestätigten Debüt ist nicht möglich. Auftritte erweitert prüfen.');
+        }
+        if (!celebrityName.trim()) throw new Error('Bitte den Prominamen eingeben.');
+        const masks = season.masks.map(m => {
+          if (m.id !== id) return m;
+          const revealed = { ...m, isRevealed: true, revealedCelebrity: celebrityName,
+            ...(celebrityImageUrl === undefined ? {} : { celebrityImageUrl }), revealedInShowId: season.activeShowId! };
+          return { ...revealed, settlement: settleMask(season, revealed, appState.players, true, Date.now()) };
+        });
+        const revealed = masks.find(m => m.id === id)!;
+        return { ...season, masks, ...(season.appearanceRules?.automatic ? { appearanceRules: { ...season.appearanceRules, appearances: { ...season.appearanceRules.appearances, [id]: appearanceEpisodes(season, { ...revealed, settlement: undefined })! } } } : {}) };
+      }
+      return ({
         ...season,
         masks: season.masks.map(m => m.id === id ? { 
             ...m, 
@@ -201,12 +235,13 @@ export const useAppManager = () => {
             celebrityImageUrl: celebrityImageUrl,
             revealedInShowId: season.activeShowId || undefined
         } : m),
-    }));
+    }); });
   };
 
   // --- Tip Management ---
   const addOrUpdateTip = (seasonId: string, maskId: string, playerId: string, celebrityName: string, isFinal: boolean) => {
     withSeason(seasonId, season => {
+        assertOpenAppearance(season, maskId);
         if (!season.activeShowId) {
             alert("Please start or select a show before adding a tip.");
             return season;
@@ -226,8 +261,9 @@ export const useAppManager = () => {
                     return mask;
                 }
                 
-                const newTip: Tip = { 
-                    celebrityName, 
+                const newTip: Tip = {
+                    celebrityName,
+                    nameResolution: resolveCelebrityName(celebrityName, appState.seasons.flatMap(s => s.masks.flatMap(m => m.revealedCelebrity ? [m.revealedCelebrity] : []))),
                     showId: season.activeShowId!, 
                     createdAt: Date.now(),
                     isFinal: playerTips.length < 2 ? isFinal : false // isFinal can only be true for tip 1 and 2
@@ -245,6 +281,7 @@ export const useAppManager = () => {
 
   const deleteLastTip = (seasonId: string, maskId: string, playerId: string) => {
      withSeason(seasonId, season => {
+        assertOpenAppearance(season, maskId);
         const newMasks = season.masks.map(mask => {
             if (mask.id === maskId) {
                 const playerTips = mask.tips[playerId] || [];
@@ -265,6 +302,7 @@ export const useAppManager = () => {
 
   const toggleTipFinal = (seasonId: string, maskId: string, playerId: string, tipIndex: number) => {
       withSeason(seasonId, season => {
+          assertOpenAppearance(season, maskId);
           const newMasks = season.masks.map(mask => {
               if (mask.id === maskId) {
                   const playerTips = [...(mask.tips[playerId] || [])];
@@ -294,6 +332,7 @@ export const useAppManager = () => {
   // --- Counter-Bet Management ---
   const addCounterBet = (seasonId: string, maskId: string, bettorPlayerId: string, targetPlayerId: string) => {
     withSeason(seasonId, season => {
+        assertOpenMask(season, maskId);
         if (!season.activeShowId) {
             alert("Please start a show to place a counter-bet.");
             return season;
@@ -336,10 +375,13 @@ export const useAppManager = () => {
   };
 
   const deleteCounterBet = (seasonId: string, id: string) => {
-    withSeason(seasonId, season => ({
+    withSeason(seasonId, season => {
+        const bet = season.counterBets.find(cb => cb.id === id);
+        if (isAppearanceSeason(season) && season.masks.some(m => m.id === bet?.maskId && m.isRevealed)) throw new Error('Abgerechnete Gegenwetten bleiben erhalten.');
+        return ({
         ...season,
         counterBets: season.counterBets.filter(cb => cb.id !== id),
-    }));
+    }); });
   };
 
   // --- Show Management ---
@@ -356,6 +398,7 @@ export const useAppManager = () => {
   };
   
  const deleteShow = (seasonId: string, showId: string) => {
+    if (appState.seasons.some(s => s.id === seasonId && isAppearanceSeason(s))) { alert('Shows dieser Staffel bleiben zur Sicherung der Auftrittsfolge und Abrechnung erhalten.'); return; }
     if (!window.confirm("Sicher, dass du diese Show löschen möchtest? Alle Tipps und Gegenwetten aus dieser Show werden unwiderruflich entfernt.")) {
         return;
     }
@@ -471,6 +514,7 @@ export const useAppManager = () => {
     updateMask,
     deleteMask,
     revealMask,
+    configureAppearances,
     addOrUpdateTip,
     deleteLastTip,
     toggleTipFinal,
