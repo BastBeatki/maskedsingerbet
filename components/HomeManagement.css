@@ -1,0 +1,123 @@
+/* Scoped to the Home management card; shared controls and other views stay intact. */
+.home-management {
+  container-type: inline-size;
+  min-width: 0;
+  border: 1px solid #545c834f;
+  background: radial-gradient(ellipse at 100% 0, #4338ca14, transparent 65%), #1f2937;
+  box-shadow: 0 12px 28px #080e1d38, inset 0 1px 0 #b9cbff0a;
+}
+
+.home-management h3 {
+  color: #f3f5ff;
+  letter-spacing: .015em;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.home-management__navigation {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.home-management__nav {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #7280af40;
+  border-radius: 12px;
+  color: #e2e8f9;
+  background: linear-gradient(115deg, #343d58, #2d394e);
+  font-size: 14px;
+  font-weight: 600;
+  transition: border-color .16s, background-color .16s, box-shadow .16s;
+}
+
+.home-management__catalog {
+  grid-column: 1 / -1;
+  border-color: #8780dc66;
+  background: linear-gradient(110deg, #413b6866, #34476a66);
+}
+
+.home-management__nav:hover { border-color: #9e9eed99; box-shadow: inset 0 0 16px #7774ff10; }
+
+.home-management__transfers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #7681a52e;
+}
+
+.home-management__import { position: relative; min-width: 0; }
+.home-management__transfer {
+  --transfer-accent: #64caff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+  min-height: 90px;
+  padding: 10px 8px;
+  border: 1px solid #537bcc80;
+  border-radius: 14px;
+  background: linear-gradient(125deg, #26314c, #182536 65%);
+  color: #f9fbff;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: inset 0 1px 0 #a3cbff12, 0 4px 12px #080d1b33;
+  transition: border-color .16s, box-shadow .16s, transform .16s;
+}
+
+.home-management__transfer--import { --transfer-accent: #52e6bf; border-color: #6d6ce17a; }
+.home-management__transfer:hover { border-color: var(--transfer-accent); box-shadow: 0 0 16px #5588ff1c; }
+.home-management__transfer:active { transform: translateY(1px); }
+.home-management__nav:focus-visible,
+.home-management__transfer:focus-visible,
+.home-management__file:focus-visible + .home-management__transfer {
+  outline: 2px solid #b6e5ff;
+  outline-offset: 3px;
+}
+
+/* Keep the native file chooser keyboard-accessible and associate its focus with the visible tile. */
+.home-management__file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.home-management__art {
+  flex: 0 0 auto;
+  width: clamp(54px, 20cqw, 108px);
+  height: auto;
+  object-fit: contain;
+  mask-image: radial-gradient(ellipse 65% 70% at center, black 55%, transparent 100%);
+}
+
+.home-management__copy { display: grid; gap: 4px; min-width: 0; }
+.home-management__title { font-size: 14px; font-weight: 750; letter-spacing: .055em; line-height: 1.2; }
+.home-management__subtitle { font-size: 11px; font-weight: 400; color: #b7c9ed; line-height: 1.4; }
+
+@container (max-width: 350px) {
+  .home-management__art { width: 50px; }
+  .home-management__title { font-size: 12px; }
+  .home-management__subtitle { font-size: 10px; }
+}
+
+@media (max-width: 479px) {
+  .home-management__transfers { grid-template-columns: minmax(0, 1fr); }
+  .home-management__transfer { min-height: 90px; gap: 14px; }
+  .home-management__art { width: 108px; }
+  .home-management__title { font-size: 15px; }
+  .home-management__subtitle { font-size: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-management__nav, .home-management__transfer { transition: none; }
+  .home-management__transfer:active { transform: none; }
+}

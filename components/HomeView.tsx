@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AppState, Season } from '../types';
 import { Button, Card, Input, Modal } from './common/UI';
 import { downloadJson, readFileAsText } from '../utils';
+import './HomeManagement.css';
 
 interface HomeViewProps {
   appState: AppState;
@@ -71,21 +72,25 @@ export const HomeView: React.FC<HomeViewProps> = (props) => {
                     </form>
                 </Card>
 
-                <Card>
-                    <h3 className="text-xl font-bold mb-4">Verwaltung & Daten</h3>
-                     <div className="grid grid-cols-2 gap-3">
-                        <Button onClick={props.onPromiCheck} variant="secondary" className="col-span-2">Promi-Check · Katalog</Button>
-                        <Button onClick={() => onNavigate('settings')} variant="secondary">Stammdaten</Button>
-                        <Button onClick={() => onNavigate('rules')} variant="secondary">Spielregeln</Button>
-                        <Button onClick={handleExport} variant="secondary" className="flex items-center justify-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
-                            Export
-                        </Button>
-                        <label htmlFor="import-file-input" className="bg-tertiary hover:bg-tertiary/80 border border-border px-4 py-2.5 font-bold rounded-lg transition-all duration-300 text-white flex items-center justify-center gap-2 cursor-pointer text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" /></svg>
-                            Import
-                        </label>
-                        <input id="import-file-input" type="file" accept=".json" onChange={handleFileChange} className="hidden" />
+                <Card className="home-management">
+                    <h3 id="home-management-heading" className="text-xl font-bold mb-4">Verwaltung & Daten</h3>
+                    <div className="home-management__navigation">
+                        <button type="button" onClick={props.onPromiCheck} className="home-management__nav home-management__catalog">Promi-Check · Katalog</button>
+                        <button type="button" onClick={() => onNavigate('settings')} className="home-management__nav">Stammdaten</button>
+                        <button type="button" onClick={() => onNavigate('rules')} className="home-management__nav">Spielregeln</button>
+                    </div>
+                    <div className="home-management__transfers" role="group" aria-label="Spieledaten übertragen">
+                        <div className="home-management__import">
+                            <input id="import-file-input" type="file" accept=".json" onChange={handleFileChange} className="home-management__file" aria-label="Import – Spieledaten einlesen" />
+                            <label htmlFor="import-file-input" className="home-management__transfer home-management__transfer--import">
+                                <img src="/ui/import-mask.webp" width="420" height="237" alt="" draggable={false} className="home-management__art" />
+                                <span className="home-management__copy"><span className="home-management__title">IMPORT</span><span className="home-management__subtitle">Spieledaten einlesen</span></span>
+                            </label>
+                        </div>
+                        <button type="button" onClick={handleExport} className="home-management__transfer home-management__transfer--export" aria-label="Export – Spieledaten sichern">
+                            <img src="/ui/export-mask.webp" width="390" height="210" alt="" draggable={false} className="home-management__art" />
+                            <span className="home-management__copy"><span className="home-management__title">EXPORT</span><span className="home-management__subtitle">Spieledaten sichern</span></span>
+                        </button>
                     </div>
                 </Card>
             </section>
