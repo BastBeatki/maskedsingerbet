@@ -84,6 +84,7 @@ const App: React.FC = () => {
         if (activeSeason) {
             return (
               <GameView
+                storageIssue={storageError}
                 season={activeSeason}
                 allPlayers={appState.players}
                 allSeasons={appState.seasons}

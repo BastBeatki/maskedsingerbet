@@ -9,19 +9,22 @@ import { ScoringDetails } from './ScoringDetails';
 import { InGamePromiCheck, PromiCheckRequest } from './InGamePromiCheck';
 import { resolveCelebrityName, tipMatchesCelebrity } from '../celebrityNames';
 import { Button, Card, Input, Modal } from './common/UI';
+import { CeremonyEntry, FinaleCeremony } from './FinaleCeremony';
+import { rankedFinalScores, verifiedFinalRevision } from '../finaleSummary';
 
 // --- Leaderboard ---
-const Leaderboard: React.FC<{ scores: PlayerScore[], players: Player[] }> = ({ scores, players }) => (
+const Leaderboard: React.FC<{ scores: PlayerScore[], players: Player[], winnerIds: string[] }> = ({ scores, players, winnerIds }) => (
   <Card>
     <h2 className="text-3xl font-bold mb-4">Gesamt-Leaderboard</h2>
     {scores.length > 0 ? (
       <div className="space-y-2">
         {scores.map((player, index) => {
           const playerDetails = players.find(p => p.id === player.playerId);
+          const isWinner = winnerIds.includes(player.playerId);
           const rankColor = index === 0 ? 'bg-green-500' : index === 1 ? 'bg-gray-500' : index === 2 ? 'bg-yellow-700' : 'bg-tertiary';
           
           return (
-            <div key={player.playerId} className="bg-background p-3 sm:p-4 rounded-lg flex items-center gap-3">
+            <div key={player.playerId} data-season-winner={isWinner || undefined} className={`bg-background p-3 sm:p-4 rounded-lg flex items-center gap-3 ${isWinner ? 'leaderboard-season-winner' : ''}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg text-white flex-shrink-0 ${rankColor}`}>
                 {index + 1}
               </div>
@@ -30,7 +33,7 @@ const Leaderboard: React.FC<{ scores: PlayerScore[], players: Player[] }> = ({ s
                     ? <img src={playerDetails.imageUrl} alt={player.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0"/> 
                     : <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex-shrink-0" style={{ backgroundColor: player.color }}></div>
                   }
-                  <span className="font-bold text-lg sm:text-xl truncate">{player.name}</span>
+                  <div className="min-w-0"><span className="block font-bold text-lg sm:text-xl truncate">{player.name}</span>{isWinner && <span className="leaderboard-winner-label"><span aria-hidden="true">♛</span> {winnerIds.length > 1 ? 'Geteilte Staffelsieger' : 'Staffelsieger'}</span>}</div>
               </div>
               <div className="hidden sm:block text-right flex-shrink-0">
                   <div className="text-xs text-text-secondary uppercase tracking-wider">Masken</div>
@@ -602,6 +605,7 @@ const MaskCard: React.FC<{
 
 // --- Main GameView ---
 interface GameViewProps {
+  storageIssue?: string | null;
   season: Season;
   allPlayers: Player[];
   allSeasons: Season[];
@@ -635,8 +639,17 @@ export const GameView: React.FC<GameViewProps> = (props) => {
     onAddShow();
   };
   const [promiCheck, setPromiCheck] = useState<PromiCheckRequest | null>(null);
+  const [ceremonyOpen, setCeremonyOpen] = useState(false);
+  const [startedFinalRevision, setStartedFinalRevision] = useState<string | null>(null);
+  const finalRevision = verifiedFinalRevision(season, allPlayers);
+  // Any changed data or storage failure revokes the acknowledgement, including when values later revert.
+  useEffect(() => { if (props.storageIssue || startedFinalRevision !== finalRevision) setStartedFinalRevision(null); }, [finalRevision, props.storageIssue, startedFinalRevision]);
+  const winnerIds = !props.storageIssue && finalRevision && startedFinalRevision === finalRevision
+    ? rankedFinalScores(season, allPlayers).filter(p => p.rank === 1).map(p => p.playerId) : [];
   const groups = debutGroups(season);
   const knownNames = season.masks.flatMap(m => m.revealedCelebrity ? [m.revealedCelebrity] : []);
+
+  if (ceremonyOpen) return <FinaleCeremony season={season} players={allPlayers} storageIssue={props.storageIssue} onClose={() => { setCeremonyOpen(false); requestAnimationFrame(() => document.getElementById('start-ceremony')?.focus()); }} />;
 
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8">
@@ -674,10 +687,11 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                 </Card>
             </div>
 
+            {isConfirmed2026Season(season) && <CeremonyEntry key={season.id} season={season} players={allPlayers} storageIssue={props.storageIssue} onStart={() => { if (finalRevision && !props.storageIssue) { setStartedFinalRevision(finalRevision); setCeremonyOpen(true); } }} />}
             <div className="flex flex-col xl:flex-row gap-8 items-start">
                 {/* Left Column: Leaderboard - Fixed width on Desktop/Large Tablet */}
                 <div className="w-full xl:w-[400px] flex-shrink-0">
-                    <Leaderboard scores={scores} players={allPlayers} />
+                    <Leaderboard scores={scores} players={allPlayers} winnerIds={winnerIds} />
                 </div>
 
                 {/* Right Column: Masks Grid - Takes remaining space */}
