@@ -5,6 +5,7 @@ import { PLAYER_COLORS } from '../constants';
 import { assertOpenAppearance, assertOpenMask, configureAppearanceMode, isAppearanceSeason, settleMask } from '../appearanceRules';
 import { appearanceEpisodes, confirmedDebut } from '../appearanceAuto';
 import { resolveCelebrityName } from '../celebrityNames';
+import { appendShow } from '../showFlow';
 
 import { initializeStorage, saveStateDB, clearStateDB, createDefaultState, APP_STORAGE_KEY, LEGACY_STORAGE_KEY } from '../storage';
 
@@ -386,15 +387,7 @@ export const useAppManager = () => {
 
   // --- Show Management ---
   const addShow = (seasonId: string) => {
-    withSeason(seasonId, season => {
-        const newEpisodeNumber = season.shows.length > 0 ? Math.max(...season.shows.map(s => s.episodeNumber)) + 1 : 1;
-        const newShow: Show = {
-            id: generateId(),
-            name: `Show ${newEpisodeNumber}`,
-            episodeNumber: newEpisodeNumber
-        };
-        return { ...season, shows: [...season.shows, newShow], activeShowId: newShow.id };
-    });
+    withSeason(seasonId, season => appendShow(season, generateId()));
   };
   
  const deleteShow = (seasonId: string, showId: string) => {

@@ -4,6 +4,7 @@ import { fileToBase64 } from '../utils';
 import { activeScores, isAppearanceSeason } from '../appearanceRules';
 import { automaticWarnings } from '../appearanceAuto';
 import { debutGroups, maskStatus } from '../seasonPresentation';
+import { canAddShow, isConfirmed2026Season, nextShowNumber, showLabel } from '../showFlow';
 import { ScoringDetails } from './ScoringDetails';
 import { InGamePromiCheck, PromiCheckRequest } from './InGamePromiCheck';
 import { resolveCelebrityName, tipMatchesCelebrity } from '../celebrityNames';
@@ -622,6 +623,17 @@ export const GameView: React.FC<GameViewProps> = (props) => {
   // Calculate scores on render. In a larger app, useMemo here.
   const { scores, tipPoints, counterBetPoints, playerMaskPoints } = activeScores(season, allPlayers);
   const activeShow = season.shows.find(s => s.id === season.activeShowId);
+  // View-only copies supply consistent titles to tip, reveal and counterbet history.
+  const displayShows = season.shows.map(show => ({ ...show, name: showLabel(season, show) }));
+  const nextEpisode = nextShowNumber(season);
+  const nextTitle = showLabel(season, { id: '', name: `Show ${nextEpisode}`, episodeNumber: nextEpisode });
+  const showLimitReached = !canAddShow(season);
+  const specialStart = isConfirmed2026Season(season) && (nextEpisode === 5 || nextEpisode === 6);
+  const startNextShow = () => {
+    if (showLimitReached) return;
+    if (specialStart && !window.confirm(`${nextTitle} starten? Die aktuelle Show wird gewechselt. Gespeicherte Tipps und Ergebnisse bleiben erhalten.`)) return;
+    onAddShow();
+  };
   const [promiCheck, setPromiCheck] = useState<PromiCheckRequest | null>(null);
   const groups = debutGroups(season);
   const knownNames = season.masks.flatMap(m => m.revealedCelebrity ? [m.revealedCelebrity] : []);
@@ -641,10 +653,10 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                     {automaticWarnings(season).length > 0 && <p role="alert" className="text-amber-300 mt-2">{automaticWarnings(season).join(' ')} {season.appearanceRules?.automatic?.deviationConfirmed ? 'Abweichende Besetzung bestätigt.' : 'Bitte unter Einstellungen → Erweitert prüfen, bevor weiter gewertet wird.'}</p>}
                 </div>
                 
-                <Card className="flex flex-col gap-2 w-full md:w-auto md:min-w-[300px]">
-                     <div className="flex justify-between items-center mb-2">
+                <Card className="flex flex-col gap-2 w-full md:w-[340px] md:flex-shrink-0">
+                     <div className="flex flex-wrap gap-2 justify-between items-center mb-2">
                         <span className="text-text-secondary font-bold">Aktuelle Show:</span>
-                        {activeShow ? <span className="text-accent font-bold">{activeShow.name}</span> : <span className="text-red-400">Keine Show aktiv</span>}
+                        {activeShow ? <span className="text-accent font-bold">{showLabel(season, activeShow)}</span> : <span className="text-red-400">Keine Show aktiv</span>}
                      </div>
                      <select 
                         aria-label="Aktuelle Show"
@@ -653,9 +665,12 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                         className="bg-background border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                      >
                         <option value="" disabled>Show auswählen...</option>
-                        {season.shows.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                        {displayShows.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                      </select>
-                     <Button onClick={onAddShow} className="w-full text-sm py-2">Neue Show starten</Button>
+                     <Button onClick={startNextShow} disabled={showLimitReached} className="w-full text-sm py-2" aria-describedby={showLimitReached ? 'show-limit-note' : undefined}>
+                        {showLimitReached ? 'Keine weitere Show' : specialStart ? `${nextEpisode === 5 ? 'Halbfinale' : 'Finale'} starten` : 'Neue Show starten'}
+                     </Button>
+                     {showLimitReached && <p id="show-limit-note" className="text-sm text-text-secondary">Finale (Show 6) ist die letzte Show dieser Staffel. Weitere Shows können nicht angelegt werden.</p>}
                 </Card>
             </div>
 
@@ -682,7 +697,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                                     onPromiCheck={setPromiCheck}
                                     knownNames={knownNames}
                                     players={allPlayers.filter(p => season.playerIds.includes(p.id))}
-                                    shows={season.shows}
+                                    shows={displayShows}
                                     counterBets={season.counterBets}
                                     isTippingActive={!!season.activeShowId}
                                     activeShowId={season.activeShowId}
