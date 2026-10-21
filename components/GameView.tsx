@@ -4,6 +4,7 @@ import { fileToBase64 } from '../utils';
 import { activeScores, isAppearanceSeason } from '../appearanceRules';
 import { automaticWarnings } from '../appearanceAuto';
 import { debutGroups, maskStatus } from '../seasonPresentation';
+import { ShowParticipants, canonicalMaskAnchor } from './ShowParticipants';
 import { canAddShow, isConfirmed2026Season, nextShowNumber, showLabel } from '../showFlow';
 import { ScoringDetails } from './ScoringDetails';
 import { InGamePromiCheck, PromiCheckRequest } from './InGamePromiCheck';
@@ -705,7 +706,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                             {season.appearanceRules?.automatic && <h2 className="text-xl font-bold mb-3 flex items-center gap-2">{group.episode ? `Show ${group.episode}` : 'Noch nicht zugeordnet'}{group.episode === activeShow?.episodeNumber && <span className="text-xs font-normal text-accent border border-accent/30 rounded px-2 py-0.5">Aktiv</span>}</h2>}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {group.masks.map(mask => (
-                                <div key={mask.id} data-mask-id={mask.id} className="space-y-2 min-w-0"><MaskCard
+                                <div key={mask.id} id={canonicalMaskAnchor(mask.id)} tabIndex={-1} data-mask-id={mask.id} className="space-y-2 min-w-0"><MaskCard
                                     mask={mask}
                                     status={maskStatus(season, mask)}
                                     onPromiCheck={setPromiCheck}
@@ -732,6 +733,7 @@ export const GameView: React.FC<GameViewProps> = (props) => {
                               <Button variant="secondary" className="text-sm py-2" aria-label={`Maske anlegen: ${name}`} onClick={() => props.onAddMask(name)}>Maske anlegen</Button>
                             </Card>)}
                             </div></section>)}
+                            <ShowParticipants season={season} players={allPlayers} points={playerMaskPoints} />
                         </div>
                     ) : (
                         <p className="text-text-secondary">Noch keine Masken angelegt. Gehe zu den Einstellungen.</p>
